@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+# Office temp files
+~$*
+# Build outputs (PlatformIO / Arduino)
+.pio/
+build/
+*.elf
+*.bin
+.vscode/
+# Secrets
+.env
+*.token
