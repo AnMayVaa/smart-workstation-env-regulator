@@ -1,0 +1,42 @@
+<mxfile host="app.diagrams.net" modified="2026-10-13T00:00:00.000Z" agent="Codex" version="24.7.17">
+  <diagram id="presence-fsm" name="Presence FSM">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="normal_panel" value="เส้นทางการทำงานปกติ" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingTop=12;spacingLeft=15;fontSize=18;fontStyle=1;fillColor=#f8fafc;strokeColor=#cbd5e1;" vertex="1" parent="1"><mxGeometry x="50" y="70" width="1490" height="370" as="geometry"/></mxCell>
+        <mxCell id="away_panel" value="เส้นทางเมื่อลุกออกจากโต๊ะ" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingTop=12;spacingLeft=15;fontSize=18;fontStyle=1;fillColor=#faf5ff;strokeColor=#ddd6fe;" vertex="1" parent="1"><mxGeometry x="50" y="465" width="930" height="245" as="geometry"/></mxCell>
+        <mxCell id="fault_panel" value="เส้นทางเมื่อเซนเซอร์ผิดปกติ" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingTop=12;spacingLeft=15;fontSize=18;fontStyle=1;fillColor=#fff7f7;strokeColor=#fecaca;" vertex="1" parent="1"><mxGeometry x="1005" y="465" width="535" height="245" as="geometry"/></mxCell>
+        <mxCell id="rules_panel" value="กติกาประกอบที่ใช้ร่วมกับ FSM" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingTop=12;spacingLeft=15;fontSize=18;fontStyle=1;fillColor=#f8fafc;strokeColor=#cbd5e1;" vertex="1" parent="1"><mxGeometry x="50" y="740" width="1490" height="205" as="geometry"/></mxCell>
+
+        <mxCell id="start" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#0f172a;strokeColor=#0f172a;" vertex="1" parent="1"><mxGeometry x="90" y="225" width="26" height="26" as="geometry"/></mxCell>
+        <mxCell id="u" value="&lt;b&gt;UNOCCUPIED&lt;/b&gt;&lt;br&gt;ยังไม่มี session การนั่ง" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#2563eb;strokeWidth=3;fontSize=17;" vertex="1" parent="1"><mxGeometry x="180" y="180" width="260" height="120" as="geometry"/></mxCell>
+        <mxCell id="w" value="&lt;b&gt;WORKING&lt;/b&gt;&lt;br&gt;นับเวลานั่งต่อเนื่อง" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#2563eb;strokeWidth=3;fontSize=17;" vertex="1" parent="1"><mxGeometry x="555" y="180" width="260" height="120" as="geometry"/></mxCell>
+        <mxCell id="e" value="&lt;b&gt;EYE_ALERT&lt;/b&gt;&lt;br&gt;เตือนพักสายตาเมื่อครบ 20 นาที" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#ea580c;strokeWidth=3;fontSize=17;" vertex="1" parent="1"><mxGeometry x="930" y="110" width="260" height="120" as="geometry"/></mxCell>
+        <mxCell id="s" value="&lt;b&gt;STAND_ALERT&lt;/b&gt;&lt;br&gt;เตือนลุกเมื่อครบ 30 นาที" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#ea580c;strokeWidth=3;fontSize=17;" vertex="1" parent="1"><mxGeometry x="930" y="280" width="260" height="120" as="geometry"/></mxCell>
+        <mxCell id="a" value="&lt;b&gt;AWAY_PENDING&lt;/b&gt;&lt;br&gt;ยังไม่ครบเวลาที่ถือว่าพักจริง" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f3ff;strokeColor=#7c3aed;strokeWidth=3;fontSize=17;" vertex="1" parent="1"><mxGeometry x="390" y="530" width="300" height="125" as="geometry"/></mxCell>
+        <mxCell id="away_note" value="&lt;b&gt;Output ระหว่างไม่มีคน&lt;/b&gt;&lt;br&gt;• ครบ 3 min: รีเซ็ต session&lt;br&gt;• ครบ 5 min: away_timeout=true&lt;br&gt;พบคนเมื่อใด → away_timeout=false" style="rounded=1;whiteSpace=wrap;html=1;align=left;spacingLeft=12;fillColor=#ffffff;strokeColor=#c4b5fd;fontSize=14;" vertex="1" parent="1"><mxGeometry x="725" y="525" width="220" height="135" as="geometry"/></mxCell>
+        <mxCell id="fault_trigger" value="ทุกสถานะ: ไม่มี valid frame &gt; 500 ms" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fca5a5;fontSize=15;" vertex="1" parent="1"><mxGeometry x="1060" y="510" width="460" height="42" as="geometry"/></mxCell>
+        <mxCell id="f" value="&lt;b&gt;SENSOR_FAULT&lt;/b&gt;&lt;br&gt;fail-safe: occupied=true" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#dc2626;strokeWidth=3;fontSize=17;" vertex="1" parent="1"><mxGeometry x="1210" y="575" width="290" height="105" as="geometry"/></mxCell>
+        <mxCell id="fault_note" value="&lt;b&gt;เมื่อข้อมูลกลับมาปกติ&lt;/b&gt;&lt;br&gt;พบคน → WORKING&lt;br&gt;ไม่พบคน → UNOCCUPIED" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=none;strokeColor=none;fontSize=15;" vertex="1" parent="1"><mxGeometry x="1035" y="570" width="170" height="105" as="geometry"/></mxCell>
+
+        <mxCell id="button_note" value="&lt;b&gt;ปุ่มกด&lt;/b&gt;&lt;br&gt;กดสั้น: รับทราบ โดยไม่รีเซ็ตเวลานั่ง&lt;br&gt;กดยาว ≥ 1.5 s: เลื่อนเตือน 5 min" style="rounded=1;whiteSpace=wrap;html=1;align=left;spacingLeft=12;fillColor=#ffffff;strokeColor=#cbd5e1;fontSize=15;" vertex="1" parent="1"><mxGeometry x="90" y="805" width="430" height="100" as="geometry"/></mxCell>
+        <mxCell id="alert_note" value="&lt;b&gt;Alert manager&lt;/b&gt;&lt;br&gt;priority 2 &gt; 1 &gt; 0; เท่ากันใช้รายการเก่าก่อน&lt;br&gt;STAND_ALERT แทน EYE_ALERT ใน session เดียวกัน" style="rounded=1;whiteSpace=wrap;html=1;align=left;spacingLeft=12;fillColor=#ffffff;strokeColor=#cbd5e1;fontSize=15;" vertex="1" parent="1"><mxGeometry x="585" y="805" width="430" height="100" as="geometry"/></mxCell>
+        <mxCell id="safe_note" value="&lt;b&gt;Fail-safe&lt;/b&gt;&lt;br&gt;sensor fault → away_timeout=false&lt;br&gt;แจ้ง ALERT_SENSOR_FAULT priority 2" style="rounded=1;whiteSpace=wrap;html=1;align=left;spacingLeft=12;fillColor=#ffffff;strokeColor=#cbd5e1;fontSize=15;" vertex="1" parent="1"><mxGeometry x="1080" y="805" width="430" height="100" as="geometry"/></mxCell>
+
+        <mxCell id="start_u" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" edge="1" parent="1" source="start" target="u"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="uw" value="พบคนคงที่ 1 s" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=14;" edge="1" parent="1" source="u" target="w"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="we" value="ครบ 20 min" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=14;" edge="1" parent="1" source="w" target="e"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ws" value="ครบ 30 min" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=14;" edge="1" parent="1" source="w" target="s"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ew" value="รับทราบ / snooze" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=14;" edge="1" parent="1" source="e" target="w"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="sw" value="รับทราบ / snooze" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=14;" edge="1" parent="1" source="s" target="w"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="es" value="ถึง 30 min" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=14;" edge="1" parent="1" source="e" target="s"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="wa" value="ไม่พบคนคงที่ 1 s" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=14;" edge="1" parent="1" source="w" target="a"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="aw" value="กลับมาก่อน 3 min: ทำ session เดิมต่อ" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=14;" edge="1" parent="1" source="a" target="w"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="au" value="ไม่พบคนครบ 3 min: รีเซ็ต session" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=14;" edge="1" parent="1" source="a" target="u"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="trigger_f" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;dashed=1;strokeColor=#dc2626;" edge="1" parent="1" source="fault_trigger" target="f"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
