@@ -33,7 +33,8 @@
 | `WORKING` | `EYE_ALERT` | ถึง `next_eye_due` และยังไม่ถึง stand alert | ส่ง `ALERT_EYE_BREAK` priority 1, วาดข้อความพักสายตา 20 s, buzzer ดังสั้น; เลื่อน due รอบถัดไปอีก 20 min เพื่อไม่ส่งซ้ำทุกวินาที |
 | `WORKING`/`EYE_ALERT` | `STAND_ALERT` | ถึง `next_stand_due` | ส่ง `ALERT_STAND_BREAK` priority 1 และแทน eye alert ถ้าเกิดพร้อมกัน, แสดงให้ลุกเดิน 3 min; เลื่อน due รอบถัดไปอีก 30 min |
 | `EYE_ALERT`/`STAND_ALERT` | `WORKING` | กดสั้น | รับทราบและหยุดเสียง แต่ไม่รีเซ็ตเวลานั่ง เพราะยังไม่ได้พักจริง |
-| `EYE_ALERT`/`STAND_ALERT` | `WORKING` | กดยาวอย่างน้อย 1.5 s | เลื่อนเฉพาะ alert ปัจจุบัน 5 min, หยุดเสียง และแสดงเวลาเตือนใหม่ |
+| `EYE_ALERT`/`STAND_ALERT` | `WORKING` | กดยาวอย่างน้อย 1.5 s และ `snooze_count < 2` | เพิ่ม `snooze_count`, เก็บชนิด alert ไว้ใน `snoozed_alert`, ตั้ง `snooze_due` อีก 5 min, หยุดเสียง และแสดงเวลาเตือนใหม่ |
+| `EYE_ALERT`/`STAND_ALERT` | สถานะเดิม | กดยาวเมื่อ `snooze_count == 2` | ไม่เลื่อนและไม่ clear alert; OLED แสดงว่าเลื่อนได้สูงสุด 2 ครั้ง ผู้ใช้ยังรับทราบด้วยกดสั้นหรือพักจริงได้ |
 | `WORKING`/alert | `AWAY_PENDING` | ไม่พบคนต่อเนื่อง 1 s | ตั้ง `occupied=false`, จำ `sit_elapsed`, เริ่ม `away_elapsed`; clear alert ของ B บนจอแต่เก็บ due time |
 | `AWAY_PENDING` | `WORKING` | พบคนก่อนครบ 3 min | ตั้ง `occupied=true`, `away_timeout=false`, ทำ session เดิมต่อโดยไม่นับช่วงที่ลุกออกไป |
 | `AWAY_PENDING` | `UNOCCUPIED` | ไม่พบคนครบ 3 min | ถือว่าพักสำเร็จตามช่วงลุกเดิน 3 นาที [B2-2], รีเซ็ต session และ due time; ถ้าเวลาว่างรวมถึง 5 min ให้ตั้ง `away_timeout=true` |
@@ -52,10 +53,16 @@ CONSTANT STAND_INTERVAL     = 30 min
 CONSTANT VALID_BREAK        = 3 min
 CONSTANT AWAY_TIMEOUT       = 5 min
 CONSTANT SNOOZE_INTERVAL    = 5 min
+CONSTANT MAX_SNOOZE         = 2
 CONSTANT SENSOR_TIMEOUT     = 500 ms
 CONSTANT PRESENCE_STABLE    = 1 s
 CONSTANT BUTTON_DEBOUNCE    = 30 ms
 CONSTANT LONG_PRESS         = 1.5 s
+
+VARIABLE snooze_count       = 0
+VARIABLE snooze_pending     = false
+VARIABLE snoozed_alert      = NONE
+VARIABLE snooze_due         = 0
 
 presence_task every 100 ms:
     frame = read_latest_ld2410_frame_without_blocking()
@@ -99,14 +106,21 @@ break_timer_task every 1000 ms:
             sit_minutes = floor(sit_elapsed / 60 s)
 
             if not stable_presence:
+                reset_snooze_control()
                 begin_away_without_resetting_session()
                 occupied = false
                 state = AWAY_PENDING
+            else if snooze_pending and now >= snooze_due:
+                enqueue snoozed_alert with its original priority
+                snooze_pending = false
+                state = alert_state_for(snoozed_alert)
             else if now >= next_stand_due:
+                reset_snooze_control()
                 enqueue ALERT_STAND_BREAK with priority 1
                 next_stand_due += STAND_INTERVAL
                 state = STAND_ALERT
             else if now >= next_eye_due:
+                reset_snooze_control()
                 enqueue ALERT_EYE_BREAK with priority 1
                 next_eye_due += EYE_INTERVAL
                 state = EYE_ALERT
@@ -114,20 +128,30 @@ break_timer_task every 1000 ms:
         EYE_ALERT or STAND_ALERT:
             sit_elapsed += 1 s
             if not stable_presence:
+                reset_snooze_control()
                 clear_current_presence_alert()
                 begin_away_without_resetting_session()
                 state = AWAY_PENDING
             else if stand alert becomes due:
+                reset_snooze_control()
                 replace current eye alert with ALERT_STAND_BREAK
                 next_stand_due += STAND_INTERVAL
                 state = STAND_ALERT
             else if short_press:
+                reset_snooze_control()
                 clear_current_presence_alert()
                 state = WORKING
             else if long_press:
-                move due time of current alert to now + SNOOZE_INTERVAL
-                clear_current_presence_alert()
-                state = WORKING
+                if snooze_count < MAX_SNOOZE:
+                    snooze_count += 1
+                    snoozed_alert = current alert type
+                    snooze_due = now + SNOOZE_INTERVAL
+                    snooze_pending = true
+                    clear_current_presence_alert()
+                    state = WORKING
+                else:
+                    keep current alert active
+                    show "เลื่อนได้สูงสุด 2 ครั้ง"
 
         AWAY_PENDING:
             away_elapsed += 1 s
@@ -177,6 +201,7 @@ display_alert_task every 500 ms or when alert queue wakes it:
 | ถือว่าพักสำเร็จ | ไม่พบคนต่อเนื่อง 3 min | ใช้ช่วงการลุกเดิน 3 min จาก [B2-2] เพื่อไม่รีเซ็ตเมื่อเพียงลุกหยิบของ |
 | ปิดไฟ/ประหยัดพลังงาน | ไม่พบคน 5 min | ค่าร่างของ D ในภาพรวม; แยกจาก 3 min เพื่อไม่ปิดไฟทันทีเมื่อพักสั้นและต้องยืนยันใน D1 |
 | snooze | 5 min | ค่าแนะนำในเอกสารบทบาท B; เป็น design parameter ไม่ใช่ค่าจากงานวิจัย |
+| จำนวน snooze สูงสุด | 2 ครั้งต่อ alert | ป้องกันการเลื่อนซ้ำไม่จำกัด โดยยังไม่เพิ่มคำสั่งปิดการเตือนถาวร; ต้องยืนยันด้วย usability test |
 | sensor timeout | 500 ms | เท่ากับพลาด 5 รอบของ task 100 ms เป็น design parameter เพื่อตรวจ fault เร็วและไม่ตัดสินจาก frame เดียว |
 | presence stable | 1 s | ต้องเห็นผลเดิม 10 รอบของ task 100 ms เป็น design parameter เพื่อลดการสลับสถานะจาก noise |
 | debounce / long press | 30 ms / 1.5 s | design parameter สำหรับแยก bounce และ intent ของผู้ใช้ ต้องยืนยันจาก usability test |
@@ -218,6 +243,7 @@ display_alert_task every 500 ms or when alert queue wakes it:
 - [x] ชื่อข้อมูลตรงกับ A1 v0.1 โดยไม่แก้ contract
 - [x] มี fail-safe ที่ไม่ปิดไฟใส่คน
 - [x] ระบุนโยบาย alert ซ้อน, ปุ่ม, stale data และ I²C mutex
+- [x] จำกัด snooze ไม่เกิน 2 ครั้งต่อ alert และไม่มีคำสั่งปิดการเตือนถาวร
 
 ## อ้างอิง
 

@@ -115,7 +115,7 @@
   <rect x="90" y="810" width="430" height="100" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
   <text x="112" y="842" class="noteTitle">ปุ่มกด</text>
   <text x="112" y="872" class="note">กดสั้น: รับทราบ โดยไม่รีเซ็ตเวลานั่ง</text>
-  <text x="112" y="897" class="note">กดยาว ≥ 1.5 s: เลื่อนเตือน 5 min</text>
+  <text x="112" y="897" class="note">กดยาว ≥ 1.5 s: เลื่อน 5 min สูงสุด 2 ครั้ง/alert</text>
 
   <rect x="585" y="810" width="430" height="100" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
   <text x="607" y="842" class="noteTitle">Alert manager</text>
