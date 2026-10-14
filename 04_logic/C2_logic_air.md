@@ -1,233 +1,256 @@
-# C2: การออกแบบซอฟต์แวร์และลอจิก โมดูลตรวจวัดคุณภาพอากาศและควบคุมพัดลม (v1)
+# C2: การออกแบบซอฟต์แวร์และลอจิก โมดูลตรวจวัดคุณภาพอากาศและควบคุมพัดลม
 
-> **รหัสเอกสาร:** C2_logic_air_v1  
-> **ผู้จัดทำ:** C (ซัน - ทิวากร ฉับพลัน 6701012610112) | โมดูลอากาศ + ภาพจำลอง + แผนทดสอบ  
-> **ส่งให้:** A (ใช้เขียนโค้ดจริงในโหนดห้อง), D (ใช้รวมเล่มหัวข้อ 5)  
-> **สถานะความสำคัญ:** 🔴 มีคนรอใช้ (อยู่ในเส้นทางวิกฤต - A รอนำไปเขียนโค้ด)  
+> **รหัสเอกสาร:** C2_logic_air  
+> **ผู้จัดทำ:** C (ซัน - นายทิวากร ฉับพลัน 6701012610112) | โมดูลอากาศ + ภาพจำลอง + แผนทดสอบ  
+> **ส่งให้:** A (โอม - นำไปเขียนโค้ด FreeRTOS บนโหนดห้อง), D (ใช้รวมเล่มหัวข้อ 5)  
+> **อ้างอิงและสอดคล้องกับ:** `02_interface/A1_interface.md` v1.0, `01_requirements/D1_requirements.md`  
 > **เนื้อหาสำหรับรายงาน:** หัวข้อ 5 (Software Design - Flowcharts/UML, Pseudocode)
 
 ---
 
 ## 1. สถานะทั้งหมดของระบบ (Finite State Machine - FSM States)
 
-ระบบควบคุมคุณภาพอากาศบนโหนดห้อง แบ่งการทำงานออกเป็น **5 สถานะหลัก** ดังนี้:
+ระบบควบคุมคุณภาพอากาศบนโหนดห้อง (Room Node) ทำงานภายใต้ระบบปฏิบัติการ FreeRTOS ทุกรอบคาบเวลา 5,000 ms โดยแบ่งออกเป็น **5 สถานะหลัก** ดังนี้:
 
 | รหัสสถานะ | ชื่อสถานะ | ความหมายและการทำงานหลัก |
 |---|---|---|
-| **S0** | `ROOM_EMPTY` (โหมดประหยัดพลังงานเมื่อห้องว่าง) | ไม่มีคนนั่งทำงานในห้องเลย (`room_occupied_count == 0`) ระบบจะปิดพัดลมดูดอากาศ (`PWM = 0%`) หรือลดการทำงานเพื่อประหยัดพลังงาน และหรี่ไฟสถานะ แต่ยังอ่านค่าอากาศทุก 5 วินาทีเพื่อติดตามสภาพห้อง |
-| **S1** | `AIR_GOOD` (อากาศดี - ปกติ) | มีคนในห้อง (`room_occupied_count > 0`) และระดับ $\text{CO}_2 < 800\ \text{ppm}$ พัดลมดูดอากาศปิด (`PWM = 0%`) ไฟสถานะแสดง **สีเขียว** (`air_level = 0`) |
-| **S2** | `AIR_MODERATE` (อากาศเริ่มสะสม - เฝ้าระวัง) | มีคนในห้อง และระดับ $800\ \text{ppm} \le \text{CO}_2 < 1000\ \text{ppm}$ ไฟสถานะเปลี่ยนเป็น **สีเหลือง** (`air_level = 1`)<br>- หากมาจากสถานะ `AIR_GOOD`: พัดลมยังคงปิด (`PWM = 0%`) เพื่อรอดูแนวโน้ม<br>- หากมาจากสถานะ `AIR_POOR` (กำลังระบายอากาศลงมา): พัดลมจะยังหมุนต่อที่ความเร็วปานกลาง (`PWM = 60%`) จนกว่าค่า $\text{CO}_2$ จะลดต่ำกว่า $800\ \text{ppm}$ (หลักการ **Hysteresis**) |
-| **S3** | `AIR_POOR_VENTILATING` (อากาศแย่ - เร่งระบายอากาศ) | มีคนในห้อง และระดับ $\text{CO}_2 \ge 1000\ \text{ppm}$ ระบบสั่งเปิดพัดลมดูดอากาศเต็มกำลัง (`PWM = 100%`) ไฟสถานะแสดง **สีแดง** (`air_level = 2`) และส่ง `alert_request` ข้าม Wi-Fi ไปแจ้งเตือนบนจอโต๊ะทำงาน |
-| **S4** | `SENSOR_FAULT` (โหมดนิรภัยเมื่อเซนเซอร์ขัดข้อง) | อ่านค่าจากเซนเซอร์ SCD41 ไม่ได้ติดต่อกันเกิน 3 ครั้ง (15 วินาที) หรือค่าที่อ่านได้หลุดช่วงความเป็นจริง ($\text{CO}_2 < 300$ หรือ $> 10000\ \text{ppm}$) ระบบเข้าสู่ **Fail-Safe Mode** โดยบังคับเปิดพัดลมที่ `PWM = 80%` เพื่อความปลอดภัยของผู้ใช้ ไฟสถานะ **กะพริบสีแดง** และส่ง `alert_request` แจ้งว่าเซนเซอร์อากาศขัดข้อง (อ้างอิง บท 6 หัวข้อ 6.2.3 หน้า 22–26) |
+| **S0** | `ROOM_EMPTY` (ห้องว่าง - โหมดประหยัดพลังงาน) | เข้าสู่สถานะนี้เมื่อ **`room_desks_online > 0` และ `room_occupied_count == 0`** (มีการเชื่อมต่อกับโต๊ะอย่างน้อย 1 ตัว และทุกโต๊ะยืนยันว่าไม่มีคนนั่ง)<br>- พัดลมดูดอากาศปิด (`fan_pct = 0%`)<br>- ไฟสถานะ RGB ดับ (`OFF`) เพื่อประหยัดพลังงาน<br>- ยังคงอ่านค่าเซนเซอร์ทุก 5 วินาที เพื่อเก็บข้อมูลสภาวะห้องและอัปเดตลงโครงสร้าง `air_status_t` |
+| **S1** | `AIR_GOOD` (อากาศดี - ปกติ) | มีคนในห้อง หรือไม่ทราบสถานะคน (`room_desks_online == 0`) และระดับ $\text{CO}_2 < 800\ \text{ppm}$<br>- พัดลมดูดอากาศปิด (`fan_pct = 0%`)<br>- ไฟสถานะ RGB แสดง **สีเขียว**<br>- ค่าฟิลด์ `co2_level = 0`, `sensor_ok = true` |
+| **S2** | `AIR_MODERATE` (อากาศเริ่มสะสม - เฝ้าระวัง Hysteresis) | มีคนในห้อง และระดับ $800\ \text{ppm} \le \text{CO}_2 < 1000\ \text{ppm}$<br>- ไฟสถานะ RGB แสดง **สีเหลือง** (`co2_level = 1`)<br>- **กรณีขาขึ้น (มาจาก S1):** พัดลมยังคงปิด (`fan_pct = 0%`) เพื่อรอดูแนวโน้ม<br>- **กรณีขาลง (มาจาก S3 ระบายอากาศลงมา):** พัดลมยังคงทำงานต่อเนื่องที่ความเร็วปานกลาง (`fan_pct = 60%`) จนกว่า $\text{CO}_2$ จะลดต่ำกว่า $800\ \text{ppm}$ ตามหลักการ **Hysteresis Band** เพื่อป้องกันการตัดต่อถี่ |
+| **S3** | `AIR_POOR_VENTILATING` (อากาศแย่ - เร่งระบายอากาศ) | มีคนในห้อง และระดับ $\text{CO}_2 \ge 1000\ \text{ppm}$ (ตรงตามข้อกำหนด FR-13, FR-14 และงานวิจัย [2])<br>- พัดลมดูดอากาศทำงานเต็มกำลัง (`fan_pct = 100%`)<br>- ไฟสถานะ RGB แสดง **สีแดง** (`co2_level = 2`)<br>- โหนดโต๊ะที่ได้รับค่า `co2_level = 2` จะแสดงคำเตือนบนหน้าจอ OLED และส่งเสียง Buzzer สั้นตามที่โมดูล B กำหนด |
+| **S4** | `SENSOR_FAULT` (โหมดนิรภัย Fail-Safe เมื่อเซนเซอร์ขัดข้อง) | เซนเซอร์ SCD41 อ่านค่าไม่ได้ติดต่อกันครบ 3 รอบ (15 วินาที ตามเกณฑ์ NFR-07) หรือค่าหลุดช่วงสมเหตุสมผล ($\text{CO}_2 < 300$ หรือ $> 5000\ \text{ppm}$)<br>- เข้าสู่สถานะนิรภัย **Fail-Open Policy** ตามสไลด์บทที่ 6 หน้า 22–26 บังคับพัดลมดูดอากาศทำงานที่ `fan_pct = 80%` ค้างไว้เพื่อความปลอดภัย<br>- ไฟสถานะ RGB **กะพริบสีแดง** (Blinking Red)<br>- กำหนดค่าแฟล็ก `sensor_ok = false` ในโครงสร้าง `air_status_t` เพื่อให้โหนดโต๊ะรับทราบและแสดงไอคอนแจ้งเตือนเซนเซอร์ขัดข้องบนหน้าจอ |
 
 ---
 
 ## 2. ตารางเปลี่ยนสถานะ (State Transition Table)
 
-| จากสถานะ | ไปสถานะ | เงื่อนไข (Guard Condition) | สิ่งที่ระบบทำ (Action) |
+| จากสถานะ | ไปสถานะ | เงื่อนไขการเปลี่ยนสถานะ (Guard Condition) | การทำงานของระบบ (Action) |
 |---|---|---|---|
-| ทุกสถานะ (ยกเว้น `S4`) | `S4: SENSOR_FAULT` | `sensor_error_count >= 3` หรือค่าไม่อยู่ในช่วง $300 \le \text{CO}_2 \le 10000$ | สั่ง `Fan_PWM = 80%`, ไฟ RGB กะพริบสีแดง, ส่ง `alert_request = "AIR_SENSOR_ERR"` |
-| `S4: SENSOR_FAULT` | `S1` หรือ `S0` | อ่านค่าเซนเซอร์สำเร็จติดต่อกัน 2 ครั้ง (`sensor_error_count == 0`) | ยกเลิกคำเตือนเซนเซอร์เสีย และกลับไปประเมินสถานะตามค่าจริง |
-| `S1`, `S2`, `S3` | `S0: ROOM_EMPTY` | `room_occupied_count == 0` (ไม่มีคนอยู่ในห้องเลย) | ปิดพัดลม `Fan_PWM = 0%`, ปิดไฟสถานะ RGB (ประหยัดไฟ) |
-| `S0: ROOM_EMPTY` | `S1: AIR_GOOD` | `room_occupied_count > 0` และ $\text{CO}_2 < 800\ \text{ppm}$ | `Fan_PWM = 0%`, ไฟ RGB = สีเขียว, `air_level = 0` |
-| `S0: ROOM_EMPTY` | `S2: AIR_MODERATE` | `room_occupied_count > 0` และ $800 \le \text{CO}_2 < 1000\ \text{ppm}$ | `Fan_PWM = 0%`, ไฟ RGB = สีเหลือง, `air_level = 1` |
-| `S0: ROOM_EMPTY` | `S3: AIR_POOR` | `room_occupied_count > 0` และ $\text{CO}_2 \ge 1000\ \text{ppm}$ | `Fan_PWM = 100%`, ไฟ RGB = สีแดง, `air_level = 2`, ส่ง `alert_request` |
-| `S1: AIR_GOOD` | `S2: AIR_MODERATE` | $\text{CO}_2 \ge 800\ \text{ppm}$ และ $\text{CO}_2 < 1000\ \text{ppm}$ | คงค่า `Fan_PWM = 0%`, เปลี่ยนไฟ RGB = สีเหลือง, `air_level = 1` |
-| `S1: AIR_GOOD` | `S3: AIR_POOR` | $\text{CO}_2 \ge 1000\ \text{ppm}$ (เพิ่มขึ้นอย่างรวดเร็ว) | เปิดพัดลม `Fan_PWM = 100%`, ไฟ RGB = สีแดง, `air_level = 2`, ส่ง `alert_request = "CO2_HIGH"` |
-| `S2: AIR_MODERATE` | `S3: AIR_POOR` | $\text{CO}_2 \ge 1000\ \text{ppm}$ | เปิดพัดลม `Fan_PWM = 100%`, ไฟ RGB = สีแดง, `air_level = 2`, ส่ง `alert_request = "CO2_HIGH"` |
-| `S2: AIR_MODERATE` | `S1: AIR_GOOD` | $\text{CO}_2 < 800\ \text{ppm}$ | ปิดพัดลม `Fan_PWM = 0%` (จุดตัด Hysteresis ล่าง), ไฟ RGB = สีเขียว, `air_level = 0` |
-| `S3: AIR_POOR` | `S2: AIR_MODERATE` | $800 \le \text{CO}_2 < 950\ \text{ppm}$ (อากาศเริ่มดีขึ้นแต่ยังไม่ต่ำกว่า 800 ppm) | ลดความเร็วพัดลมลงเป็น `Fan_PWM = 60%` (ยังไม่ปิดสนิทเพื่อดึง $\text{CO}_2$ ให้พ้นช่วงเฝ้าระวัง), ไฟ RGB = สีเหลือง, `air_level = 1` |
-| `S3: AIR_POOR` | `S1: AIR_GOOD` | $\text{CO}_2 < 800\ \text{ppm}$ | ปิดพัดลม `Fan_PWM = 0%`, ไฟ RGB = สีเขียว, `air_level = 0` |
+| ทุกสถานะ (ยกเว้น S4) | `S4: SENSOR_FAULT` | อ่านค่าผิดพลาดติดต่อกัน $\ge 3$ ครั้ง (`fault_counter >= 3`) หรือค่าหลุดช่วง $300 \le \text{CO}_2 \le 5000$ | `fan_pct = 80`, ไฟ RGB กะพริบสีแดง, `sensor_ok = false` |
+| `S4: SENSOR_FAULT` | `S1` หรือ `S0` | อ่านค่าสำเร็จติดต่อกันครบ 2 ครั้ง (`fault_counter == 0`) | `sensor_ok = true`, ยกเลิก Fail-Safe และกลับสู่สถานะตามค่าตรวจวัดจริง |
+| `S1`, `S2`, `S3` | `S0: ROOM_EMPTY` | `room_desks_online > 0` และ `room_occupied_count == 0` (ทุกโต๊ะรายงานว่าไม่มีคน) | `fan_pct = 0`, ไฟ RGB = ดับ (OFF), `co2_level = 0` |
+| `S0: ROOM_EMPTY` | `S1: AIR_GOOD` | (`room_occupied_count > 0` หรือ `room_desks_online == 0`) และ $\text{CO}_2 < 800\ \text{ppm}$ | `fan_pct = 0`, ไฟ RGB = สีเขียว, `co2_level = 0` |
+| `S0: ROOM_EMPTY` | `S2: AIR_MODERATE` | (`room_occupied_count > 0` หรือ `room_desks_online == 0`) และ $800 \le \text{CO}_2 < 1000\ \text{ppm}$ | `fan_pct = 0`, ไฟ RGB = สีเหลือง, `co2_level = 1` |
+| `S0: ROOM_EMPTY` | `S3: AIR_POOR` | (`room_occupied_count > 0` หรือ `room_desks_online == 0`) และ $\text{CO}_2 \ge 1000\ \text{ppm}$ | `fan_pct = 100`, ไฟ RGB = สีแดง, `co2_level = 2` |
+| `S1: AIR_GOOD` | `S2: AIR_MODERATE` | $\text{CO}_2 \ge 800\ \text{ppm}$ (ขาขึ้น) และ $\text{CO}_2 < 1000\ \text{ppm}$ | คงค่า `fan_pct = 0`, ไฟ RGB = สีเหลือง, `co2_level = 1` |
+| `S1: AIR_GOOD` | `S3: AIR_POOR` | $\text{CO}_2 \ge 1000\ \text{ppm}$ (เพิ่มขึ้นรวดเร็ว) | `fan_pct = 100`, ไฟ RGB = สีแดง, `co2_level = 2` |
+| `S2: AIR_MODERATE` | `S3: AIR_POOR` | $\text{CO}_2 \ge 1000\ \text{ppm}$ | `fan_pct = 100`, ไฟ RGB = สีแดง, `co2_level = 2` |
+| `S2: AIR_MODERATE` | `S1: AIR_GOOD` | $\text{CO}_2 < 800\ \text{ppm}$ (ผ่านจุดตัด Hysteresis ล่าง) | `fan_pct = 0`, ไฟ RGB = สีเขียว, `co2_level = 0` |
+| `S3: AIR_POOR` | `S2: AIR_MODERATE` | $800 \le \text{CO}_2 < 950\ \text{ppm}$ (เริ่มระบายอากาศได้ผล) | ลดรอบพัดลมเป็น `fan_pct = 60`, ไฟ RGB = สีเหลือง, `co2_level = 1` |
+| `S3: AIR_POOR` | `S1: AIR_GOOD` | $\text{CO}_2 < 800\ \text{ppm}$ (ระบายอากาศสะอาดสมบูรณ์) | `fan_pct = 0`, ไฟ RGB = สีเขียว, `co2_level = 0` |
 
-> **หมายเหตุเรื่องการแจ้งเตือนอุณหภูมิ (แยกอิสระจากสถานะพัดลม):**  
-> ในทุกๆ รอบการอ่านค่า (5 วินาที) หากมีคนอยู่ในห้อง (`room_occupied_count > 0`) และพบว่าอุณหภูมิห้องไม่อยู่ในช่วงเหมาะสม คือ $T < 20.0^\circ\text{C}$ หรือ $T > 26.0^\circ\text{C}$ (จากค่าที่เหมาะสมที่สุด $21-22^\circ\text{C}$ ตามงานวิจัย [5]) ระบบจะแนบสถานะแจ้งเตือนอุณหภูมิไปกับ `alert_request` เพื่อให้จอ OLED บนโต๊ะแจ้งให้ผู้ใช้ปรับเครื่องปรับอากาศ โดยระบบจะไม่ควบคุมแอร์โดยตรง
+> **ข้อกำหนดการทำงานเมื่อการเชื่อมต่อ Wi-Fi ขาดหาย (ตาม A1 ข้อ 4 และ NFR-06):**  
+> หาก `room_desks_online == 0` (เช่น Wi-Fi หลุด หรือโหนดโต๊ะดับ) โหนดห้องจะ **ไม่เข้าสู่สถานะ ROOM_EMPTY** เพราะไม่สามารถยืนยันได้ว่าห้องว่างจริง โหนดห้องจะตัดสินใจควบคุมพัดลมดูดอากาศตามระดับ $\text{CO}_2$ ที่วัดได้จริงอย่างอิสระ (Local Autonomous Resilience) เพื่อความปลอดภัยของผู้ใช้งานในห้อง
 
 ---
 
 ## 3. แผนภาพสถานะ (FSM State Diagram)
 
-*(สามารถนำโค้ด Mermaid ด้านล่างไป Render หรือวาดตามใน draw.io เพื่อส่งออกเป็นไฟล์ PNG ไว้ใน `07_visuals/` ได้ทันที)*
-
 ```mermaid
 stateDiagram-v2
     [*] --> S0_ROOM_EMPTY : เริ่มต้นระบบ
 
-    S0_ROOM_EMPTY : S0 - ROOM_EMPTY\nFan PWM = 0% | LED = ปิด\n(ประหยัดพลังงานเมื่อไม่มีคน)
-    S1_AIR_GOOD : S1 - AIR_GOOD\nCO2 < 800 ppm\nFan PWM = 0% | LED = สีเขียว (level 0)
-    S2_AIR_MODERATE : S2 - AIR_MODERATE\n800 <= CO2 < 1000 ppm\nFan PWM = 0% (ขาขึ้น) หรือ 60% (ขาลง)\nLED = สีเหลือง (level 1)
-    S3_AIR_POOR : S3 - AIR_POOR_VENTILATING\nCO2 >= 1000 ppm\nFan PWM = 100% | LED = สีแดง (level 2)\nส่ง alert_request = CO2_HIGH
-    S4_SENSOR_FAULT : S4 - SENSOR_FAULT (Fail-Safe)\nอ่านค่าไม่ได้ >= 3 ครั้ง หรือค่าผิดปกติ\nFan PWM = 80% | LED = กะพริบแดง\nส่ง alert_request = AIR_SENSOR_ERR
+    S0_ROOM_EMPTY : S0 - ROOM_EMPTY\nfan_pct = 0% | LED = ปิด\n(room_desks_online > 0 && occupied == 0)
+    S1_AIR_GOOD : S1 - AIR_GOOD\nCO2 < 800 ppm\nfan_pct = 0% | LED = สีเขียว\nco2_level = 0, sensor_ok = true
+    S2_AIR_MODERATE : S2 - AIR_MODERATE\n800 <= CO2 < 1000 ppm\nfan_pct = 0% (ขาขึ้น) หรือ 60% (ขาลง Hysteresis)\nLED = สีเหลือง | co2_level = 1
+    S3_AIR_POOR : S3 - AIR_POOR_VENTILATING\nCO2 >= 1000 ppm\nfan_pct = 100% | LED = สีแดง\nco2_level = 2
+    S4_SENSOR_FAULT : S4 - SENSOR_FAULT (Fail-Safe)\nอ่านเซนเซอร์ล้มเหลว >= 3 ครั้ง\nfan_pct = 80% | LED = กะพริบแดง\nsensor_ok = false
 
-    S0_ROOM_EMPTY --> S1_AIR_GOOD : มีคนเข้าห้อง (occupied > 0)\nและ CO2 < 800
-    S0_ROOM_EMPTY --> S2_AIR_MODERATE : มีคนเข้าห้อง (occupied > 0)\nและ 800 <= CO2 < 1000
-    S0_ROOM_EMPTY --> S3_AIR_POOR : มีคนเข้าห้อง (occupied > 0)\nและ CO2 >= 1000
+    S0_ROOM_EMPTY --> S1_AIR_GOOD : มีคน (occupied > 0 หรือ desks_online == 0)\nและ CO2 < 800 ppm
+    S0_ROOM_EMPTY --> S2_AIR_MODERATE : มีคน และ 800 <= CO2 < 1000 ppm
+    S0_ROOM_EMPTY --> S3_AIR_POOR : มีคน และ CO2 >= 1000 ppm
 
     S1_AIR_GOOD --> S2_AIR_MODERATE : CO2 >= 800 ppm (ขาขึ้น)
     S1_AIR_GOOD --> S3_AIR_POOR : CO2 >= 1000 ppm
     S2_AIR_MODERATE --> S3_AIR_POOR : CO2 >= 1000 ppm
-    S3_AIR_POOR --> S2_AIR_MODERATE : CO2 < 950 ppm\n(ลดพัดลมเหลือ 60% ทำ Hysteresis)
-    S2_AIR_MODERATE --> S1_AIR_GOOD : CO2 < 800 ppm\n(ปิดพัดลม 0% จบรอบ Hysteresis)
+    S3_AIR_POOR --> S2_AIR_MODERATE : CO2 < 950 ppm (ลดรอบพัดลมเหลือ 60%)
+    S2_AIR_MODERATE --> S1_AIR_GOOD : CO2 < 800 ppm (ปิดพัดลมสมบูรณ์)
     S3_AIR_POOR --> S1_AIR_GOOD : CO2 < 800 ppm
 
-    S1_AIR_GOOD --> S0_ROOM_EMPTY : ห้องว่าง (room_occupied_count == 0)
-    S2_AIR_MODERATE --> S0_ROOM_EMPTY : ห้องว่าง (room_occupied_count == 0)
-    S3_AIR_POOR --> S0_ROOM_EMPTY : ห้องว่าง (room_occupied_count == 0)
+    S1_AIR_GOOD --> S0_ROOM_EMPTY : desks_online > 0 && occupied == 0
+    S2_AIR_MODERATE --> S0_ROOM_EMPTY : desks_online > 0 && occupied == 0
+    S3_AIR_POOR --> S0_ROOM_EMPTY : desks_online > 0 && occupied == 0
 
-    S0_ROOM_EMPTY --> S4_SENSOR_FAULT : เซนเซอร์ขัดข้อง >= 3 ครั้ง
-    S1_AIR_GOOD --> S4_SENSOR_FAULT : เซนเซอร์ขัดข้อง >= 3 ครั้ง
-    S2_AIR_MODERATE --> S4_SENSOR_FAULT : เซนเซอร์ขัดข้อง >= 3 ครั้ง
-    S3_AIR_POOR --> S4_SENSOR_FAULT : เซนเซอร์ขัดข้อง >= 3 ครั้ง
+    S0_ROOM_EMPTY --> S4_SENSOR_FAULT : เซนเซอร์ล้มเหลว >= 3 ครั้ง
+    S1_AIR_GOOD --> S4_SENSOR_FAULT : เซนเซอร์ล้มเหลว >= 3 ครั้ง
+    S2_AIR_MODERATE --> S4_SENSOR_FAULT : เซนเซอร์ล้มเหลว >= 3 ครั้ง
+    S3_AIR_POOR --> S4_SENSOR_FAULT : เซนเซอร์ล้มเหลว >= 3 ครั้ง
     S4_SENSOR_FAULT --> S1_AIR_GOOD : เซนเซอร์กลับมาอ่านค่าได้ปกติ
 ```
 
+*(หมายเหตุ: ไฟล์ภาพ PNG ของแผนภาพ FSM ถูกบันทึกไว้ที่ `07_visuals/C2_fsm_air_quality.png`)*
+
 ---
 
-## 4. รหัสเทียม (Pseudocode)
+## 4. รหัสเทียม (Pseudocode สำหรับ A นำไปเขียนโค้ด FreeRTOS)
 
-```text
+```c
 // ============================================================================
-// โมดูลควบคุมคุณภาพอากาศและพัดลมระบายอากาศ (โหนดห้อง - Room Node)
-// ทำงานทุกๆ 5,000 ms (5 วินาที) ภายใต้ระบบปฏิบัติการ FreeRTOS
+// โมดูลตรวจวัดคุณภาพอากาศและควบคุมการระบายอากาศ (โหนดห้อง - Room Node)
+// ฟังก์ชันงานย่อย FreeRTOS: Task_AirQuality (Period = 5000 ms)
+// โครงสร้างข้อมูลยึดตาม A1_interface.md v1.0 และข้อกำหนด D1
 // ============================================================================
 
-CONST CO2_THRESHOLD_HIGH = 1000      // ค่าเริ่มเปิดพัดลมเต็มกำลัง [อ้างอิง 2]
-CONST CO2_THRESHOLD_HYST_MID = 950   // ค่าเริ่มลดความเร็วพัดลมลงมาที่ระดับกลาง
-CONST CO2_THRESHOLD_LOW  = 800       // ค่าปิดพัดลม (Hysteresis band = 200 ppm)
-CONST TEMP_OPTIMAL_MIN   = 20.0      // อุณหภูมิต่ำสุดที่ยอมรับได้ (เหมาะสมที่สุด 21-22°C [อ้างอิง 5])
-CONST TEMP_OPTIMAL_MAX   = 26.0      // อุณหภูมิสูงสุดก่อนเตือน
-CONST MAX_SENSOR_ERRORS  = 3         // จำนวนครั้งที่อ่านพลาดติดต่อกันก่อนเข้า Fail-safe
+#define CO2_HIGH_LIMIT       1000   // เกณฑ์เปิดพัดลมดูดอากาศเต็มกำลัง [FR-13]
+#define CO2_HYST_MID         950    // เกณฑ์ลดความเร็วรอบพัดลมลงมาที่ระดับกลาง
+#define CO2_LOW_LIMIT        800    // เกณฑ์ปิดพัดลมสมบูรณ์ (Hysteresis Band = 200 ppm)
+#define TEMP_LOW_LIMIT_X10   200    // 20.0 °C (เตือนเมื่อ temp_c_x10 < 200) [FR-17]
+#define TEMP_HIGH_LIMIT_X10  260    // 26.0 °C (เตือนเมื่อ temp_c_x10 > 260) [FR-17]
+#define MAX_SENSOR_FAULTS    3      // จำนวนรอบที่อ่านล้มเหลวติดต่อกันก่อนเข้า Fail-Safe [NFR-07]
 
-STATE current_state = S0_ROOM_EMPTY
-INT sensor_error_count = 0
-BOOL fan_was_active = FALSE          // ตัวแปรจำสถานะ Hysteresis ขาลง
+// โครงสร้างข้อมูลกลางตาม A1_interface.md v1.0
+typedef struct {
+    uint16_t co2_ppm;       // ความเข้มข้น CO2 (ppm)
+    int16_t  temp_c_x10;    // อุณหภูมิ x 10 (เช่น 235 = 23.5 °C)
+    uint8_t  rh_pct;        // ความชื้นสัมพัทธ์ (%RH)
+    uint8_t  co2_level;     // ระดับเตือน CO2: 0 ดี / 1 เริ่มแย่ / 2 แย่
+    uint8_t  temp_flag;     // อุณหภูมิ: 0 ปกติ / 1 เย็นเกิน (<20°C) / 2 ร้อนเกิน (>26°C)
+    bool     sensor_ok;     // สถานะเซนเซอร์: true = ปกติ, false = ขัดข้อง
+    uint8_t  fan_pct;       // ความเร็วรอบพัดลมดูดอากาศ: 0 - 100%
+} air_status_t;
 
-TASK AirQuality_And_Fan_Task (ทำงานทุก 5000 ms):
-    LOOP FOREVER:
-        // --- ส่วนที่ 1: อ่านค่าจากเซนเซอร์ SCD41 ผ่าน I2C พร้อม Mutex Lock ---
-        ACQUIRE_MUTEX(i2c_lock, timeout = 100 ms)
-        IF lock_acquired THEN
-            (read_ok, co2, temp, hum) = READ_SCD41_SENSOR()
-            RELEASE_MUTEX(i2c_lock)
-        ELSE
-            read_ok = FALSE
-        END IF
+typedef enum {
+    STATE_ROOM_EMPTY = 0,
+    STATE_AIR_GOOD,
+    STATE_AIR_MODERATE,
+    STATE_AIR_POOR,
+    STATE_SENSOR_FAULT
+} room_fsm_state_t;
 
-        // --- ส่วนที่ 2: ตรวจสอบความถูกต้องของข้อมูล (Fault Detection) ---
-        IF (read_ok == FALSE) OR (co2 < 300) OR (co2 > 10000) OR (temp < -10) OR (temp > 60) THEN
-            sensor_error_count = sensor_error_count + 1
-        ELSE
-            sensor_error_count = 0
-        END IF
+// ตัวแปรส่วนกลาง (Shared Variables)
+air_status_t     air_status;
+room_fsm_state_t current_state = STATE_ROOM_EMPTY;
+uint8_t          sensor_fault_count = 0;
+bool             fan_was_ventilating = false;
 
-        // --- ส่วนที่ 3: ประมวลผลสถานะ (FSM State Evaluation & Transition) ---
-        IF sensor_error_count >= MAX_SENSOR_ERRORS THEN
-            current_state = S4_SENSOR_FAULT
-        ELSE IF room_occupied_count == 0 THEN
-            current_state = S0_ROOM_EMPTY
-            fan_was_active = FALSE
-        ELSE
-            // กรณีมีคนอยู่ในห้องและเซนเซอร์ปกติ
-            IF co2 >= CO2_THRESHOLD_HIGH THEN
-                current_state = S3_AIR_POOR
-                fan_was_active = TRUE
-            ELSE IF co2 < CO2_THRESHOLD_LOW THEN
-                current_state = S1_AIR_GOOD
-                fan_was_active = FALSE
-            ELSE
-                // ช่วง 800 <= CO2 < 1000 ppm (Hysteresis Zone)
-                IF (current_state == S3_AIR_POOR) AND (co2 >= CO2_THRESHOLD_HYST_MID) THEN
-                    current_state = S3_AIR_POOR   // ยังคงเร่งพัดลม 100% จนกว่าจะลดต่ำกว่า 950 ppm
-                ELSE
-                    current_state = S2_AIR_MODERATE
-                END IF
-            END IF
-        END IF
+void Task_AirQuality(void *pvParameters) {
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    const TickType_t xPeriod = pdMS_TO_TICKS(5000); // ทำงานทุก 5,000 ms
 
-        // --- ส่วนที่ 4: สั่งการอุปกรณ์ขับเคลื่อน (Actuator & LED Output) ---
-        SWITCH (current_state):
-            CASE S0_ROOM_EMPTY:
-                SET_FAN_PWM(0%)
-                SET_RGB_LED(OFF)
-                air_status.level = 0
-                
-            CASE S1_AIR_GOOD:
-                SET_FAN_PWM(0%)
-                SET_RGB_LED(GREEN)
-                air_status.level = 0
+    for (;;) {
+        bool read_success = false;
+        uint16_t raw_co2 = 0;
+        int16_t raw_temp_x10 = 0;
+        uint8_t raw_rh = 0;
 
-            CASE S2_AIR_MODERATE:
-                IF fan_was_active == TRUE THEN
-                    SET_FAN_PWM(60%)     // ขาลงจาก S3: หมุนพัดลมต่อแบบเบาจนกว่าจะต่ำกว่า 800 ppm
-                ELSE
-                    SET_FAN_PWM(0%)      // ขาขึ้นจาก S1: ยังไม่เปิดพัดลม แต่แสดงไฟเหลืองเตือน
-                END IF
-                SET_RGB_LED(YELLOW)
-                air_status.level = 1
+        // 1. อ่านข้อมูลเซนเซอร์ SCD41 ผ่าน I2C บัส พร้อม Mutex Protection
+        if (xSemaphoreTake(i2c_lock, pdMS_TO_TICKS(50)) == pdTRUE) {
+            read_success = SCD41_ReadMeasurement(&raw_co2, &raw_temp_x10, &raw_rh);
+            xSemaphoreGive(i2c_lock);
+        } else {
+            read_success = false; // รอล็อกเกิน 50 ms ถือเป็นความผิดพลาด
+        }
 
-            CASE S3_AIR_POOR:
-                SET_FAN_PWM(100%)
-                SET_RGB_LED(RED)
-                air_status.level = 2
-                SEND_ALERT(alert_request = "CO2_HIGH_VENTILATING")
+        // 2. ตรวจสอบความถูกต้องของข้อมูล (Sanity Check & Fault Detection)
+        if (!read_success || raw_co2 < 300 || raw_co2 > 5000) {
+            if (sensor_fault_count < MAX_SENSOR_FAULTS) {
+                sensor_fault_count++;
+            }
+        } else {
+            sensor_fault_count = 0; // รีเซ็ตตัวนับเมื่ออ่านสำเร็จ
+            air_status.co2_ppm = raw_co2;
+            air_status.temp_c_x10 = raw_temp_x10;
+            air_status.rh_pct = raw_rh;
+        }
 
-            CASE S4_SENSOR_FAULT:
-                SET_FAN_PWM(80%)         // Fail-Safe: บังคับระบายอากาศไว้ก่อนเพื่อความปลอดภัย
-                SET_RGB_LED(BLINK_RED)
-                air_status.level = 2
-                SEND_ALERT(alert_request = "AIR_SENSOR_ERROR")
-        END SWITCH
+        // 3. ประมวลผลและเปลี่ยนสถานะ FSM
+        if (sensor_fault_count >= MAX_SENSOR_FAULTS) {
+            current_state = STATE_SENSOR_FAULT;
+        } else if (room_desks_online > 0 && room_occupied_count == 0) {
+            // ห้องว่างเฉพาะเมื่อมีการต่อโต๊ะอยู่และทุกโต๊ะไม่มีคน [FR-15, A1 ข้อ 4]
+            current_state = STATE_ROOM_EMPTY;
+            fan_was_ventilating = false;
+        } else {
+            // กรณีมีคนอยู่ในห้อง หรือ Wi-Fi หลุด (room_desks_online == 0 ให้คุมต่อตาม NFR-06)
+            if (air_status.co2_ppm >= CO2_HIGH_LIMIT) {
+                current_state = STATE_AIR_POOR;
+                fan_was_ventilating = true;
+            } else if (air_status.co2_ppm < CO2_LOW_LIMIT) {
+                current_state = STATE_AIR_GOOD;
+                fan_was_ventilating = false;
+            } else {
+                // ช่วงเฝ้าระวัง Hysteresis (800 <= CO2 < 1000 ppm)
+                if (fan_was_ventilating && air_status.co2_ppm >= CO2_HYST_MID) {
+                    current_state = STATE_AIR_POOR; // คงรอบ 100% จนกว่าจะต่ำกว่า 950 ppm
+                } else {
+                    current_state = STATE_AIR_MODERATE;
+                }
+            }
+        }
 
-        // --- ส่วนที่ 5: ตรวจสอบอุณหภูมิห้อง (เตือนอย่างเดียว ไม่คุมแอร์) ---
-        IF (current_state != S4_SENSOR_FAULT) AND (room_occupied_count > 0) THEN
-            IF (temp > TEMP_OPTIMAL_MAX) THEN
-                SEND_ALERT(alert_request = "TEMP_TOO_HIGH")
-            ELSE IF (temp < TEMP_OPTIMAL_MIN) THEN
-                SEND_ALERT(alert_request = "TEMP_TOO_LOW")
-            END IF
-        END IF
+        // 4. สั่งการ Actuator และอัปเดตฟิลด์ใน air_status (ไม่มี SEND_ALERT ในโหนดห้อง)
+        switch (current_state) {
+            case STATE_ROOM_EMPTY:
+                air_status.fan_pct = 0;
+                air_status.co2_level = 0;
+                air_status.sensor_ok = true;
+                Set_Fan_PWM_Duty(0);
+                Set_RGB_LED(COLOR_OFF);
+                break;
 
-        // --- ส่วนที่ 6: อัปเดตตารางข้อมูลกลางเพื่อส่งข้าม Wi-Fi ---
-        air_status.co2_ppm = co2
-        air_status.temperature_c = temp
-        air_status.humidity_rh = hum
+            case STATE_AIR_GOOD:
+                air_status.fan_pct = 0;
+                air_status.co2_level = 0;
+                air_status.sensor_ok = true;
+                Set_Fan_PWM_Duty(0);
+                Set_RGB_LED(COLOR_GREEN);
+                break;
 
-        WAIT_UNTIL_NEXT_PERIOD(5000 ms)
-    END LOOP
+            case STATE_AIR_MODERATE:
+                if (fan_was_ventilating) {
+                    air_status.fan_pct = 60; // ขาลง: หมุนต่อแบบเบาช่วยดึง CO2 ให้พ้นเกณฑ์
+                } else {
+                    air_status.fan_pct = 0;  // ขาขึ้น: ยังไม่เปิดพัดลม
+                }
+                air_status.co2_level = 1;
+                air_status.sensor_ok = true;
+                Set_Fan_PWM_Duty(air_status.fan_pct);
+                Set_RGB_LED(COLOR_YELLOW);
+                break;
+
+            case STATE_AIR_POOR:
+                air_status.fan_pct = 100;    // เร่งระบายอากาศเต็มกำลัง
+                air_status.co2_level = 2;
+                air_status.sensor_ok = true;
+                Set_Fan_PWM_Duty(100);
+                Set_RGB_LED(COLOR_RED);
+                break;
+
+            case STATE_SENSOR_FAULT:
+                air_status.fan_pct = 80;     // Fail-Safe: บังคับระบายอากาศเพื่อความปลอดภัย
+                air_status.co2_level = 2;
+                air_status.sensor_ok = false; // แฟล็กแจ้งโต๊ะว่าเซนเซอร์เสีย
+                Set_Fan_PWM_Duty(80);
+                Set_RGB_LED(COLOR_BLINK_RED);
+                break;
+        }
+
+        // 5. ตรวจสอบสถานะอุณหภูมิห้อง (ตั้งค่า temp_flag ตามเกณฑ์ D1 [FR-17])
+        if (air_status.sensor_ok) {
+            if (air_status.temp_c_x10 < TEMP_LOW_LIMIT_X10) {
+                air_status.temp_flag = 1; // อุณหภูมิต่ำกว่า 20.0 °C (เย็นเกินไป)
+            } else if (air_status.temp_c_x10 > TEMP_HIGH_LIMIT_X10) {
+                air_status.temp_flag = 2; // อุณหภูมิสูงกว่า 26.0 °C (ร้อนเกินไป)
+            } else {
+                air_status.temp_flag = 0; // อุณหภูมิอยู่ในเกณฑ์เหมาะสม (20.0 - 26.0 °C)
+            }
+        } else {
+            air_status.temp_flag = 0;
+        }
+
+        // 6. รอจนครบรอบคาบเวลาถัดไป (5 วินาที)
+        vTaskDelayUntil(&xLastWakeTime, xPeriod);
+    }
+}
 ```
 
 ---
 
-## 5. ค่าที่ใช้และที่มา (Thresholds & Justifications)
+## 5. ข้อมูลการเชื่อมต่อและตัวแปรกลาง (ตรงตาม A1_interface.md v1.0)
 
-| พารามิเตอร์ | ค่าที่กำหนด | เหตุผลและแหล่งอ้างอิง |
-|---|---|---|
-| **เกณฑ์เปิดพัดลมดูดอากาศ ($\text{CO}_2$ สูง)** | $\ge 1000\ \text{ppm}$ | อ้างอิงงานวิจัยของ Satish et al. [2] พบว่าที่ความเข้มข้น $\text{CO}_2$ ระดับ $1000\ \text{ppm}$ ประสิทธิภาพการตัดสินใจของมนุษย์ลดลงอย่างมีนัยสำคัญใน 6 จาก 9 ด้าน และตรงกับเกณฑ์แนะนำของมาตรฐาน ASHRAE สำหรับห้องทำงาน |
-| **เกณฑ์ปิดพัดลม ($\text{CO}_2$ ปกติ - Hysteresis)** | $< 800\ \text{ppm}$ | กำหนดช่วงต่าง (Hysteresis band) กว้าง $200\ \text{ppm}$ ($1000 \rightarrow 800\ \text{ppm}$) เพื่อป้องกันปรากฏการณ์ **Chattering / Rapid Cycling** คือการที่พัดลมเปิด-ปิดสลับกันถี่ๆ เมื่อค่า $\text{CO}_2$ แกว่งอยู่บริเวณ $999 - 1001\ \text{ppm}$ ซึ่งจะทำให้มอเตอร์พัดลมสึกหรอและเกิดเสียงรบกวนสมาธิผู้ใช้ นอกจากนี้ที่ระดับ $< 800\ \text{ppm}$ ยังสอดคล้องกับงานวิจัยของ Allen et al. [1] ที่ระบุว่าสมองทำงานได้เต็มประสิทธิภาพ |
-| **เกณฑ์อุณหภูมิที่เหมาะสม** | $21 - 22^\circ\text{C}$ (เตือนเมื่อ $< 20^\circ\text{C}$ หรือ $> 25^\circ\text{C}$) | อ้างอิงงานวิจัยของ Seppänen et al. [5] ที่พบว่าประสิทธิภาพการทำงานในออฟฟิศสูงสุดอยู่ที่ช่วง $21 - 22^\circ\text{C}$ และจะเริ่มลดลงอย่างชัดเจนเมื่ออุณหภูมิสูงเกิน $25^\circ\text{C}$ |
-| **คาบสัญญาณ PWM ของพัดลม** | $20\ \text{ms}$ ($50\ \text{Hz}$) | อ้างอิงสไลด์ **บทที่ 13 หน้า 95** ที่ระบุว่าคาบสัญญาณ PWM ที่เหมาะสมสำหรับการควบคุมความเร็วมอเตอร์กระแสตรง (DC Motor) อยู่ในช่วง $5 - 20\ \text{ms}$ |
-| **ความถี่ในการอ่านค่าและควบคุม** | ทุก $5\ \text{วินาที}$ ($5000\ \text{ms}$) | ก๊าซ $\text{CO}_2$ และอุณหภูมิในห้องมีการเปลี่ยนแปลงอย่างช้าๆ (Slow physical dynamics) และสอดคล้องกับคาบการวัดแบบ Periodic measurement ของเซนเซอร์ SCD41 (5 วินาทีต่อครั้ง) ช่วยลดการใช้พลังงานและไม่แย่งเวลา CPU จากงานที่ต้องการ Real-time สูง |
-
----
-
-## 6. ข้อมูลรับเข้าและส่งออก (Interface ตามตารางข้อมูลกลาง A1)
-
-| ทิศทาง | ชื่อข้อมูลในตารางกลาง | ชนิดข้อมูล | รายละเอียดการใช้งานในโมดูล C |
+| ทิศทาง | ชื่อข้อมูลในตารางกลาง | ชนิดข้อมูล | การใช้งานในโมดูลอากาศ (โหนดห้อง) |
 |---|---|---|---|
-| **รับเข้า (Input)** | `room_occupied_count` | ตัวเลขจำนวนเต็ม (`int`) | รับจากโหนดห้อง (ที่ A รวบรวมจากทุกโต๊ะ) ทุก 5 วินาที ถ้าเท่ากับ `0` จะเข้าสู่สถานะ `S0_ROOM_EMPTY` เพื่อปิดพัดลมประหยัดไฟ |
-| **รับเข้า/ใช้ร่วม** | `i2c_lock` | `Mutex` | ใช้ล็อกบัส I²C ก่อนอ่านค่าจาก SCD41 ทุกครั้งเพื่อป้องกันข้อมูลชนกัน |
-| **ส่งออก (Output)** | `air_status` | ชุดข้อมูล (`struct`: `co2`, `temp`, `hum`, `level`) | อัปเดตทุก 5 วินาที เพื่อให้ A ส่งข้าม Wi-Fi ไปแสดงผลบนจอ OLED ของโหนดโต๊ะ (โมดูล B) |
-| **ส่งออก (Output)** | `alert_request` | ข้อความ/รหัสเตือน (`enum/string`) | ส่งคำขอเตือนเมื่อเกิดเหตุการณ์สำคัญ ได้แก่ `"CO2_HIGH"`, `"TEMP_TOO_HIGH"`, `"TEMP_TOO_LOW"`, และ `"AIR_SENSOR_ERROR"` |
-
----
-
-## 7. การรับมือกรณีผิดพลาด (Fault Handling & Fail-Safe Design)
-
-ออกแบบตามหลักการ **ตรวจจับ $\rightarrow$ ตอบสนอง $\rightarrow$ แจ้งเตือน** ในสไลด์ **บทที่ 6 หัวข้อ 6.2.3 หน้า 22–26**:
-1. **การตรวจจับ (Fault Detection):**
-   - ตรวจสอบสถานะการสื่อสาร I²C (ACK/NACK timeout และ CRC checksum ของ SCD41)
-   - ตรวจสอบความสมเหตุสมผลของข้อมูล (Sanity Check / Range Check): หากค่า $\text{CO}_2 < 300\ \text{ppm}$ (ต่ำกว่าอากาศธรรมชาติบนโลกที่เป็นไปไม่ได้) หรือ $> 10,000\ \text{ppm}$ หรืออ่านค่าไม่สำเร็จติดต่อกันครบ **3 ครั้ง (15 วินาที)** เพื่อกรองสัญญาณรบกวนชั่วคราว (Transient fault)
-2. **การตอบสนองอย่างปลอดภัย (Fail-Safe Response):**
-   - แทนที่จะสั่งปิดพัดลมซึ่งอาจทำให้ก๊าซ $\text{CO}_2$ สะสมในห้องปิดจนเป็นอันตรายต่อผู้ใช้งานโดยไม่มีใครรู้ ระบบจะเข้าสู่โหมด **Fail-Safe (Safe State)** โดยสั่งเปิดพัดลมดูดอากาศที่ความเร็ว **80%** อัตโนมัติ เพื่อรับประกันว่าห้องยังมีการระบายอากาศอย่างต่อเนื่อง
-3. **การแจ้งเตือนและการกู้คืน (Notification & Recovery):**
-   - สั่งไฟสถานะ RGB บนโหนดห้องให้ **กะพริบสีแดง** และส่ง `alert_request = "AIR_SENSOR_ERROR"` ไปแสดงข้อความแจ้งเตือนบนหน้าจอ OLED ที่โต๊ะทำงาน
-   - ระบบยังคงพยายามส่งคำสั่งอ่านค่าเซนเซอร์ใหม่ทุก 5 วินาที (Self-recovery) หากเซนเซอร์กลับมาส่งค่าปกติติดต่อกัน 2 ครั้ง ระบบจะยกเลิกโหมด Fail-Safe และกลับเข้าสู่สถานะทำงานปกติโดยไม่ต้องเปิด-ปิดเครื่องใหม่
+| **รับเข้า** | `room_occupied_count` | `uint8_t` | จำนวนโต๊ะที่มีคนนั่งทำงานจริงในห้อง รับจากงานสื่อสาร Wi-Fi ของ A |
+| **รับเข้า** | `room_desks_online` | `uint8_t` | จำนวนโต๊ะที่ยังส่งสัญญาณติดต่อได้ หากเป็น 0 แปลว่าไม่ทราบสถานะคน (ระบบจะคุมพัดลมตามค่า $\text{CO}_2$ ต่อไป ไม่ปิดพัดลม) |
+| **ใช้ร่วม** | `i2c_lock` | FreeRTOS Mutex | ตัวล็อกสาย I²C เพื่อป้องกันการชนกันระหว่างการอ่านค่า SCD41 รอล็อกได้ไม่เกิน 50 ms |
+| **ส่งออก** | `air_status` | `air_status_t` | ชุดข้อมูลโครงสร้างอากาศในห้อง อัปเดตทุก 5 วินาที เพื่อให้ A ส่งข้าม Wi-Fi ไปยังทุกโต๊ะ |
