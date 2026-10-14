@@ -1,0 +1,63 @@
+name: 'INT desk (real-time build): alerts from room, link lost / restore'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- wait-serial: MQTT connected
+- wait-serial: room/online=1
+- delay: 4s
+- write-serial: 'presence on
+
+    '
+- wait-serial: desk_report occ=1 (immediate)
+- delay: 2s
+- take-screenshot:
+    part-id: oled
+    save-to: out/int/01_working_link_ok.png
+- wait-serial: display alert CO2 HIGH
+- delay: 600ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/int/02_co2_high_from_room.png
+- write-serial: 'status
+
+    '
+- wait-serial: display alert SENSOR FAULT
+- delay: 600ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/int/03_room_sensor_fault.png
+- write-serial: 'status
+
+    '
+- delay: 16s
+- write-serial: 'status
+
+    '
+- write-serial: 'wifi off
+
+    '
+- wait-serial: link_ok=0
+- delay: 500ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/int/04_link_lost.png
+- write-serial: 'status
+
+    '
+- delay: 18s
+- write-serial: 'wifi on
+
+    '
+- wait-serial: link_ok=1
+- delay: 1500ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/int/05_link_restored.png
+- write-serial: 'status
+
+    '
+- write-serial: 'stats
+
+    '
+- delay: 1500ms

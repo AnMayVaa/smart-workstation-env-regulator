@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "author": "Group (010123119)",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "co2_pot",
+      "top": -110,
+      "left": -180,
+      "attrs": {
+        "value": "0"
+      }
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht",
+      "top": -120,
+      "left": 200,
+      "attrs": {
+        "temperature": "24",
+        "humidity": "55"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_fan",
+      "top": 40,
+      "left": 300,
+      "attrs": {
+        "color": "blue",
+        "label": "FAN"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_fan",
+      "top": 140,
+      "left": 230,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-rgb-led",
+      "id": "rgb",
+      "top": 40,
+      "left": 420,
+      "attrs": {
+        "common": "cathode"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_r",
+      "top": 160,
+      "left": 360,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_g",
+      "top": 160,
+      "left": 420,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_b",
+      "top": 160,
+      "left": 480,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-logic-analyzer",
+      "id": "la",
+      "top": 300,
+      "left": 220,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "co2_pot:SIG",
+      "esp:35",
+      "orange",
+      []
+    ],
+    [
+      "co2_pot:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "co2_pot:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "dht:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "dht:SDA",
+      "esp:4",
+      "green",
+      []
+    ],
+    [
+      "dht:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "r_fan:1",
+      "esp:25",
+      "blue",
+      []
+    ],
+    [
+      "r_fan:2",
+      "led_fan:A",
+      "blue",
+      []
+    ],
+    [
+      "led_fan:C",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "r_r:1",
+      "esp:18",
+      "red",
+      []
+    ],
+    [
+      "r_r:2",
+      "rgb:R",
+      "red",
+      []
+    ],
+    [
+      "r_g:1",
+      "esp:19",
+      "green",
+      []
+    ],
+    [
+      "r_g:2",
+      "rgb:G",
+      "green",
+      []
+    ],
+    [
+      "r_b:1",
+      "esp:23",
+      "blue",
+      []
+    ],
+    [
+      "r_b:2",
+      "rgb:B",
+      "blue",
+      []
+    ],
+    [
+      "rgb:COM",
+      "esp:GND.3",
+      "black",
+      []
+    ],
+    [
+      "la:D0",
+      "esp:25",
+      "blue",
+      []
+    ],
+    [
+      "la:GND",
+      "esp:GND.3",
+      "black",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

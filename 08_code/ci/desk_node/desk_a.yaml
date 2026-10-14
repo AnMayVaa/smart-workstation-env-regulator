@@ -1,0 +1,200 @@
+name: 'Desk A: settings menu, break alerts, ack, snooze limit'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- wait-serial: away_timeout=1
+- delay: 500ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/01_boot_status.png
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 1700ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- delay: 200ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/02_menu_lux_500.png
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- delay: 200ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/03_menu_lux_800.png
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 1700ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- delay: 200ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/04_menu_late_off.png
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- delay: 200ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/05_menu_late_on.png
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 1700ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- delay: 200ms
+- write-serial: 'status
+
+    '
+- write-serial: 'presence on
+
+    '
+- wait-serial: UNOCCUPIED -> WORKING
+- delay: 2s
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/06_working_sitting.png
+- wait-serial: display alert EYE BREAK
+- delay: 300ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/07_eye_break_alert.png
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- wait-serial: short press -> ack
+- wait-serial: display alert STAND UP
+- delay: 300ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/08_stand_alert.png
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 1700ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- wait-serial: long press -> snooze (snooze 1/2)
+- delay: 200ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/09_snoozed_1.png
+- wait-serial: snoozed STAND re-raised
+- delay: 200ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/10_stand_reraised_1.png
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 1700ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- wait-serial: long press -> snooze (snooze 2/2)
+- wait-serial: snoozed STAND re-raised
+- delay: 200ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/11_stand_reraised_2.png
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 1700ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- delay: 100ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/12_snooze_rejected_max2.png
+- write-serial: 'status
+
+    '
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- wait-serial: short press -> ack
+- delay: 300ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_a/13_after_ack.png
+- write-serial: 'status
+
+    '
+- write-serial: 'stats
+
+    '
+- delay: 1500ms

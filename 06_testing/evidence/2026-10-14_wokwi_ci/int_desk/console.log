@@ -1,0 +1,86 @@
+[wall    4.158] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall    4.390] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall   35.205] Starting simulation...
+[wall   35.590] ets Jul 29 2019 12:21:46
+[wall   35.590] 
+[wall   35.590] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall   35.590] configsip: 0, SPIWP:0xee
+[wall   35.590] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall   35.590] mode:DIO, clock div:2
+[wall   35.590] load:0x3fff0030,len:1156
+[wall   35.590] load:0x40078000,len:11456
+[wall   35.590] ho 0 tail 12 room 4
+[wall   35.590] load:0x40080400,len:2972
+[wall   35.590] entry 0x400805dc
+[wall   37.415] 
+[wall   37.440] === SWER desk node 1  (SIMULATION=1, TIME_SCALE=1) ===
+[wall   38.065] [    2.023] tasks started
+[wall   38.065] [INT desk (real-time build): alerts from room, link lost / restore] Expected text matched: "tasks started"
+[wall   38.238] ; type 'help' for test commands
+[wall   38.319] [    2.137] A: Wi-Fi up 10.13.37.2, SNTP started
+[wall   38.708] [    2.406] A: MQTT connected
+[wall   38.708] [INT desk (real-time build): alerts from room, link lost / restore] Expected text matched: "MQTT connected"
+[wall   38.784]  as swer-desk1-ae16
+[wall   40.971] [    4.518] A: room/online=1
+[wall   40.971] [INT desk (real-time build): alerts from room, link lost / restore] Expected text matched: "room/online=1"
+[wall   40.972] [INT desk (real-time build): alerts from room, link lost / restore] delay 4s
+[wall   45.377] [    8.551] TEST: presence forced ON
+[wall   46.534] [    9.622] B: UNOCCUPIED -> WORKING
+[wall   46.534] [    9.623] D: OFF -> REGULATING (B=0.0%)
+[wall   46.535] [    9.628] A: desk_report occ=1 (immediate)
+[wall   46.535] [INT desk (real-time build): alerts from room, link lost / restore] Expected text matched: "desk_report occ=1 (immediate)"
+[wall   46.535] [INT desk (real-time build): alerts from room, link lost / restore] delay 2s
+[wall   57.555] [   19.373] B: display alert CO2 HIGH
+[wall   57.555] [INT desk (real-time build): alerts from room, link lost / restore] Expected text matched: "display alert CO2 HIGH"
+[wall   57.555] [INT desk (real-time build): alerts from room, link lost / restore] delay 600ms
+[wall   57.686]  prio 1
+[wall   58.590] B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   58.590] D: state=REGULATING lux_now=503 B=50.6% r=0.500
+[wall   58.590] A: time_valid=0 00:00 link_ok=1 air: co2=1200 lvl=2 t=24.0 rh=55 tf=0 ok=1 fan=100 age=1s
+[wall   58.590] A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=5 air_rx=3 air_lost=0 bad=0 rssi=-97
+[wall   78.451] [   37.766] B: display alert SENSOR FAULT
+[wall   78.451] [INT desk (real-time build): alerts from room, link lost / restore] Expected text matched: "display alert SENSOR FAULT"
+[wall   78.451] [INT desk (real-time build): alerts from room, link lost / restore] delay 600ms
+[wall   78.595]  prio 2
+[wall   79.526] [INT desk (real-time build): alerts from room, link lost / restore] delay 16s
+[wall   79.630] B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   79.641] D: state=REGULATING lux_now=503 B=50.6% r=0.500
+[wall   79.641] A: time_valid=1 22:57 link_ok=1 air: co2=1200 lvl=2 t=24.0 rh=55 tf=0 ok=0 fan=80 age=0s
+[wall   79.641] A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=8 air_rx=7 air_lost=0 bad=0 rssi=-83
+[wall   98.843] B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   98.871] D: state=REGULATING lux_now=503 B=50.6% r=0.497
+[wall   98.871] A: time_valid=1 22:57 link_ok=1 air: co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=2s
+[wall   98.871] A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=11 air_rx=10 air_lost=0 bad=0 rssi=-80
+[wall   99.016] [   54.504] A: Wi-Fi OFF (test)
+[wall   99.017] [   54.504] A: link_ok=0
+[wall   99.017] [INT desk (real-time build): alerts from room, link lost / restore] Expected text matched: "link_ok=0"
+[wall   99.017] [INT desk (real-time build): alerts from room, link lost / restore] delay 500ms
+[wall   99.135] [   54.517] B: display alert LINK LOST prio 0
+[wall   99.739] [INT desk (real-time build): alerts from room, link lost / restore] delay 18s
+[wall   99.829] B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   99.829] D: state=REGULATING lux_now=503 B=50.6% r=0.497
+[wall   99.877] A: time_valid=1 22:57 link_ok=0 air: co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=3s
+[wall   99.877] A: wifi=0 mqtt=0 room_online=1 link_ok=0 reports=11 air_rx=10 air_lost=0 bad=0 rssi=0
+[wall  120.569] [   73.032] TEST: Wi-Fi allowed
+[wall  121.363] [   73.457] A: MQTT connected as swer-desk1-ae16
+[wall  122.040] [   74.078] A: room/online=1
+[wall  127.035] [   78.298] A: link_ok=1
+[wall  127.035] [INT desk (real-time build): alerts from room, link lost / restore] Expected text matched: "link_ok=1"
+[wall  127.035] [INT desk (real-time build): alerts from room, link lost / restore] delay 1500ms
+[wall  129.158] [INT desk (real-time build): alerts from room, link lost / restore] delay 1500ms
+[wall  129.253] B: state=WORKING occupied=1 sit=1min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall  129.253] D: state=REGULATING lux_now=503 B=50.6% r=0.493
+[wall  129.253] A: time_valid=1 22:57 link_ok=1 air: co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=5s
+[wall  129.292] A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=13 air_rx=12 air_lost=3 bad=0 rssi=-83
+[wall  129.292] ---- task statistics (measured) ----
+[wall  129.292] task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+[wall  129.292] presence_task               100    779       809       38  0.008090     0  1888
+[wall  129.292] button_event_task           100    778       194       24  0.001940     0  2188
+[wall  129.318] light_control_task          200    390     29335     1093  0.146675     0  1848
+[wall  129.318] display_alert_task          500    144     47327    41551  0.094654     0  2060
+[wall  129.318] break_timer_task           1000     78      1246       78  0.001246     0  3480
+[wall  129.318] desk_communication_task    1000     13      5186     4925  0.005186     0  5848
+[wall  129.345] Total U (WCET-based) = 25.7791%   RMS bound n=6: 73.48%
+[wall  129.345] heap free=216076  min_free=205228  TIME_SCALE=1
+[wall  130.947] [INT desk (real-time build): alerts from room, link lost / restore] Scenario completed successfully
+[wall  133.204] VCD file written to: out/int/logic_analyzer.vcd

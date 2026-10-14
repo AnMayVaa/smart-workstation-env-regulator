@@ -2,7 +2,7 @@
 
 | รายการ | ค่า |
 |---|---|
-| เวอร์ชัน | v1.0 |
+| เวอร์ชัน | v1.1 (ปรับตามผลทดสอบ A5: keepalive, อายุข้อมูล, `seq`, จังหวะนับโต๊ะ) |
 | วันที่ | 2026-10-14 |
 | เจ้าของ | A |
 | ส่งให้ | B (งานย่อยด้านสื่อสารใน B3), D (เล่มหัวข้อ 5), C (พฤติกรรมเมื่อโต๊ะหลุด) |
@@ -112,7 +112,7 @@ sequenceDiagram
   participant M as MQTT broker
   participant R as โหนดห้อง
   Note over D: Wi-Fi หลุด / ไฟดับ
-  M--xD: ไม่ได้ข้อความภายใน 1.5 × keepalive (≈ 22 วินาที)
+  M--xD: ไม่ได้ข้อความภายใน 1.5 × keepalive (15 s → ≈ 22 วินาที)
   M->>R: desk/1/online = 0 (LWT)
   R->>R: ตัด desk 1 ออกจาก room_desks_online และ room_occupied_count
   Note over R: ถ้า room_desks_online = 0 → C คุมพัดลมตาม CO₂ ต่อ (A1 ข้อ 4)
@@ -126,9 +126,13 @@ sequenceDiagram
 | ไม่ได้ `room/air` เกิน 15 วินาที แต่ยังต่อ broker ได้ | อายุของ `air_status` (`age_s > 15`) | เหมือนแถวบน และขึ้น "ไม่มีข้อมูลอากาศ" | — | เหมือนแถวบน |
 | โต๊ะหนึ่งไม่ส่ง `report` เกิน 3 × `iv` หรือได้ LWT `0` | เวลาที่ได้รับล่าสุดของโต๊ะนั้น | — | ตัดโต๊ะนั้นออกจากการนับ | — |
 | ข้อความเสีย (JSON อ่านไม่ได้ หรือค่าเกินช่วง) | ตรวจรูปแบบและช่วงค่าทุกข้อความ | ทิ้งข้อความ ใช้ค่าเดิม นับ error | ทิ้งข้อความ นับ error | บันทึกใน Serial log |
-| `seq` กระโดด | `seq` ใหม่ ≠ เดิม + 1 | นับจำนวนข้อความที่หาย (ใช้ในผลทดสอบ A5) | เหมือนกัน | — |
+| `seq` กระโดด | `seq` ใหม่ ≠ เดิม + 1 | ช่องว่าง < 1,000 นับเป็นข้อความที่หาย (ใช้ในผลทดสอบ A5) · ช่องว่าง ≥ 1,000 หรือ `seq` ย้อนกลับ = ผู้ส่งรีสตาร์ต / ได้ข้อความ retained ซ้ำ ไม่นับ | เหมือนกัน | — |
 
 **การต่อกลับ:** ลองต่อใหม่แบบเว้นช่วงเพิ่มขึ้นเรื่อยๆ 1, 2, 4, 8, … สูงสุด 60 วินาที (exponential backoff) เพื่อไม่ให้ทุกโหนดรุมต่อ router พร้อมกันตอนไฟกลับมา งานสื่อสารเป็นงานเดียวที่รอเครือข่าย และรอแบบ block โดยไม่ถือ mutex งานอื่นจึงไม่ช้าลง
+
+**keepalive และการตรวจโต๊ะหลุด:** บอร์ดจริงตั้ง MQTT keepalive 15 วินาที (broker ประกาศ LWT ภายใน ≈ 22 วินาที) · ใน Wokwi ตั้ง 60 วินาที (`SIMULATION 1`) เพราะการจำลองช้ากว่าเวลาจริงราว 0.3–0.7 เท่า keepalive 15 วินาทีของระบบจำลองจึงยาวเกินเวลาที่ broker รอ ทำให้หลุดเอง (A5 bug 9) · โหนดห้องไม่ได้พึ่ง LWT อย่างเดียว ตัดโต๊ะที่ไม่ส่ง `report` เกิน 3 × `iv` ด้วย ผล A5: โต๊ะปิด Wi-Fi แล้วห้องตัดออกหลังเงียบ ≈ 16 วินาที
+
+**จังหวะนับโต๊ะ:** `air_sensor_task` (C) เรียก `comm_update_counts()` ก่อนตัดสิน FSM ทุกรอบ ตัวนับโต๊ะจึงเป็นค่าของรอบเดียวกัน · ถ้านับหลังส่ง `room/air` อย่างเดียว FSM จะใช้ค่าที่เก่า 1 รอบ (5 วินาที) (A5 bug 8)
 
 ## 7. เวลาจริงจาก NTP (บท 16 หน้า 23–29)
 
@@ -182,7 +186,7 @@ loop forever:
     snap = read_snapshot(occupied, away_timeout)    // mutex สั้นๆ
     iv = snap.away_timeout ? IV_AWAY : IV_NORMAL
     mqtt_publish("…/desk/<ID>/report", {seq++, occ: snap.occupied, iv}, qos 0)
-    age = now - last_room_air_time
+    age = max(0, (int32)(now - last_room_air_time))   // signed: ข้อความที่มาในรอบนี้ทำให้ last > now ได้
     write_shared(air_status.age_s = age)
     new_link = (age <= STALE) and room_online
     if new_link != link_ok:
@@ -202,8 +206,11 @@ loop forever:
     wait_notify(from air_sensor_task, timeout = 5 s)   // ส่งหลังอ่าน SCD41 ทุกรอบ
     snap = read_snapshot(air_status)
     mqtt_publish("…/room/air", {seq++, snap fields}, qos 0, retain = true)
+    comm_update_counts()
+
+function comm_update_counts():                 // air_sensor_task เรียกก่อนตัดสิน FSM ทุกรอบด้วย
     online = 0; occupied = 0
-    for each desk in desks:
+    for each desk in desks:                    // ใต้ mutex ของตารางโต๊ะ
         alive = desk.online and (now - desk.last_seen) <= 3 × desk.iv
         if alive: online++; if desk.occ: occupied++
     write_shared(room_desks_online = online, room_occupied_count = occupied)

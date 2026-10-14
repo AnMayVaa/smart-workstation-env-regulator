@@ -1,0 +1,43 @@
+[wall    6.166] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall    6.421] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall    7.421] Starting simulation...
+[wall    7.932] ets Jul 29 2019 12:21:46
+[wall    7.932] 
+[wall    7.932] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall    7.932] configsip: 0, SPIWP:0xee
+[wall    7.932] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall    7.932] mode:DIO, clock div:2
+[wall    7.932] load:0x3fff0030,len:1156
+[wall    7.932] load:0x40078000,len:11456
+[wall    7.932] ho 0 tail 12 room 4
+[wall    7.932] load:0x40080400,len:2972
+[wall    7.932] entry 0x400805dc
+[wall    9.765] 
+[wall    9.765] === SWER desk node 1  (SIMULATION=1, TIME_SCALE=1) ===
+[wall   10.495] [    2.023] tasks started
+[wall   10.495] [MULTI desk 1: occupied] Expected text matched: "tasks started"
+[wall   10.676] ; type 'help' for test commands
+[wall   10.763] [    2.136] A: Wi-Fi up 10.13.37.2, SNTP started
+[wall   11.126] [    2.384] A: MQTT connected
+[wall   11.126] [MULTI desk 1: occupied] Expected text matched: "MQTT connected"
+[wall   11.203]  as swer-desk1-8861
+[wall   29.790] [   20.010] A: link_ok=0
+[wall   29.809] [   20.010] B: display alert LINK LOST prio 0
+[wall   42.885] [   32.330] A: room/online=1
+[wall   42.885] [MULTI desk 1: occupied] Expected text matched: "room/online=1"
+[wall   42.885] [MULTI desk 1: occupied] delay 8s
+[wall   48.158] [   37.249] A: link_ok=1
+[wall   51.512] [   40.362] TEST: presence forced ON
+[wall   52.663] [   41.422] B: UNOCCUPIED -> WORKING
+[wall   52.663] [   41.423] D: OFF -> REGULATING (B=0.0%)
+[wall   52.663] [   41.428] A: desk_report occ=1
+[wall   52.663] [MULTI desk 1: occupied] Expected text matched: "desk_report occ=1"
+[wall   52.664] [MULTI desk 1: occupied] delay 12s
+[wall   52.734]  (immediate)
+[wall   68.005] [MULTI desk 1: occupied] delay 1500ms
+[wall   68.115] B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   68.115] D: state=REGULATING lux_now=503 B=50.6% r=0.497
+[wall   68.115] A: time_valid=1 22:43 link_ok=1 air: co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=7s
+[wall   68.115] A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=11 air_rx=3 air_lost=0 bad=0 rssi=-98
+[wall   69.909] [MULTI desk 1: occupied] Scenario completed successfully
+[wall   71.405] VCD file written to: out/multi/logic_analyzer.vcd

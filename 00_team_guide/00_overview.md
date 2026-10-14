@@ -4,7 +4,7 @@
 > สมาชิกทุกคน และ AI ที่แต่ละคนใช้ช่วยทำงาน ควรอ่านไฟล์นี้ก่อนไฟล์บทบาทของตัวเอง
 > ไฟล์บทบาท: `role_A_integration.md`, `role_B_presence_tasks.md`, `role_C_air_visual_test.md`, `role_D_pm_light.md`
 >
-> ผู้ดูแลไฟล์: D (PM) | อัปเดตล่าสุด: 2026-10-13
+> ผู้ดูแลไฟล์: D (PM) | อัปเดตล่าสุด: 2026-10-14
 
 ---
 
@@ -85,6 +85,8 @@
 
 ## 4. ค่าเกณฑ์เริ่มต้น (D จะยืนยันใน D1)
 
+> ⚠️ **ตารางนี้เป็นร่างเดิม ยืนยันแล้วใน D1** ให้ใช้ค่าจาก `01_requirements/D1_requirements.md` ข้อ 6 (เช่น อุณหภูมิเตือนต่ำกว่า 20°C หรือสูงกว่า 26°C, คาบ PWM ของ LED 0.2 ms ที่ 5 kHz)
+
 ตัวเลขที่ใช้ในระบบต้องมีที่มาทุกตัว ห้ามตั้งขึ้นลอยๆ
 
 | ค่า | ค่าเริ่มต้น | ที่มา |
@@ -102,6 +104,8 @@
 ---
 
 ## 5. ตารางข้อมูลกลาง (ร่าง — A จะยืนยันใน A1)
+
+> ⚠️ **ตารางนี้ล้าสมัยแล้ว** ให้ใช้ `02_interface/A1_interface.md` **v1.0** แทน (มีข้อมูลเพิ่ม เช่น `away_timeout`, `user_lux_target`, `late_mode`, `time_valid`, `link_ok`, `room_desks_online` และโครงสร้าง `air_status_t`, `alert_request_t`)
 
 **ตารางนี้คือ "สัญญา" ระหว่างโมดูล** บอกว่าแต่ละโมดูลส่งข้อมูลอะไรออก และรับอะไรเข้า เมื่อตกลงกันแล้ว แต่ละคนออกแบบข้างในโมดูลของตัวเองได้อิสระ **ห้ามเปลี่ยนตารางนี้เองโดยไม่บอก A**
 
@@ -178,12 +182,12 @@
 
 | Milestone | วันที่ (D เติม) | เป้าหมาย | ของที่ต้องครบก่อนผ่านด่าน | ปลดล็อกอะไร |
 |---|---|---|---|---|
-| **M1 ตั้งต้น** | ____ | ทุกคนรู้ว่าระบบต้องทำอะไร และส่วนต่างๆ ต่อกันยังไง | D1, A1 | ทุกคนเริ่มออกแบบโมดูลได้ |
-| **M2 ออกแบบโมดูล** (ทำพร้อมกัน) | ____ | ทุกโมดูลมีอุปกรณ์และ logic ครบ | A2, A3, B1, B2, C1, C2, D2, D3 + ข้อมูลงานย่อย (X-T) และ test case (X-TC) ของทุกคน | A เขียนโค้ด, B ทำตารางงานย่อยรวม, C ทำแผนทดสอบ |
-| **M3 รวมระบบ** | ____ | มีโค้ดและวงจรจำลองที่รวมทุกโมดูลแล้ว | A4, B3, C5 (+ C3, C4) | เริ่มทดสอบ |
-| **M4 ทดสอบ** | ____ | รู้ว่าระบบทำงานตาม requirement หรือไม่ | A5 (ถ้าโมดูลไหนไม่ผ่าน เจ้าของแก้ logic แล้วส่งใหม่) | มีผลจริงให้เขียนหัวข้อ 7 |
-| **M5 เขียนเอกสาร** | ____ | ทุกคนส่งเนื้อหาส่วนตัวเอง | A6, B4, C6, D4 + บันทึกปัญหาและอ้างอิง (X-N) ของทุกคน | D รวมเล่ม |
-| **M6 รวมเล่มและส่ง** | ____ | เอกสารสมบูรณ์ ทุกคนตรวจแล้ว | D5 | ส่งงาน |
+| **M1 ตั้งต้น** | ✅ 14 ต.ค. 2569 | ทุกคนรู้ว่าระบบต้องทำอะไร และส่วนต่างๆ ต่อกันยังไง | D1, A1 | ทุกคนเริ่มออกแบบโมดูลได้ |
+| **M2 ออกแบบโมดูล** (ทำพร้อมกัน) | ✅ 14 ต.ค. 2569 | ทุกโมดูลมีอุปกรณ์และ logic ครบ | A2, A3, B1, B2, C1, C2, D2, D3 + ข้อมูลงานย่อย (X-T) และ test case (X-TC) ของทุกคน | A เขียนโค้ด, B ทำตารางงานย่อยรวม, C ทำแผนทดสอบ |
+| **M3 รวมระบบ** | รอ D กำหนด | มีโค้ดและวงจรจำลองที่รวมทุกโมดูลแล้ว | A4, B3, C5 (+ C3, C4) | เริ่มทดสอบ |
+| **M4 ทดสอบ** | รอ D กำหนด | รู้ว่าระบบทำงานตาม requirement หรือไม่ | A5 (ถ้าโมดูลไหนไม่ผ่าน เจ้าของแก้ logic แล้วส่งใหม่) | มีผลจริงให้เขียนหัวข้อ 7 |
+| **M5 เขียนเอกสาร** | รอ D กำหนด | ทุกคนส่งเนื้อหาส่วนตัวเอง | A6, B4, C6, D4 + บันทึกปัญหาและอ้างอิง (X-N) ของทุกคน | D รวมเล่ม |
+| **M6 รวมเล่มและส่ง** | รอ D กำหนด | เอกสารสมบูรณ์ ทุกคนตรวจแล้ว | D5 | ส่งงาน |
 
 **เส้นทางวิกฤต (ช้าตรงไหน ทั้งโปรเจคช้าตาม):**
 D1 + A1 → logic ของ B, C, D → A เขียนโค้ดและจำลอง → ผลทดสอบ → รวมเล่ม
@@ -297,13 +301,20 @@ Embedded_Project/
 
 ## 14. แหล่งอ้างอิงหลักที่ทีมมีแล้ว
 
-[1] J. G. Allen et al., "Associations of cognitive function scores with carbon dioxide, ventilation, and volatile organic compound exposures in office workers," *Environ. Health Perspect.*, vol. 124, no. 6, 2016, doi: 10.1289/ehp.1510037.
+[1] J. G. Allen et al., "Associations of cognitive function scores with carbon dioxide, ventilation, and volatile organic compound exposures in office workers," *Environ. Health Perspect.*, vol. 124, no. 6, pp. 805–812, 2016, doi: 10.1289/ehp.1510037.
 [2] U. Satish et al., "Is CO2 an indoor pollutant? Direct effects of low-to-moderate CO2 concentrations on human decision-making performance," *Environ. Health Perspect.*, vol. 120, no. 12, pp. 1671–1677, 2012, doi: 10.1289/ehp.1104789.
-[3] *Light and lighting – Lighting of work places – Part 1: Indoor work places*, EN 12464-1.
+[3] *Light and lighting – Lighting of work places – Part 1: Indoor work places*, EN 12464-1:2021.
 [4] A. U. Viola, L. M. James, L. J. Schlangen, and D. J. Dijk, "Blue-enriched white light in the workplace improves self-reported alertness, performance and sleep quality," *Scand. J. Work Environ. Health*, vol. 34, no. 4, pp. 297–306, 2008, doi: 10.5271/sjweh.1268.
-[5] O. Seppänen, W. J. Fisk, and Q. H. Lei, "Effect of temperature on task performance in office environment," Lawrence Berkeley National Laboratory, 2006.
+[5] O. Seppänen, W. J. Fisk, and Q. H. Lei, "Effect of temperature on task performance in office environment," Lawrence Berkeley National Laboratory, Rep. LBNL-60952, Jul. 2006.
 [6] A. A. Abusharha and E. I. Pearce, "The effect of low humidity on the human tear film," *Cornea*, vol. 32, no. 4, 2013, doi: 10.1097/ICO.0b013e31826671ab.
 [7] C. Talens-Estarelles et al., "The effects of breaks on digital eye strain, dry eye and binocular vision: Testing the 20-20-20 rule," *Cont. Lens Anterior Eye*, 2022, Art. no. 101744, doi: 10.1016/j.clae.2022.101744.
 [8] P. Wennberg et al., "Acute effects of breaking up prolonged sitting on fatigue and cognition: A pilot study," *BMJ Open*, vol. 6, no. 2, Art. no. e009630, 2016.
 
-ต้องตรวจซ้ำก่อนส่งจริง: เลขหน้าของ [1] และ [6], ปีของ [3]
+[9] A. L. Sheppard and J. S. Wolffsohn, "Digital eye strain: Prevalence, measurement and amelioration," *BMJ Open Ophthalmol.*, vol. 3, no. 1, Art. no. e000146, 2018, doi: 10.1136/bmjophth-2018-000146.
+[10] A.-M. Chang, D. Aeschbach, J. F. Duffy, and C. A. Czeisler, "Evening use of light-emitting eReaders negatively affects sleep, circadian timing, and next-morning alertness," *Proc. Natl. Acad. Sci. USA*, vol. 112, no. 4, pp. 1232–1237, 2015, doi: 10.1073/pnas.1418490112.
+[11] *IEEE Recommended Practices for Modulating Current in High-Brightness LEDs for Mitigating Health Risks to Viewers*, IEEE Std 1789-2015, 2015.
+[12] *Energy Standard for Buildings Except Low-Rise Residential Buildings*, ANSI/ASHRAE/IES Standard 90.1-2019, 2019.
+[13] Sensirion, "SCD4x: Breaking the size barrier in CO2 sensing," datasheet.
+
+รายการเต็มและเลขล่าสุดอยู่ใน `01_requirements/D1_requirements.md` ข้อ 7 · เลขทั้งเล่มจะจัดใหม่ตอนรวมเล่ม
+ต้องตรวจซ้ำก่อนส่งจริง: เลขหน้าของ [6]

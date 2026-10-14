@@ -1,0 +1,69 @@
+[wall    0.240] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall    0.565] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall    1.762] Starting simulation...
+[wall    2.266] ets Jul 29 2019 12:21:46
+[wall    2.266] 
+[wall    2.266] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall    2.266] configsip: 0, SPIWP:0xee
+[wall    2.266] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall    2.266] mode:DIO, clock div:2
+[wall    2.266] load:0x3fff0030,len:1156
+[wall    2.266] load:0x40078000,len:11456
+[wall    2.266] ho 0 tail 12 room 4
+[wall    2.266] load:0x40080400,len:2972
+[wall    2.266] entry 0x400805dc
+[wall    4.123] 
+[wall    4.123] === SWER room node  (SIMULATION=1) ===
+[wall    4.778] [    1.917] tasks started
+[wall    4.778] [Room B: SCD41 fault + 2-read recovery, temperature flags] Expected text matched: "tasks started"
+[wall    5.888] ; type 'help' for test commands
+[wall   12.473] [    2.176] C: S0_ROOM_EMPTY -> S1_AIR_GOOD
+[wall   12.473] [Room B: SCD41 fault + 2-read recovery, temperature flags] Expected text matched: "-> S1_AIR_GOOD"
+[wall   12.784]  co2=0 fan=0% desks online=0 occupied=0
+[wall   12.784] [    2.177] TEST: desks online=1 occupied=1
+[wall   12.784] [    2.178] TEST: CO2 fixed at 700 ppm (next reading)
+[wall   12.784] [    2.200] TEST: SCD41 read error
+[wall   13.257] [    2.529] A: MQTT connected as swer-room-34cb
+[wall   23.131] [   11.916] C: S1_AIR_GOOD -> S4_SENSOR_FAULT
+[wall   23.131] [Room B: SCD41 fault + 2-read recovery, temperature flags] Expected text matched: "-> S4_SENSOR_FAULT"
+[wall   23.131] [Room B: SCD41 fault + 2-read recovery, temperature flags] delay 1200ms
+[wall   23.233]  co2=0 fan=80% desks online=1 occupied=1
+[wall   24.566] [Room B: SCD41 fault + 2-read recovery, temperature flags] delay 3s
+[wall   24.666] C: state=S4_SENSOR_FAULT co2=0 lvl=2 t=0.0 rh=0 tf=0 ok=0 fan=80%
+[wall   24.666] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall   24.666] A: wifi=1 mqtt=1 published=2 bad=0
+[wall   28.157] [   16.164] TEST: SCD41 restored
+[wall   34.790] [   21.923] C: S4_SENSOR_FAULT ->
+[wall   34.790] [Room B: SCD41 fault + 2-read recovery, temperature flags] Expected text matched: "S4_SENSOR_FAULT ->"
+[wall   34.790] [Room B: SCD41 fault + 2-read recovery, temperature flags] delay 300ms
+[wall   34.888]  S1_AIR_GOOD co2=700 fan=0% desks online=1 occupied=1
+[wall   35.289] [Room B: SCD41 fault + 2-read recovery, temperature flags] delay 5500ms
+[wall   35.384] C: state=S1_AIR_GOOD co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0%
+[wall   35.395] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall   35.395] A: wifi=1 mqtt=1 published=4 bad=0
+[wall   35.407] [   22.278] TEST: temperature fixed at 27.0 C
+[wall   41.320] [Room B: SCD41 fault + 2-read recovery, temperature flags] delay 5500ms
+[wall   41.422] C: state=S1_AIR_GOOD co2=700 lvl=0 t=27.0 rh=55 tf=2 ok=1 fan=0%
+[wall   41.422] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall   41.422] A: wifi=1 mqtt=1 published=5 bad=0
+[wall   41.422] [   27.742] TEST: temperature fixed at 18.0 C
+[wall   47.408] [Room B: SCD41 fault + 2-read recovery, temperature flags] delay 16s
+[wall   47.504] C: state=S1_AIR_GOOD co2=700 lvl=0 t=18.0 rh=55 tf=1 ok=1 fan=0%
+[wall   47.504] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall   47.504] A: wifi=1 mqtt=1 published=6 bad=0
+[wall   47.513] [   33.256] TEST: temperature from DHT22
+[wall   47.513] [   33.258] TEST: CO2 fixed at 5200 ppm (next reading)
+[wall   62.059] [   46.923] C: S1_AIR_GOOD -> S4_SENSOR_FAULT co2=700 fan=80% desks online=1 occupied=1
+[wall   64.800] [Room B: SCD41 fault + 2-read recovery, temperature flags] delay 1500ms
+[wall   64.901] C: state=S4_SENSOR_FAULT co2=700 lvl=2 t=18.0 rh=55 tf=0 ok=0 fan=80%
+[wall   64.901] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall   64.912] A: wifi=1 mqtt=1 published=9 bad=0
+[wall   64.912] [   49.272] TEST: CO2 from potentiometer
+[wall   64.912] ---- task statistics (measured) ----
+[wall   64.929] task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+[wall   64.929] air_sensor_task            5000     10    259993    30914  0.051999     0  1884
+[wall   64.929] room_communication_task    5000     10      7499     5123  0.001500     0  5856
+[wall   64.929] Total U (WCET-based) = 5.3498%
+[wall   64.943] heap free=242844  min_free=232848
+[wall   66.531] [Room B: SCD41 fault + 2-read recovery, temperature flags] Scenario completed successfully
+[wall   66.612] VCD file written to: out/room_b/logic_analyzer.vcd

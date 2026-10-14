@@ -2,8 +2,9 @@
 
 | รายการ | ค่า |
 |---|---|
-| เวอร์ชัน | v1 |
+| เวอร์ชัน | v1.1 |
 | วันที่ | 2026-10-14 |
+| แก้ไขใน v1.1 | ตัด `reset_user_settings()` ออก B เป็นคนคืนค่าที่ผู้ใช้ปรับตาม A1 v1.0 ข้อ 3, อัปเดตตารางข้อมูลตาม A1 v1.0 (Issue #7) |
 | เจ้าของ | D |
 | ส่งให้ | A (เขียนโค้ด A4) |
 | อ้างอิง | `01_requirements/D1_requirements.md` (FR-06–FR-11, NFR-02, NFR-03, NFR-07, NFR-09–NFR-11), `02_interface/A1_interface.md`, `03_hardware/D2_hardware_light.md`, `05_tasks/D-T_tasks.md` |
@@ -49,7 +50,7 @@
 | (เปิดเครื่อง) | S0 OFF | — | B = 0, ตั้ง BH1750 เป็นโหมดวัดต่อเนื่อง (H-Resolution), ตั้ง LEDC 5 kHz 13 บิต 2 ช่อง |
 | S0 OFF | S1 REGULATING | `occupied` = true | ค่อยๆ เปิดไฟจาก 0 → B_start ใน 2 วินาที (B_start = B ครั้งล่าสุดที่ใช้ ถ้าไม่มีใช้ 50%) |
 | S1 REGULATING | S1 REGULATING | ทุก 200 ms | อ่าน `lux_now` → ปรับ B ตามวงป้อนกลับ (ข้อ 4) |
-| S1 REGULATING | S2 DIMMING | `away_timeout` = true | จำค่า B ไว้ (B_saved), หรี่เหลือ B_saved × 0.5 ใน 2 วินาที, เริ่มนับ 60 วินาที, **ล้างค่าที่ผู้ใช้ปรับ** (`user_lux_target` → 500, `late_mode` → false) ตาม FR-11 |
+| S1 REGULATING | S2 DIMMING | `away_timeout` = true | จำค่า B ไว้ (B_saved), หรี่เหลือ B_saved × 0.5 ใน 2 วินาที, เริ่มนับ 60 วินาที (ค่าที่ผู้ใช้ปรับ B เป็นคนคืนเป็นค่าเริ่มต้นเองเมื่อ `away_timeout` เป็นจริง ตาม FR-11 และ A1 ข้อ 3 D อ่านอย่างเดียว) |
 | S2 DIMMING | S1 REGULATING | `occupied` = true (คนกลับมาก่อนดับ) | ค่อยๆ กลับไปที่ B_saved ใน 2 วินาที แล้วใช้วงป้อนกลับต่อ |
 | S2 DIMMING | S0 OFF | ค้างครบ 60 วินาที | ค่อยๆ ปิดเหลือ 0 ใน 5 วินาที |
 | S1 REGULATING | S3 SENSOR_FAULT | อ่านค่าไม่ได้ 3 รอบติดกัน (รวมกรณีรอ `i2c_lock` เกิน 50 ms) | ค่อยๆ ไปที่ B = 60% ใน 2 วินาที, ส่ง `alert_request` {SRC_LIGHT, ALERT_SENSOR_FAULT, priority 1, ALERT_SHOW} |
@@ -114,7 +115,7 @@ TASK light_control_task (period = 200 ms):
         ok = bh1750_read_lux(&lux)        // อ่านผลล่าสุด 2 ไบต์ ไม่ต้องรอ 120 ms
         give(i2c_lock)
     ELSE
-        ok = FALSE                        // ข้ามรอบนี้ นับเป็นความผิดพลาด (A1 ข้อ 6)
+        ok = FALSE                        // ข้ามรอบนี้ นับเป็นความผิดพลาด (A1 ข้อ 7)
     END IF
     IF ok THEN lux_now = lux; err_count = 0; ok_count += 1
     ELSE err_count += 1; ok_count = 0
@@ -169,7 +170,7 @@ TASK light_control_task (period = 200 ms):
 FUNCTION enter_dimming():
   B_saved = B
   fade_B_to(B * DIM_RATIO, FADE_ON_MS)
-  reset_user_settings()          // user_lux_target = 500, late_mode = false (FR-11)
+  // ไม่ล้างค่าที่ผู้ใช้ปรับในฝั่ง D: B คืนค่า user_lux_target และ late_mode เอง (A1 ข้อ 3, FR-11)
   start_dim_timer()
   light_state = S2_DIMMING
 
@@ -184,7 +185,7 @@ FUNCTION to_counts(pct):         // 13 บิต: 0–8191
 
 **เรื่องที่ A ต้องรู้ตอนเขียนโค้ด**
 - `fade_B_to()` คือการเปลี่ยน B แบบค่อยเป็นค่อยไปในเวลาที่กำหนด ใช้ hardware fade ของ LEDC ได้ (`ledc_set_fade_with_time()`) ไม่ต้องสร้าง task เพิ่ม
-- `reset_user_settings()` เป็นการล้างค่าในฝั่ง D ถ้า A1 กำหนดให้ B เป็นเจ้าของ `user_lux_target` และ `late_mode` ให้ D แค่ **ไม่ใช้ค่านั้นจนกว่าผู้ใช้จะกดใหม่** หรือให้ B ล้างค่าเมื่อ `away_timeout` เป็นจริง (A ตัดสินใน A1)
+- **ค่าที่ผู้ใช้ปรับ (`user_lux_target`, `late_mode`):** ตัดสินแล้วใน A1 v1.0 ข้อ 3 ว่า B เป็นเจ้าของคนเดียวและเป็นคนคืนค่าเมื่อ `away_timeout` เป็นจริง D อ่านอย่างเดียว ไม่เขียนกลับ (เดิม D3 v1 มี `reset_user_settings()` ในฝั่ง D ตัดออกแล้ว)
 - **ในการจำลอง Wokwi:** photoresistor มองไม่เห็นแสงจาก LED ให้คิด `lux_now = lux_จากตัวเลื่อน + 6 × B` (ไฟเต็ม 100% ให้แสงเพิ่ม 600 lux ตามที่ประมาณใน D2) เพื่อให้วงป้อนกลับทำงานได้
 
 ---
@@ -216,10 +217,10 @@ FUNCTION to_counts(pct):         // 13 บิต: 0–8191
 | `away_timeout` | รับ | B | หรี่และปิดไฟ (S1/S3 → S2) |
 | `time_of_day` | รับ | A | เลือกสีแสง |
 | `time_valid` | รับ | A | ถ้า false ใช้สีกลาง (C0) |
-| `user_lux_target` 🆕 | รับ | B | ความสว่างเป้าหมายที่ผู้ใช้ตั้ง (500–1,000) — **รอ A เพิ่มใน A1** |
-| `late_mode` 🆕 | รับ | B | โหมดทำงานดึก — **รอ A เพิ่มใน A1** |
+| `user_lux_target` 🆕 | รับ | B | ความสว่างเป้าหมายที่ผู้ใช้ตั้ง (500–1,000) D จำกัดค่าให้อยู่ในช่วงเสมอ (NFR-15) · มีใน A1 v1.0 แล้ว |
+| `late_mode` 🆕 | รับ | B | โหมดทำงานดึก · มีใน A1 v1.0 แล้ว |
 | `lux_now` | สร้าง | D (ใช้เอง) | ค่าแสงบนโต๊ะ |
-| `alert_request` | ส่ง | B (ผ่าน queue) | เตือนเมื่อเซนเซอร์แสงเสีย / เลิกเตือนเมื่อกลับมาปกติ |
+| `alert_request` | ส่ง | B (ผ่าน queue, `source` = `SRC_LIGHT`) | เตือนเมื่อเซนเซอร์แสงเสีย / เลิกเตือนเมื่อกลับมาปกติ |
 | `i2c_lock` | ใช้ | A กำหนดกติกา | ขอก่อนอ่าน BH1750 รอไม่เกิน 50 ms |
 
 ---

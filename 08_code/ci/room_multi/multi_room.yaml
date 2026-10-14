@@ -1,0 +1,17 @@
+name: 'MULTI room: two desks counted separately'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- wait-serial: MQTT connected
+- wait-serial: desk 1 online=1
+- wait-serial: desk 2 online=1
+- wait-serial: desk 1 occupied=1
+- delay: 6s
+- write-serial: 'status
+
+    '
+- write-serial: 'stats
+
+    '
+- delay: 1500ms

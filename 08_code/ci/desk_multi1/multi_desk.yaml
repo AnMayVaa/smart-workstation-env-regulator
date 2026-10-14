@@ -1,0 +1,20 @@
+name: 'MULTI desk 1: occupied'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- wait-serial: MQTT connected
+- wait-serial: room/online=1
+- delay: 8s
+- write-serial: 'presence on
+
+    '
+- wait-serial: desk_report occ=1
+- delay: 12s
+- write-serial: 'status
+
+    '
+- take-screenshot:
+    part-id: oled
+    save-to: out/multi/01_desk1_status.png
+- delay: 1500ms

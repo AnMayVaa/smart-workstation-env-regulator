@@ -1,0 +1,56 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+
+=== SWER desk node 1  (SIMULATION=1, TIME_SCALE=120) ===
+[    2.024] tasks started; type 'help' for test commands
+[    2.136] A: Wi-Fi up 10.13.37.2, SNTP started
+[    2.359] A: MQTT connected as swer-desk1-99f7
+[    5.023] B: away_timeout=1 (reset user_lux_target=500, late_mode=0)
+[    7.864] B: user_lux_target=600 late_mode=0
+[    8.460] B: user_lux_target=700 late_mode=0
+[    9.060] B: user_lux_target=800 late_mode=0
+[   11.810] B: user_lux_target=800 late_mode=1
+B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=800 late=1 snooze=0
+D: state=OFF lux_now=200 B=0.0% r=0.740
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-82
+[   14.729] TEST: presence forced ON
+[   15.823] B: UNOCCUPIED -> WORKING[   15.824] D: OFF -> REGULATING (B=0.0%)
+[   15.828] A: desk_report occ=1 (immediate)
+[   17.838] TEST: presence forced OFF
+[   18.923] B: WORKING -> AWAY_PENDING[   18.929] A: desk_report occ=0 (immediate)
+[   20.030] A: link_ok=0
+[   20.031] B: display alert LINK LOST prio 0
+[   21.023] B: AWAY_PENDING -> UNOCCUPIED[   22.023] B: away_timeout=1 (reset user_lux_target=500, late_mode=0)
+[   22.223] D: REGULATING -> DIMMING (B=91.6%)
+B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=500 late=0 snooze=0
+D: state=DIMMING lux_now=721 B=82.4% r=0.752
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=5 air_rx=0 air_lost=0 bad=0 rssi=-79
+[   22.781] TEST: presence forced ON
+[   23.823] B: UNOCCUPIED -> WORKING
+[   23.828] A: desk_report occ=1 (immediate)
+[   23.834] D: DIMMING -> REGULATING (B=54.7%)
+B: state=WORKING occupied=1 sit=4min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=737 B=87.6% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=6 air_rx=0 air_lost=0 bad=0 rssi=-92
+---- task statistics (measured) ----
+task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+presence_task               100    244       887       49  0.008870     0  1904
+button_event_task           100    716       897       58  0.008970     0  876
+light_control_task          200    123     26390     1357  0.131950     0  1848
+display_alert_task          500     45     42899    40092  0.085798     0  1820
+break_timer_task           1000     25      1185      166  0.001185     0  1912
+desk_communication_task    1000      6      5684     5005  0.005684     0  5892
+Total U (WCET-based) = 24.2457%   RMS bound n=6: 73.48%
+heap free=216124  min_free=207552  TIME_SCALE=120

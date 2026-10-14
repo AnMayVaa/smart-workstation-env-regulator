@@ -1,0 +1,36 @@
+[wall   12.148] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall   12.368] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall   14.091] Starting simulation...
+[wall   15.353] ets Jul 29 2019 12:21:46
+[wall   15.353] 
+[wall   15.353] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall   15.353] configsip: 0, SPIWP:0xee
+[wall   15.353] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall   15.353] mode:DIO, clock div:2
+[wall   15.353] load:0x3fff0030,len:1156
+[wall   15.353] load:0x40078000,len:11456
+[wall   15.353] ho 0 tail 12 room 4
+[wall   15.353] load:0x40080400,len:2972
+[wall   15.353] entry 0x400805dc
+[wall   17.960] 
+[wall   17.960] === SWER desk node 2  (SIMULATION=1, TIME_SCALE=1) ===
+[wall   19.453] [    2.023] tasks started
+[wall   19.453] [MULTI desk 2: free] Expected text matched: "tasks started"
+[wall   19.615] ; type 'help' for test commands
+[wall   19.856] [    2.136] A: Wi-Fi up 10.13.37.2, SNTP started
+[wall   20.376] [    2.403] A: MQTT connected
+[wall   20.376] [MULTI desk 2: free] Expected text matched: "MQTT connected"
+[wall   20.455]  as swer-desk2-aeb7
+[wall   39.147] [   20.026] A: link_ok=0
+[wall   39.147] [   20.026] B: display alert LINK LOST prio 0
+[wall   42.843] [   23.436] A: room/online=1
+[wall   42.843] [MULTI desk 2: free] Expected text matched: "room/online=1"
+[wall   42.843] [MULTI desk 2: free] delay 20s
+[wall   52.221] [   32.260] A: link_ok=1
+[wall   64.318] [MULTI desk 2: free] delay 1500ms
+[wall   64.400] B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   64.400] D: state=OFF lux_now=200 B=0.0% r=0.499
+[wall   64.400] A: time_valid=1 22:43 link_ok=1 air: co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=5s
+[wall   64.417] A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=9 air_rx=3 air_lost=0 bad=0 rssi=-90
+[wall   65.915] [MULTI desk 2: free] Scenario completed successfully
+[wall   65.973] VCD file written to: out/multi/logic_analyzer.vcd
