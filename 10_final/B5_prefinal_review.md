@@ -15,7 +15,7 @@
 | 4.2.2 Hardware | ชนิดอุปกรณ์ ขา GPIO 13/16/17/21/22/26/27 และการใช้ slide switch แทน LD2410 ใน Wokwi ตรงกับ A2 v1.1 |
 | 5.1.1 FSM | เกณฑ์ 1 s, 3 min, 5 min, fail-safe `occupied=true` และ reset ค่าผู้ใช้ตรงกับ B2 |
 | 5.2.1 Pseudocode | การเตือน 20/30 min, snooze 5 min สูงสุด 2 ครั้ง และ FR-11 ตรงกับ B2 |
-| 5.3 RTOS | คาบและ WCET รายงานตรงกับ A5 แต่การรวม utilization ข้าม core ต้องแก้ตามหัวข้อถัดไป |
+| 5.3 RTOS | คาบ task ถูกต้อง แต่ต้องแทน WCET ด้วยผลรัน 22.8 นาทีจาก A5 ข้อ 7 และแยก utilization ตาม core |
 | 6.3 Concurrency | `i2c_lock` 50 ms, alert queue, single writer/snapshot และผล latency 0.9 s ตรงกับ implementation/test; ตัวเลข utilization ต้องแยก core |
 | ตาราง 7.1 | ความหมาย TC-B-01 ถึง TC-B-08 ตรงกับ `B-TC_testcases.md` |
 
@@ -36,11 +36,23 @@
 
 ### ตาราง 5.5 และข้อความหัวข้อ 6.3
 
-โค้ด A4 pin งานควบคุม B/C/D บน core 1 แต่ pin `desk_communication_task`, `room_communication_task` และ NTP บน core 0 ตาราง 5.5/A5 นำค่า C/T ของสอง core มาบวกเป็น 0.274 แล้วเทียบ RMS bound `n=6` ชุดเดียว จึงไม่ใช่การวิเคราะห์ schedulability ตาม core ที่รันจริง
+โค้ด A4 pin งานควบคุม B/C/D บน core 1 แต่ pin `desk_communication_task`, `room_communication_task` และ NTP บน core 0 ตาราง 5.5 ในเล่มใช้ผลรอบสั้น 0.274 และนำค่า C/T ของสอง core มาเทียบ RMS bound `n=6` ชุดเดียว จึงต้องแทนด้วยผลรอบยาวพร้อมวิเคราะห์ตาม core ที่รันจริง
 
 ให้แก้ข้อความเป็นดังนี้
 
-- งานควบคุมโต๊ะ core 1 จำนวน 5 งาน: `U = 0.268796` หรือ **26.88%**, RMS bound `n=5` = **74.35%**
-- งานสื่อสารโต๊ะ core 0 ที่ instrument: `U = 0.005605` หรือ **0.56%**; ห้ามสรุปผ่าน RMS จากค่านี้เพียงค่าเดียวเพราะยังมี Wi-Fi/TCP-IP system tasks
-- โหนดห้อง: `air_sensor_task` core 1 = **4.36%**, `room_communication_task` core 0 = **0.11%**
-- คงข้อสรุปว่า deadline miss = 0 ในช่วงทดสอบประมาณ 45 s แต่ระบุว่ายังรอรัน 10 นาทีและฮาร์ดแวร์จริง
+- ผลรวมตามตาราง A5 ข้อ 7: `U = 0.294966` หรือ **29.50%** แต่ห้ามเทียบ bound ข้าม core
+- งานควบคุมโต๊ะ core 1 จำนวน 5 งาน: `U = 0.289759` หรือ **28.98%**, RMS bound `n=5` = **74.35%**
+- งานสื่อสารโต๊ะ core 0 ที่ instrument: `U = 0.005207` หรือ **0.52%**; ห้ามสรุปผ่าน RMS จากค่านี้เพียงค่าเดียวเพราะยังมี Wi-Fi/TCP-IP system tasks
+- โหนดห้องใช้กรณีแย่สุด: `air_sensor_task` core 1 = **4.36%**, `room_communication_task` core 0 = **0.16%**
+- ระบุว่า `late=0` ระหว่างรันโต๊ะ 22.8 นาทีและห้อง 10.5 นาที แต่ยังรอฮาร์ดแวร์จริง
+
+## การตัดสินใจ B หลัง A5
+
+- ยืนยันให้เริ่ม session ใหม่ (`sit=0`) เมื่อ LD2410 ฟื้นจาก fault เพราะเวลาในช่วงข้อมูลขาดไม่น่าเชื่อถือ
+- ยืนยัน stack `button_event_task` = 3,072 B; รอบ 22.8 นาทีเหลืออย่างน้อย 2,196 B
+- ยืนยัน alert อากาศ ลิงก์ และเซนเซอร์แสงเต็มจอ 10 s แล้วเป็นแถบล่าง ส่วน presence alert และ priority 2 คงเต็มจอจนถูก clear
+- B2 v1.4 ระบุ debounce แบบรอสัญญาณเงียบ 30 ms และกฎ STAND ที่ snooze ครอบ EYE แล้ว
+
+## ข้อความสำหรับ Issue ถึง D
+
+โปรดอัปเดตบท 4.2.2, 5.1.1, 5.2.1, 5.3 และ 6.3 จาก B1/B2 v1.4/B3 v1.3/B4 ล่าสุด โดยเฉพาะ debounce, STAND ครอบ EYE ระหว่าง snooze, `SENSOR ERR`, นโยบาย alert 10 s และผล WCET รอบ 22.8 นาที แก้ตาราง 5.5 ให้แยก core 1 = 28.98% ออกจาก communication core 0 = 0.52% และแก้ mapping TC-B-01/02 ในตาราง 7.3 ตามหัวข้อข้างต้น

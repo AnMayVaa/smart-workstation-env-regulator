@@ -2,10 +2,10 @@
 
 | รายการ | ค่า |
 |---|---|
-| เวอร์ชัน | v1.2 |
+| เวอร์ชัน | v1.3 |
 | วันที่ | 2026-10-15 |
 | เจ้าของ | B |
-| สถานะ | รวม task specification แล้ว และเพิ่มผลวัดเบื้องต้นจาก A5/Wokwi CI; ยังรอรันต่อเนื่อง 10 นาทีและฮาร์ดแวร์จริง |
+| สถานะ | รวม task specification และผลรัน Wokwi ต่อเนื่อง 22.8 นาทีจาก A5 แล้ว; ยังรอวัดบนฮาร์ดแวร์จริง |
 
 ## ขอบเขตและสมมติฐาน
 
@@ -67,24 +67,26 @@ U_core0_app = 15/5000
 
 งานควบคุม core 1 มี utilization เพียง 0.12% งานสองงานมี period เท่ากันแต่ deadline ต่างกัน จึงให้ `Task_Read_Air` ที่ deadline 500 ms มี priority สูงกว่า `Task_Control_Fan` ที่ deadline 1,000 ms เวลารวม 6 ms ต่ำกว่า deadline ที่สั้นที่สุดมาก ส่วน core 0 มี application communication 0.30% โดยยังไม่รวม system tasks
 
-## 3. ผลวัดเบื้องต้นจาก A5
+## 3. ผลวัดต่อเนื่องจาก A5
 
-A5 วัดเวลาจาก Wokwi CI ประมาณ 45 s ด้วย `stats` ผลนี้ใช้ยืนยัน feasibility ของ implementation ปัจจุบัน แต่ยังไม่แทนการรันต่อเนื่อง 10 นาทีและการวัดบน ESP32 จริง
+A5 รันโหนดโต๊ะใน Wokwi ต่อเนื่อง 22.8 นาทีพร้อมเหตุการณ์ใช้งาน และรันโหนดห้อง 10.5 นาที ไม่พบ deadline miss หรือ reset ค่าในตารางเป็น WCET ของรอบต่อเนื่องตาม `06_testing/A5_results.md` ข้อ 7 และยังไม่แทนการวัดบน ESP32 จริง
 
 | โหนด | Core | งานย่อย | T (ms) | WCET ที่วัดได้ (µs) | C/T |
 |---|---:|---|---:|---:|---:|
-| โต๊ะ | 1 | `presence_task` | 100 | 889 | 0.008890 |
-| โต๊ะ | 1 | `button_event_task` | 100 | 1,447 | 0.014470 |
-| โต๊ะ | 1 | `light_control_task` | 200 | 28,534 | 0.142670 |
-| โต๊ะ | 1 | `display_alert_task` | 500 | 43,186 | 0.086372 |
-| โต๊ะ | 1 | `break_timer_task` | 1,000 | 16,394 | 0.016394 |
-| โต๊ะ | 0 | `desk_communication_task` | 1,000 | 5,605 | 0.005605 |
+| โต๊ะ | 1 | `presence_task` | 100 | 948 | 0.009480 |
+| โต๊ะ | 1 | `button_event_task` | 100 | 68 | 0.000680 |
+| โต๊ะ | 1 | `light_control_task` | 200 | 31,797 | 0.158985 |
+| โต๊ะ | 1 | `display_alert_task` | 500 | 53,110 | 0.106220 |
+| โต๊ะ | 1 | `break_timer_task` | 1,000 | 14,394 | 0.014394 |
+| โต๊ะ | 0 | `desk_communication_task` | 1,000 | 5,207 | 0.005207 |
 | ห้อง | 1 | `air_sensor_task` | 5,000 | 218,015 | 0.043603 |
-| ห้อง | 0 | `room_communication_task` | 5,000 | 5,538 | 0.001108 |
+| ห้อง | 0 | `room_communication_task` | 5,000 | 8,216 | 0.001643 |
 
-งานควบคุมโต๊ะบน core 1 มี `U = 0.268796` หรือ **26.88%** ต่ำกว่า RMS bound สำหรับ `n=5` ที่ประมาณ **74.35%** และไม่พบ deadline miss ระหว่างการทดสอบ งานสื่อสารโต๊ะที่วัดบน core 0 ใช้ 0.56% เฉพาะ application task ส่วนโหนดห้องวัดได้ 4.36% บน core 1 และ 0.11% บน core 0 โดย `air_sensor_task` รวมงานควบคุมพัดลมใน implementation จำลอง `ntp_sync_task`, console และ system tasks ไม่อยู่ในตารางวัด จึงไม่รวม utilization ข้าม core แล้วนำไปเทียบ RMS bound เดียวกัน
+ผลรวมตามตาราง A5 ข้อ 7 คือ `U = 0.294966` หรือ **29.50%** และต่ำกว่า bound `n=6` ที่ 73.48% แต่ตัวเลขนั้นรวม task คนละ core จึงใช้สรุป schedulability ไม่ได้ เมื่อแยกตามการ pin จริง งานควบคุมโต๊ะ core 1 มี `U = 0.289759` หรือ **28.98%** ต่ำกว่า RMS bound สำหรับ `n=5` ที่ **74.35%** ส่วน `desk_communication_task` บน core 0 ใช้ **0.52%** เฉพาะ application task และยังไม่รวม Wi-Fi/TCP-IP system tasks
 
-WCET ของ `light_control_task` 28.534 ms สูงกว่าค่าประมาณ 2 ms เพราะรอ `i2c_lock` ขณะ OLED วาดเต็มเฟรมประมาณ 40 ms แต่ยังต่ำกว่า deadline 200 ms มาก `display_alert_task` ใช้ 43.186 ms และยังต่ำกว่า deadline 500 ms กติกา timeout I²C 50 ms จึงยังสอดคล้องกับผลวัดรอบนี้
+โหนดห้องใช้ค่า `air_sensor_task` 218.015 ms จากรอบสั้นเป็นกรณีแย่สุด เพราะสูงกว่ารอบต่อเนื่อง 7.795 ms ที่ไม่มีการอ่าน DHT22 ครั้งแรก ส่วน `room_communication_task` ใช้ค่ารอบต่อเนื่อง 8.216 ms ดังนั้น application utilization ที่วัดได้คือ 4.36% บน core 1 และ 0.16% บน core 0
+
+WCET ของ `light_control_task` 31.797 ms และ `display_alert_task` 53.110 ms สะท้อนการรอ `i2c_lock` ระหว่าง OLED วาดเต็มเฟรม แต่ยังต่ำกว่า deadline 200 และ 500 ms ตามลำดับ `button_event_task` เหลือ stack 2,196 B หลังเพิ่ม allocation เป็น 3,072 B และรัน 22.8 นาที จึงยืนยัน margin ได้ดีกว่ารอบสั้นที่เคยเหลือ 876 B
 
 ## 4. ทรัพยากรที่ใช้ร่วมและ concurrency
 
@@ -110,8 +112,8 @@ WCET ของ `light_control_task` 28.534 ms สูงกว่าค่าป�
 
 ## 7. ข้อจำกัดของผลคำนวณและงานที่ต้องยืนยัน
 
-- [x] A5 ส่งผล WCET เบื้องต้นจาก Wokwi CI และไม่พบ deadline miss ในช่วงประมาณ 45 s
-- [ ] รันต่อเนื่องอย่างน้อย 10 นาทีและวัดบน ESP32 จริงก่อนใช้เป็น WCET ขั้นสุดท้าย
+- [x] A5 รัน Wokwi ต่อเนื่อง 22.8 นาทีสำหรับโต๊ะและ 10.5 นาทีสำหรับห้อง โดย `late = 0` ทุก task
+- [ ] วัด WCET และ stack high-water mark บน ESP32 จริงก่อนใช้เป็นค่าขั้นสุดท้าย
 - [x] รวมชื่อ, period, deadline และ estimated WCET จาก A-T/C-T/D-T ฉบับเจ้าของงานแล้ว
 - [x] รับ requirement จาก D1 แล้ว: NFR-04 กำหนดให้แสดงการเตือนพักภายใน 1 s และ NFR-14 กำหนดอย่างน้อย 2 ช่องทาง
 - [x] A1 v1.0 ยืนยัน `user_lux_target`, `late_mode`, `room_occupied_count` และเจ้าของข้อมูลแล้ว
@@ -125,7 +127,7 @@ WCET ของ `light_control_task` 28.534 ms สูงกว่าค่าป�
 - [x] เรียง priority ตาม RMS และอธิบายกรณี period เท่ากัน
 - [x] แสดงวิธีคำนวณรายโหนดและเทียบ bound
 - [x] ระบุ I²C mutex, queue, blocking และข้อห้ามถือ lock
-- [x] แยกค่าประมาณออกจากผลวัดที่ยังรอ A
+- [x] แยกค่าประมาณออกจากผลวัดต่อเนื่องของ A5 และแยก utilization ตาม core
 
 ## อ้างอิง
 

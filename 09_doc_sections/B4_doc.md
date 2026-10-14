@@ -20,7 +20,7 @@ A2 ยืนยันผังขาของ B เป็น OLED SDA/SCL ที
 
 จอและ buzzer มี task เจ้าของเพียงตัวเดียว ทุกโมดูลในโหนดโต๊ะส่ง `alert_request` ผ่าน queue ระบบเลือก priority 2 ก่อน 1 ก่อน 0 และใช้รายการที่มาถึงก่อนเมื่อลำดับเท่ากัน C ส่งเฉพาะ `air_status` ผ่าน A ทุก 5 s โดยโหนดห้องไม่ส่ง `alert_request` ข้าม Wi-Fi B อ่าน `co2_level`, `temp_flag` และ `sensor_ok` เพื่อสร้าง `ALERT_CO2_HIGH`, `ALERT_TEMP` และ `ALERT_SENSOR_FAULT` ภายในโหนด พร้อมแสดง CO₂ อุณหภูมิ ความชื้น ระดับอากาศ และ `fan_pct` ค่าที่เก่ากว่า 15 s จะแสดงว่าไม่มีข้อมูลอากาศและ clear alert อากาศที่ล้าสมัย เมื่อ LD2410 ไม่ส่ง valid frame เกิน 500 ms ระบบใช้ fail-safe `occupied=true`, `away_timeout=false` เพื่อไม่ปิดไฟใส่คน พร้อมส่ง sensor fault priority 2 แผนภาพและ pseudocode ฉบับเต็มอยู่ใน `04_logic/B2_logic_presence.md`
 
-การทดสอบ A5 พบและแก้ปัญหาของ B สองจุด ได้แก่ debounce เดิมอาจทิ้งการกดจริงเมื่อขอบแรกเกิดระหว่าง contact bounce จึงเปลี่ยนเป็นรอให้สัญญาณนิ่ง 30 ms ก่อนอ่านระดับ และ eye alert รอบถัดไปอาจล้าง stand alert ที่กำลัง snooze จึงกำหนดให้ stand alert ที่ค้างอยู่มีสิทธิ์เหนือ eye alert นอกจากนี้ลดชื่อ `SENSOR FAULT` บน OLED เป็น `SENSOR ERR` เพื่อไม่ให้ข้อความกว้างเกินจอ 128 พิกเซล
+การทดสอบ A5 พบและแก้ปัญหาของ B สองจุด ได้แก่ debounce เดิมอาจทิ้งการกดจริงเมื่อขอบแรกเกิดระหว่าง contact bounce จึงเปลี่ยนเป็นให้ทุกขอบเริ่มช่วงเงียบ 30 ms ใหม่ แล้วอ่านระดับ GPIO ที่นิ่งเพียงครั้งเดียว และ eye alert รอบถัดไปอาจล้าง stand alert ที่กำลัง snooze จึงกำหนดให้ stand alert ที่ค้างอยู่ครอบ eye alert จนกว่าจะกลับมาเตือน นอกจากนี้ลดชื่อ `SENSOR FAULT` บน OLED เป็น `SENSOR ERR` เพื่อไม่ให้ข้อความกว้างเกินจอ 128 พิกเซล เตือนการพักและ fault priority 2 คงเต็มจอจนถูก clear ส่วนเตือนอากาศ ลิงก์ และเซนเซอร์แสงแสดงเต็มจอ 10 s แล้วลดเป็นแถบล่างเพื่อให้ยังเห็นเวลานั่ง
 
 ### เหตุผลที่ใช้ RTOS
 
@@ -28,7 +28,7 @@ A2 ยืนยันผังขาของ B เป็น OLED SDA/SCL ที
 
 ## 6. Handling Concurrency, Timing, and Latency
 
-ขั้นออกแบบประเมิน utilization งานควบคุมโหนดโต๊ะบน core 1 ไว้ 3.90% จาก estimated WCET ส่วน A5 วัด implementation ใน Wokwi CI ประมาณ 45 s ได้ 26.88% สำหรับ 5 งานบน core 1 เทียบกับ RMS bound 74.35% และไม่พบ deadline miss งานสื่อสารอยู่ core 0 และใช้ 0.56% เฉพาะ application task จึงไม่นำมารวมกับ RMS ของ core 1 ค่าที่เพิ่มขึ้นหลักมาจาก `light_control_task` ซึ่งมี WCET 28.534 ms เพราะรอ `i2c_lock` ระหว่าง OLED วาดเต็มเฟรม และ `display_alert_task` มี WCET 43.186 ms ทั้งคู่ยังต่ำกว่า deadline 200 และ 500 ms ตามลำดับ ผลนี้เป็นหลักฐานเบื้องต้น ยังต้องรัน 10 นาทีและวัดบน ESP32 จริง รายละเอียดสูตร ขอบเขตงานที่วัด และค่าของโหนดห้องอยู่ใน `05_tasks/B3_task_table.md`
+ขั้นออกแบบประเมิน utilization งานควบคุมโหนดโต๊ะบน core 1 ไว้ 3.90% จาก estimated WCET ส่วน A5 รัน Wokwi ต่อเนื่อง 22.8 นาทีได้ 28.98% สำหรับ 5 งานบน core 1 เทียบกับ RMS bound 74.35% และไม่พบ deadline miss งานสื่อสารอยู่ core 0 และใช้ 0.52% เฉพาะ application task จึงไม่นำมารวมกับ RMS ของ core 1 แม้ผลรวมที่ A5 รายงานจะเป็น 29.50% `light_control_task` มี WCET 31.797 ms และ `display_alert_task` มี WCET 53.110 ms ทั้งคู่ยังต่ำกว่า deadline 200 และ 500 ms ตามลำดับ stack ของ `button_event_task` จัดสรร 3,072 B และเหลืออย่างน้อย 2,196 B ในรอบยาว ผลนี้ยังต้องยืนยันบน ESP32 จริง รายละเอียดสูตรและขอบเขตงานที่วัดอยู่ใน `05_tasks/B3_task_table.md`
 
 OLED และ BH1750 ใช้ I²C ร่วมกัน ทุก transaction ต้องขอ `i2c_lock` รอไม่เกิน 50 ms และปล่อยทันที ห้ามหน่วงหรือรอ network ขณะถือ lock Queue ของ alert ป้องกันหลาย producer เขียนจอพร้อมกัน ส่วนข้อมูลกลางใช้ single writer และอ่านเป็น snapshot ภายใต้ critical section สั้น PWM ของไฟ พัดลม และ buzzer ใช้ hardware peripheral จึงไม่สร้าง task ความถี่สูงเพื่อ toggle GPIO
 
