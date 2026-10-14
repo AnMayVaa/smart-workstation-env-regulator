@@ -1,0 +1,35 @@
+=== SWER room node  (SIMULATION=1) ===
+[    1.970] tasks started; type 'help' for test commands
+[    1.977] C: S0_ROOM_EMPTY -> S1_AIR_GOOD co2=400 fan=0% desks online=0 occupied=0
+[    3.649] A: MQTT connected as swer-room-12fc
+[    3.954] A: new desk 1
+[    3.954] A: desk 1 online=1
+[    4.169] A: desk 1 occupied=1
+[    6.976] A: room_desks_online=1 room_occupied_count=1
+[   21.240] TEST: desks online=1 occupied=1
+[   26.191] TEST: CO2 fixed at 1200 ppm (next reading)
+[   26.977] C: S1_AIR_GOOD -> S3_AIR_POOR co2=1200 fan=100% desks online=1 occupied=1
+[   60.892] TEST: CO2 fixed at 970 ppm (next reading)
+[   90.693] TEST: CO2 fixed at 920 ppm (next reading)
+[   91.977] C: S3_AIR_POOR -> S2_AIR_MODERATE co2=920 fan=60% desks online=1 occupied=1
+[  104.894] TEST: CO2 fixed at 700 ppm (next reading)
+[  106.977] C: S2_AIR_MODERATE -> S1_AIR_GOOD co2=700 fan=0% desks online=1 occupied=1
+[  126.945] TEST: SCD41 read error
+[  136.971] C: S1_AIR_GOOD -> S4_SENSOR_FAULT co2=700 fan=80% desks online=1 occupied=1
+[  171.896] TEST: SCD41 restored
+[  176.977] C: S4_SENSOR_FAULT -> S1_AIR_GOOD co2=700 fan=0% desks online=1 occupied=1
+[  211.597] TEST: temperature fixed at 27.0 C
+[  241.348] TEST: temperature fixed at 18.0 C
+[  271.049] TEST: temperature from DHT22
+[  276.050] TEST: desk counts from MQTT
+[  281.001] TEST: CO2 from potentiometer
+[  378.282] TEST: CO2 fixed at 1100 ppm (next reading)
+[  381.977] C: S1_AIR_GOOD -> S3_AIR_POOR co2=1100 fan=100% desks online=0 occupied=0
+[  437.783] TEST: CO2 from potentiometer
+[  441.977] C: S3_AIR_POOR -> S1_AIR_GOOD co2=400 fan=0% desks online=0 occupied=0
+---- task statistics (measured) ----
+task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+air_sensor_task            5000    124      7795     6020  0.001559     0  1832
+room_communication_task    5000    124      8216     4676  0.001643     0  5792
+Total U (WCET-based) = 0.3202%
+heap free=215404  min_free=202396
