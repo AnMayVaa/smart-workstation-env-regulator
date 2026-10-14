@@ -18,7 +18,7 @@
 | RMS priority | งานย่อย | เจ้าของ | ทำอะไร | Period / min inter-arrival T (ms) | Deadline D (ms) | Estimated WCET C (ms) | C/T | ของร่วม/การป้องกัน |
 |---:|---|---|---|---:|---:|---:|---:|---|
 | 1 | `presence_task` | B | อ่าน LD2410, filter และอัปเดต `occupied` | 100 | 100 | 1.0 | 0.010000 | UART เฉพาะ task; critical section สั้นกับข้อมูลกลาง |
-| 2 | `button_event_task` | B | debounce และแปล short/long press | 100 | 100 | 0.2 | 0.002000 | ISR ส่ง queue เท่านั้น |
+| 2 | `button_event_task` | B | debounce และแปล short/long press สำหรับ alert และเมนูตั้งค่าแสง | 100 | 100 | 0.2 | 0.002000 | ISR ส่ง queue เท่านั้น; publish `user_lux_target`/`late_mode` เมื่อเปลี่ยน |
 | 3 | `light_control_task` | D | อ่าน BH1750 และปรับ PWM | 200 | 200 | 2.0 | 0.010000 | I²C ผ่าน `i2c_lock`; PWM เป็น hardware peripheral |
 | 4 | `display_alert_task` | B | จัด alert, วาด OLED และกำหนด buzzer | 500 | 500 | 8.0 | 0.016000 | I²C ผ่าน `i2c_lock`; alert ผ่าน queue |
 | 5 | `break_timer_task` | B | นับเวลานั่งและตัดสิน 20/30/3/5 นาที | 1,000 | 1,000 | 1.0 | 0.001000 | อ่าน snapshot ของ `occupied`; ส่ง queue |
@@ -71,7 +71,7 @@ U_bound(n=3) = 3(2^(1/3) - 1)
 |---|---|---|---|
 | I²C โหนดโต๊ะ | BH1750 ของ D, OLED ของ B | FreeRTOS mutex `i2c_lock` พร้อม priority inheritance | รอ lock ไม่เกิน 50 ms; ถือเฉพาะ transaction; ห้าม `vTaskDelay`/รอ Wi-Fi ขณะถือ lock |
 | I²C โหนดห้อง | SCD41 ของ C | `i2c_lock` แม้ปัจจุบันมีผู้ใช้หลักรายเดียว เพื่อรองรับการเพิ่มอุปกรณ์ | กติกาเดียวกับโหนดโต๊ะ |
-| จอและ buzzer | ทุกโมดูลร้องขอ, B เป็นเจ้าของ | FreeRTOS queue ของ `alert_request`; display task เป็นผู้เขียน hardware รายเดียว | priority 2 > 1 > 0; ไม่ block task ด้วยการเปิดเสียง |
+| จอและ buzzer | ทุกโมดูลร้องขอ, B เป็นเจ้าของ | FreeRTOS queue ของ `alert_request`; display task เป็นผู้เขียน hardware รายเดียว | priority 2 > 1 > 0; alert แทรกเมนูตั้งค่าได้; ไม่ block task ด้วยการเปิดเสียง |
 | ข้อมูลกลาง | task สร้าง/อ่านต่างกัน | single writer + snapshot ภายใต้ mutex/critical section สั้น | ห้ามถือ lock ระหว่าง network I/O |
 | GPIO PWM | งานแสง/พัดลม/buzzer | hardware timer/channel แยกกัน; A ตรวจ channel conflict ใน A2 | ไม่สร้าง RTOS task ที่คาบ 1–20 ms เพียงเพื่อ toggle ขา |
 
@@ -91,7 +91,8 @@ U_bound(n=3) = 3(2^(1/3) - 1)
 
 - [ ] A วัด WCET/response time ของทุก task จาก A4 อย่างน้อย 100 รอบ และใช้ค่าสูงสุดรวม margin แทน estimated WCET
 - [ ] A, C และ D ส่ง A-T/C-T/D-T แล้วตรวจว่าชื่อ, period, deadline และทรัพยากรตรงกับตารางนี้
-- [ ] D ยืนยัน deadline/NFR ใน D1 โดยเฉพาะเวลาตอบสนองการเตือนและการควบคุมพัดลม
+- [x] รับ requirement จาก D1 แล้ว: NFR-04 กำหนดให้แสดงการเตือนพักภายใน 1 s และ NFR-14 กำหนดอย่างน้อย 2 ช่องทาง
+- [ ] A รวม `user_lux_target`, `late_mode` และการ aggregate `occupied` เป็น `room_occupied_count` ใน contract กลาง
 - [ ] A ตรวจว่าการเรียก Wi-Fi/NTP ไม่ busy-wait และไม่ถือ mutex ขณะ block
 - [ ] ถ้า task set หรือ period เปลี่ยน ต้องคำนวณ `U`, RMS bound และ blocking ใหม่
 
@@ -108,4 +109,3 @@ U_bound(n=3) = 3(2^(1/3) - 1)
 [B3-1] เอกสารประกอบวิชา 010123119, บท 16 หน้า 9, 15–21, 30–34 และบท 17 หน้า 17–31.
 
 [B3-2] C. L. Liu and J. W. Layland, “Scheduling algorithms for multiprogramming in a hard-real-time environment,” *J. ACM*, vol. 20, no. 1, pp. 46–61, Jan. 1973, doi: 10.1145/321738.321743.
-
