@@ -1,0 +1,50 @@
+[wall    0.143] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall    0.662] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall   31.396] Starting simulation...
+[wall   31.906] ets Jul 29 2019 12:21:46
+[wall   31.906] 
+[wall   31.906] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall   31.906] configsip: 0, SPIWP:0xee
+[wall   31.906] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall   31.906] mode:DIO, clock div:2
+[wall   31.906] load:0x3fff0030,len:1156
+[wall   31.906] load:0x40078000,len:11456
+[wall   31.906] ho 0 tail 12 room 4
+[wall   31.906] load:0x40080400,len:2972
+[wall   31.906] entry 0x400805dc
+[wall   33.710] 
+[wall   33.782] === SWER room node  (SIMULATION=1) ===
+[wall   34.244] [    1.917] tasks started
+[wall   34.244] [MULTI room: two desks counted separately] Expected text matched: "tasks started"
+[wall   35.301] ; type 'help' for test commands
+[wall   42.113] [    2.176] C: S0_ROOM_EMPTY -> S1_AIR_GOOD co2=0 fan=0% desks online=0 occupied=0
+[wall   42.741] [    2.560] A: MQTT connected
+[wall   42.741] [MULTI room: two desks counted separately] Expected text matched: "MQTT connected"
+[wall   42.811]  as swer-room-ffba
+[wall   43.211] [    2.969] A: new desk 1
+[wall   43.211] [    2.969] A: desk 1 online=1
+[wall   43.211] [MULTI room: two desks counted separately] Expected text matched: "desk 1 online=1"
+[wall   43.357] [    3.074] A: new desk 2
+[wall   43.358] [    3.074] A: desk 2 online=1
+[wall   43.358] [MULTI room: two desks counted separately] Expected text matched: "desk 2 online=1"
+[wall   47.553] [    6.923] A: room_desks_online=2 room_occupied_count=0
+[wall   52.874] [   11.923] C: S1_AIR_GOOD -> S0_ROOM_EMPTY co2=400 fan=0% desks online=2 occupied=0
+[wall   52.874] [   11.932] A: desk 1 occupied=1
+[wall   52.874] [MULTI room: two desks counted separately] Expected text matched: "desk 1 occupied=1"
+[wall   52.875] [MULTI room: two desks counted separately] delay 6s
+[wall   52.951] [   11.933] A: room_desks_online=2 room_occupied_count=1
+[wall   58.249] [   16.923] C: S0_ROOM_EMPTY -> S1_AIR_GOOD co2=400 fan=0% desks online=2 occupied=1
+[wall   59.400] [MULTI room: two desks counted separately] delay 1500ms
+[wall   59.495] C: state=S1_AIR_GOOD co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0%
+[wall   59.495] A: room_desks_online=2 room_occupied_count=1
+[wall   59.495] A: wifi=1 mqtt=1 published=3 bad=0
+[wall   59.495]    desk 1 online=1 occ=1 iv=5s last=6s ago lost=0
+[wall   59.509]    desk 2 online=1 occ=0 iv=5s last=1s ago lost=0
+[wall   59.509] ---- task statistics (measured) ----
+[wall   59.526] task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+[wall   59.526] air_sensor_task            5000      4    259895    70405  0.051979     0  1884
+[wall   59.526] room_communication_task    5000      4      6082     4417  0.001216     0  5684
+[wall   59.550] Total U (WCET-based) = 5.3195%
+[wall   59.550] heap free=240472  min_free=232848
+[wall   61.009] [MULTI room: two desks counted separately] Scenario completed successfully
+[wall   61.069] VCD file written to: out/multi/logic_analyzer.vcd

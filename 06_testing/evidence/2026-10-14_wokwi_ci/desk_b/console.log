@@ -1,0 +1,114 @@
+[wall    0.144] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall    0.468] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall    1.902] Starting simulation...
+[wall    2.771] ets Jul 29 2019 12:21:46
+[wall    2.771] 
+[wall    2.771] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall    2.771] configsip: 0, SPIWP:0xee
+[wall    2.771] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall    2.771] mode:DIO, clock div:2
+[wall    2.771] load:0x3fff0030,len:1156
+[wall    2.771] load:0x40078000,len:11456
+[wall    2.771] ho 0 tail 12 room 4
+[wall    2.771] load:0x40080400,len:2972
+[wall    2.771] entry 0x400805dc
+[wall    5.184] 
+[wall    5.294] === SWER desk node 1  (SIMULATION=1, TIME_SCALE=120) ===
+[wall    6.548] [    2.025] tasks started
+[wall    6.548] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] Expected text matched: "tasks started"
+[wall    6.834] ; type 'help' for test commands
+[wall    6.912] [    2.076] TEST: presence forced ON
+[wall    6.991] [    2.138] A: Wi-Fi up 10.13.37.2, SNTP started
+[wall    7.486] [    2.406] A: MQTT connected as swer-desk1-c381
+[wall    8.284] [    3.124] B: UNOCCUPIED -> WORKING
+[wall    8.284] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] Expected text matched: "UNOCCUPIED -> WORKING"
+[wall    8.459] [    3.130] A: desk_report occ=1 (immediate)
+[wall    8.459] [    3.139] TEST: BH1750 read error
+[wall    8.505] [    3.225] D: OFF -> REGULATING (B=0.0%)
+[wall    8.994] [    3.625] D: REGULATING -> SENSOR_FAULT
+[wall    8.994] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] Expected text matched: "REGULATING -> SENSOR_FAULT"
+[wall    8.994] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 400ms
+[wall    9.163]  (B=10.0%)
+[wall    9.163] [    3.652] B: display alert SENSOR FAULT prio 1
+[wall   10.157] B: state=WORKING occupied=1 sit=1min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   10.157] D: state=SENSOR_FAULT lux_now=200 B=20.0% r=0.500
+[wall   10.157] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   10.187] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-70
+[wall   10.187] [    4.067] TEST: BH1750 restored
+[wall   10.670] [    4.425] D: SENSOR_FAULT -> REGULATING
+[wall   10.670] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] Expected text matched: "SENSOR_FAULT -> REGULATING"
+[wall   10.670] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 300ms
+[wall   10.836]  (B=30.0%)
+[wall   11.371] B: state=WORKING occupied=1 sit=1min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   11.371] D: state=REGULATING lux_now=380 B=35.0% r=0.500
+[wall   11.404] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   11.404] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-95
+[wall   11.404] [    4.793] TEST: LD2410 frames stopped
+[wall   12.058] [    5.324] B: WORKING -> SENSOR_FAULT
+[wall   12.058] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] Expected text matched: "-> SENSOR_FAULT"
+[wall   12.059] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 400ms
+[wall   12.245] [    5.325] B: display alert SENSOR FAULT prio 2
+[wall   13.178] B: state=SENSOR_FAULT occupied=1 sit=3min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   13.178] D: state=REGULATING lux_now=530 B=59.4% r=0.500
+[wall   13.213] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   13.213] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-97
+[wall   13.213] [    5.770] TEST: LD2410 frames restored
+[wall   13.256] [    5.824] B: SENSOR_FAULT ->
+[wall   13.256] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] Expected text matched: "SENSOR_FAULT ->"
+[wall   13.256] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 300ms
+[wall   13.406]  WORKING
+[wall   13.817] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 6s
+[wall   13.941] B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   13.975] D: state=REGULATING lux_now=549 B=57.3% r=0.500
+[wall   13.975] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   13.975] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-75
+[wall   21.067] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 6s
+[wall   21.197] B: state=WORKING occupied=1 sit=12min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   21.197] D: state=REGULATING lux_now=476 B=71.1% r=0.500
+[wall   21.224] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   21.224] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=3 air_rx=0 air_lost=0 bad=0 rssi=-78
+[wall   25.868] [   16.025] B: WORKING -> EYE_ALERT
+[wall   25.868] [   16.026] B: display alert EYE BREAK prio 1
+[wall   28.828] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 4s
+[wall   28.997] B: state=EYE_ALERT occupied=1 sit=24min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   28.997] D: state=REGULATING lux_now=878 B=11.1% r=0.500
+[wall   28.997] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   29.106] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=5 air_rx=0 air_lost=0 bad=0 rssi=-93
+[wall   31.490] [   20.047] A: link_ok=0
+[wall   32.750] [   21.025] B: EYE_ALERT -> STAND_ALERT
+[wall   32.750] [   21.026] B: display alert LINK LOST prio 0
+[wall   32.854] [   21.065] B: display alert STAND UP prio 1
+[wall   34.534] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 1s
+[wall   34.776] B: state=STAND_ALERT occupied=1 sit=32min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   34.776] D: state=REGULATING lux_now=463 B=44.7% r=0.500
+[wall   34.776] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   34.776] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=5 air_rx=0 air_lost=0 bad=0 rssi=-89
+[wall   34.807] [   22.193] TEST: clock set to 16:58 (advances x120)
+[wall   35.908] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 10s
+[wall   36.062] B: state=STAND_ALERT occupied=1 sit=34min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   36.062] D: state=REGULATING lux_now=475 B=45.9% r=0.500
+[wall   36.062] A: time_valid=1 16:59 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   36.062] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=6 air_rx=0 air_lost=0 bad=0 rssi=-90
+[wall   48.614] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 10s
+[wall   48.765] B: state=STAND_ALERT occupied=1 sit=54min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   48.765] D: state=REGULATING lux_now=475 B=45.9% r=0.680
+[wall   48.765] A: time_valid=1 17:19 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   48.765] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=8 air_rx=0 air_lost=0 bad=0 rssi=-76
+[wall   61.421] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] delay 1500ms
+[wall   61.587] B: state=STAND_ALERT occupied=1 sit=74min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   61.587] D: state=REGULATING lux_now=475 B=45.9% r=0.547
+[wall   61.587] A: time_valid=1 17:39 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   61.655] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=10 air_rx=0 air_lost=0 bad=0 rssi=-78
+[wall   61.655] [   43.187] TEST: clock from NTP
+[wall   61.655] ---- task statistics (measured) ----
+[wall   61.655] task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+[wall   61.655] presence_task               100    412       699       42  0.006990     0  1904
+[wall   61.735] button_event_task           100    411        24       23  0.000240     0  2188
+[wall   61.735] light_control_task          200    206     25351      965  0.126755     0  1848
+[wall   61.735] display_alert_task          500     79     43408    41808  0.086816     0  1820
+[wall   61.735] break_timer_task           1000     42     14500      663  0.014500     0  1880
+[wall   61.735] desk_communication_task    1000     10      5351     4813  0.005351     0  5892
+[wall   61.780] Total U (WCET-based) = 24.0652%   RMS bound n=6: 73.48%
+[wall   61.780] heap free=216212  min_free=207552  TIME_SCALE=120
+[wall   63.820] [Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule] Scenario completed successfully
+[wall   66.907] VCD file written to: out/desk_b/logic_analyzer.vcd

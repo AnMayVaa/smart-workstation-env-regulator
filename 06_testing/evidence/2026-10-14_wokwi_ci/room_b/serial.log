@@ -1,0 +1,49 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+
+=== SWER room node  (SIMULATION=1) ===
+[    1.917] tasks started; type 'help' for test commands
+[    2.176] C: S0_ROOM_EMPTY -> S1_AIR_GOOD co2=0 fan=0% desks online=0 occupied=0
+[    2.177] TEST: desks online=1 occupied=1
+[    2.178] TEST: CO2 fixed at 700 ppm (next reading)
+[    2.200] TEST: SCD41 read error
+[    2.529] A: MQTT connected as swer-room-34cb
+[   11.916] C: S1_AIR_GOOD -> S4_SENSOR_FAULT co2=0 fan=80% desks online=1 occupied=1
+C: state=S4_SENSOR_FAULT co2=0 lvl=2 t=0.0 rh=0 tf=0 ok=0 fan=80%
+A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+A: wifi=1 mqtt=1 published=2 bad=0
+[   16.164] TEST: SCD41 restored
+[   21.923] C: S4_SENSOR_FAULT -> S1_AIR_GOOD co2=700 fan=0% desks online=1 occupied=1
+C: state=S1_AIR_GOOD co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0%
+A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+A: wifi=1 mqtt=1 published=4 bad=0
+[   22.278] TEST: temperature fixed at 27.0 C
+C: state=S1_AIR_GOOD co2=700 lvl=0 t=27.0 rh=55 tf=2 ok=1 fan=0%
+A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+A: wifi=1 mqtt=1 published=5 bad=0
+[   27.742] TEST: temperature fixed at 18.0 C
+C: state=S1_AIR_GOOD co2=700 lvl=0 t=18.0 rh=55 tf=1 ok=1 fan=0%
+A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+A: wifi=1 mqtt=1 published=6 bad=0
+[   33.256] TEST: temperature from DHT22
+[   33.258] TEST: CO2 fixed at 5200 ppm (next reading)
+[   46.923] C: S1_AIR_GOOD -> S4_SENSOR_FAULT co2=700 fan=80% desks online=1 occupied=1
+C: state=S4_SENSOR_FAULT co2=700 lvl=2 t=18.0 rh=55 tf=0 ok=0 fan=80%
+A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+A: wifi=1 mqtt=1 published=9 bad=0
+[   49.272] TEST: CO2 from potentiometer
+---- task statistics (measured) ----
+task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+air_sensor_task            5000     10    259993    30914  0.051999     0  1884
+room_communication_task    5000     10      7499     5123  0.001500     0  5856
+Total U (WCET-based) = 5.3498%
+heap free=242844  min_free=232848

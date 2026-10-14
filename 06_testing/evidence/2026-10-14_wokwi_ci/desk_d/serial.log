@@ -1,0 +1,41 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+
+=== SWER desk node 1  (SIMULATION=1, TIME_SCALE=120) ===
+[    2.024] tasks started; type 'help' for test commands
+[    2.076] TEST: presence forced ON
+[    2.145] A: Wi-Fi OFF (test)
+[    3.123] B: UNOCCUPIED -> WORKING[    3.224] D: OFF -> REGULATING (B=0.0%)
+B: state=WORKING occupied=1 sit=5min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=503 B=50.6% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=0 mqtt=0 room_online=0 link_ok=0 reports=0 air_rx=0 air_lost=0 bad=0 rssi=0
+[    6.176] TEST: presence forced OFF
+[    7.223] B: WORKING -> AWAY_PENDING
+[    9.024] B: AWAY_PENDING -> UNOCCUPIED
+[   10.024] B: away_timeout=1 (reset user_lux_target=500, late_mode=0)
+[   10.224] D: REGULATING -> DIMMING (B=50.6%)
+B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=500 late=0 snooze=0
+D: state=DIMMING lux_now=351 B=25.3% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=0 mqtt=0 room_online=0 link_ok=0 reports=0 air_rx=0 air_lost=0 bad=0 rssi=0
+[   20.024] A: link_ok=0
+[   20.025] B: display alert LINK LOST prio 0
+B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=500 late=0 snooze=0
+D: state=DIMMING lux_now=351 B=25.3% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=0 mqtt=0 room_online=0 link_ok=0 reports=0 air_rx=0 air_lost=0 bad=0 rssi=0
+[   70.224] D: DIMMING -> OFF (B=25.3%)
+B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=500 late=0 snooze=0
+D: state=OFF lux_now=200 B=0.0% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=0 mqtt=0 room_online=0 link_ok=0 reports=0 air_rx=0 air_lost=0 bad=0 rssi=0

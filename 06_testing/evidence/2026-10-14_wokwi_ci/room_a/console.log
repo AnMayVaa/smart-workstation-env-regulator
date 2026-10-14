@@ -1,0 +1,105 @@
+[wall    0.198] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall    0.472] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall    1.737] Starting simulation...
+[wall    2.367] ets Jul 29 2019 12:21:46
+[wall    2.367] 
+[wall    2.367] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall    2.367] configsip: 0, SPIWP:0xee
+[wall    2.368] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall    2.368] mode:DIO, clock div:2
+[wall    2.368] load:0x3fff0030,len:1156
+[wall    2.368] load:0x40078000,len:11456
+[wall    2.368] ho 0 tail 12 room 4
+[wall    2.368] load:0x40080400,len:2972
+[wall    2.368] entry 0x400805dc
+[wall    4.986] 
+[wall    4.986] === SWER room node  (SIMULATION=1) ===
+[wall    5.962] [    1.916] tasks started
+[wall    5.962] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Expected text matched: "tasks started"
+[wall    8.014] ; type 'help' for test commands
+[wall   37.936] ets Jul 29 2019 12:21:46
+[wall   37.936] 
+[wall   37.936] rst:0x8 (TG1WDT_SYS_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall   37.936] configsip: 0, SPIWP:0xee
+[wall   37.983] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall   37.983] mode:DIO, clock div:2
+[wall   37.983] load:0x3fff0030,len:1156
+[wall   37.983] load:0x40078000,len:11456
+[wall   37.983] ho 0 tail 12 room 4
+[wall   37.983] load:0x40080400,len:2972
+[wall   37.983] entry 0x400805dc
+[wall   40.205] 
+[wall   40.313] === SWER room node  (SIMULATION=1) ===
+[wall   40.650] E (2981) phy_init: load_cal_data_from_nvs_handle: calibration data MAC check failed: expected 00:00:00:00:00:00, found 24:0a:c4:00:01:10
+[wall   42.281] [    4.812] tasks started; type 'help' for test commands
+[wall   45.550] [    4.903] C: S0_ROOM_EMPTY -> S1_AIR_GOOD co2=0 fan=0% desks online=0 occupied=0
+[wall   46.073] [    5.267] A: MQTT connected
+[wall   46.073] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Expected text matched: "MQTT connected"
+[wall   46.252]  as swer-room-e830
+[wall   46.275] [    5.304] TEST: desks online=1 occupied=1
+[wall   46.275] [    5.306] TEST: CO2 fixed at 1050 ppm (next reading)
+[wall   51.129] [    9.817] C: S1_AIR_GOOD -> S3_AIR_POOR
+[wall   51.129] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Expected text matched: "-> S3_AIR_POOR"
+[wall   51.130] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] delay 300ms
+[wall   51.212]  co2=1050 fan=100% desks online=1 occupied=1
+[wall   51.597] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] delay 5500ms
+[wall   51.693] C: state=S3_AIR_POOR co2=1050 lvl=2 t=24.0 rh=55 tf=0 ok=1 fan=100%
+[wall   51.701] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall   51.701] A: wifi=1 mqtt=1 published=1 bad=0
+[wall   51.701] [   10.170] TEST: CO2 fixed at 970 ppm (next reading)
+[wall   57.853] C: state=S3_AIR_POOR co2=970 lvl=2 t=24.0 rh=55 tf=0 ok=1 fan=100%
+[wall   57.853] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall   57.867] A: wifi=1 mqtt=1 published=2 bad=0
+[wall   57.867] [   15.685] TEST: CO2 fixed at 920 ppm (next reading)
+[wall   62.383] [   19.817] C: S3_AIR_POOR -> S2_AIR_MODERATE
+[wall   62.383] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Expected text matched: "-> S2_AIR_MODERATE"
+[wall   62.383] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] delay 300ms
+[wall   62.604]  co2=920 fan=60% desks online=1 occupied=1
+[wall   64.571] C: state=S2_AIR_MODERATE co2=920 lvl=1 t=24.0 rh=55 tf=0 ok=1 fan=60%
+[wall   64.571] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall   64.571] A: wifi=1 mqtt=1 published=3 bad=0
+[wall   64.869] [   20.149] TEST: CO2 fixed at 750 ppm (next reading)
+[wall   94.377] [   24.817] C: S2_AIR_MODERATE -> S1_AIR_GOOD
+[wall   94.377] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Expected text matched: "-> S1_AIR_GOOD"
+[wall   94.377] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] delay 300ms
+[wall   94.463]  co2=750 fan=0% desks online=1 occupied=1
+[wall   94.949] C: state=S1_AIR_GOOD co2=750 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0%
+[wall   94.949] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall   94.949] A: wifi=1 mqtt=1 published=4 bad=0
+[wall   94.949] [   25.163] TEST: CO2 fixed at 900 ppm (next reading)
+[wall  100.182] [   29.817] C: S1_AIR_GOOD -> S2_AIR_MODERATE
+[wall  100.182] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Expected text matched: "-> S2_AIR_MODERATE"
+[wall  100.182] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] delay 300ms
+[wall  100.548]  co2=900 fan=0% desks online=1 occupied=1
+[wall  103.981] C: state=S2_AIR_MODERATE co2=900 lvl=1 t=24.0 rh=55 tf=0 ok=1 fan=0%
+[wall  103.981] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall  103.981] A: wifi=1 mqtt=1 published=5 bad=0
+[wall  104.277] [   30.182] TEST: CO2 fixed at 1200 ppm (next reading)
+[wall  135.528] [   34.817] C: S2_AIR_MODERATE -> S3_AIR_POOR
+[wall  135.528] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Expected text matched: "-> S3_AIR_POOR"
+[wall  135.679]  co2=1200 fan=100% desks online=1 occupied=1
+[wall  135.679] [   34.833] TEST: desks online=1 occupied=0
+[wall  141.041] [   39.817] C: S3_AIR_POOR -> S0_ROOM_EMPTY
+[wall  141.041] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Expected text matched: "-> S0_ROOM_EMPTY"
+[wall  141.041] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] delay 300ms
+[wall  141.143]  co2=1200 fan=0% desks online=1 occupied=0
+[wall  141.637] C: state=S0_ROOM_EMPTY co2=1200 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0%
+[wall  141.637] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall  141.637] A: wifi=1 mqtt=1 published=7 bad=0
+[wall  141.637] [   40.147] TEST: desks online=0 occupied=0
+[wall  146.654] [   44.817] C: S0_ROOM_EMPTY -> S3_AIR_POOR
+[wall  146.654] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Expected text matched: "-> S3_AIR_POOR"
+[wall  146.654] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] delay 300ms
+[wall  146.754]  co2=1200 fan=100% desks online=0 occupied=0
+[wall  147.121] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] delay 1500ms
+[wall  147.205] C: state=S3_AIR_POOR co2=1200 lvl=2 t=24.0 rh=55 tf=0 ok=1 fan=100%
+[wall  147.234] A: room_desks_online=0 room_occupied_count=0 (overridden for C unit tests)
+[wall  147.234] A: wifi=1 mqtt=1 published=8 bad=0
+[wall  147.234] ---- task statistics (measured) ----
+[wall  147.234] task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+[wall  147.256] air_sensor_task            5000      9     91750    16697  0.018350     0  1888
+[wall  147.256] room_communication_task    5000      9      5751     4915  0.001150     0  5860
+[wall  147.256] Total U (WCET-based) = 1.9500%
+[wall  147.256] heap free=242716  min_free=232736
+[wall  148.737] [Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown] Scenario completed successfully
+[wall  148.798] VCD file written to: out/room_a/logic_analyzer.vcd

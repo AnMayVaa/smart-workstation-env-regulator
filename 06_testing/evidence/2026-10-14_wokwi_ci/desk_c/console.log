@@ -1,0 +1,97 @@
+[wall    0.158] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall    0.416] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall    2.314] Starting simulation...
+[wall    3.396] ets Jul 29 2019 12:21:46
+[wall    3.396] 
+[wall    3.396] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall    3.396] configsip: 0, SPIWP:0xee
+[wall    3.396] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall    3.396] mode:DIO, clock div:2
+[wall    3.396] load:0x3fff0030,len:1156
+[wall    3.396] load:0x40078000,len:11456
+[wall    3.396] ho 0 tail 12 room 4
+[wall    3.396] load:0x40080400,len:2972
+[wall    3.396] entry 0x400805dc
+[wall    6.037] 
+[wall    6.037] === SWER desk node 1  (SIMULATION=1, TIME_SCALE=120) ===
+[wall    7.467] [    2.024] tasks started
+[wall    7.467] [Desk C: away_timeout resets user settings, dimming, return] Expected text matched: "tasks started"
+[wall    7.672] ; type 'help' for test commands
+[wall    7.963] [    2.136] A: Wi-Fi up 10.13.37.2, SNTP started
+[wall    8.463] [    2.359] A: MQTT connected as swer-desk1-99f7
+[wall   11.674] [    5.023] B: away_timeout=1
+[wall   11.674] [Desk C: away_timeout resets user settings, dimming, return] Expected text matched: "away_timeout=1"
+[wall   11.675] [Desk C: away_timeout resets user settings, dimming, return] delay 500ms
+[wall   11.767]  (reset user_lux_target=500, late_mode=0)
+[wall   12.290] [Desk C: away_timeout resets user settings, dimming, return] delay 1700ms
+[wall   14.284] [Desk C: away_timeout resets user settings, dimming, return] delay 450ms
+[wall   14.887] [Desk C: away_timeout resets user settings, dimming, return] delay 150ms
+[wall   15.131] [Desk C: away_timeout resets user settings, dimming, return] delay 450ms
+[wall   15.231] [    7.864] B: user_lux_target=600 late_mode=0
+[wall   15.708] [Desk C: away_timeout resets user settings, dimming, return] delay 150ms
+[wall   15.963] [Desk C: away_timeout resets user settings, dimming, return] delay 450ms
+[wall   16.120] [    8.460] B: user_lux_target=700 late_mode=0
+[wall   16.566] [Desk C: away_timeout resets user settings, dimming, return] delay 150ms
+[wall   16.836] [Desk C: away_timeout resets user settings, dimming, return] delay 450ms
+[wall   16.987] [    9.060] B: user_lux_target=800 late_mode=0
+[wall   17.440] [Desk C: away_timeout resets user settings, dimming, return] delay 1700ms
+[wall   19.438] [Desk C: away_timeout resets user settings, dimming, return] delay 450ms
+[wall   20.054] [Desk C: away_timeout resets user settings, dimming, return] delay 150ms
+[wall   20.369] [Desk C: away_timeout resets user settings, dimming, return] delay 450ms
+[wall   20.516] [   11.810] B: user_lux_target=800 late_mode=1
+[wall   20.954] [Desk C: away_timeout resets user settings, dimming, return] delay 1700ms
+[wall   23.039] [Desk C: away_timeout resets user settings, dimming, return] delay 450ms
+[wall   23.548] [Desk C: away_timeout resets user settings, dimming, return] delay 300ms
+[wall   24.192] B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=800 late=1 snooze=0
+[wall   24.192] D: state=OFF lux_now=200 B=0.0% r=0.740
+[wall   24.192] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   24.192] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-82
+[wall   24.192] [   14.729] TEST: presence forced ON
+[wall   25.482] [   15.823] B: UNOCCUPIED -> WORKING
+[wall   25.482] [Desk C: away_timeout resets user settings, dimming, return] Expected text matched: "UNOCCUPIED -> WORKING"
+[wall   25.482] [Desk C: away_timeout resets user settings, dimming, return] delay 2s
+[wall   25.569] [   15.824] D: OFF -> REGULATING (B=0.0%)
+[wall   25.569] [   15.828] A: desk_report occ=1 (immediate)
+[wall   28.277] [   17.838] TEST: presence forced OFF
+[wall   29.936] [   18.923] B: WORKING -> AWAY_PENDING
+[wall   29.936] [Desk C: away_timeout resets user settings, dimming, return] Expected text matched: "WORKING -> AWAY_PENDING"
+[wall   30.042] [   18.929] A: desk_report occ=0 (immediate)
+[wall   31.591] [   20.030] A: link_ok=0
+[wall   31.709] [   20.031] B: display alert LINK LOST prio 0
+[wall   33.386] [   21.023] B: AWAY_PENDING -> UNOCCUPIED
+[wall   33.386] [Desk C: away_timeout resets user settings, dimming, return] Expected text matched: "AWAY_PENDING -> UNOCCUPIED"
+[wall   35.683] [   22.023] B: away_timeout=1
+[wall   35.683] [Desk C: away_timeout resets user settings, dimming, return] Expected text matched: "away_timeout=1"
+[wall   35.826]  (reset user_lux_target=500, late_mode=0)
+[wall   36.274] [   22.223] D: REGULATING -> DIMMING
+[wall   36.274] [Desk C: away_timeout resets user settings, dimming, return] Expected text matched: "REGULATING -> DIMMING"
+[wall   36.274] [Desk C: away_timeout resets user settings, dimming, return] delay 500ms
+[wall   36.372]  (B=91.6%)
+[wall   37.774] B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=500 late=0 snooze=0
+[wall   37.774] D: state=DIMMING lux_now=721 B=82.4% r=0.752
+[wall   37.774] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   37.774] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=5 air_rx=0 air_lost=0 bad=0 rssi=-79
+[wall   37.774] [   22.781] TEST: presence forced ON
+[wall   39.354] [   23.823] B: UNOCCUPIED -> WORKING
+[wall   39.354] [   23.828] A: desk_report occ=1 (immediate)
+[wall   39.355] [   23.834] D: DIMMING -> REGULATING
+[wall   39.355] [Desk C: away_timeout resets user settings, dimming, return] Expected text matched: "DIMMING -> REGULATING"
+[wall   39.355] [Desk C: away_timeout resets user settings, dimming, return] delay 2500ms
+[wall   39.439]  (B=54.7%)
+[wall   42.688] [Desk C: away_timeout resets user settings, dimming, return] delay 1500ms
+[wall   42.798] B: state=WORKING occupied=1 sit=4min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   42.840] D: state=REGULATING lux_now=737 B=87.6% r=0.500
+[wall   42.840] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   42.840] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=6 air_rx=0 air_lost=0 bad=0 rssi=-92
+[wall   42.840] ---- task statistics (measured) ----
+[wall   42.883] task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+[wall   42.883] presence_task               100    244       887       49  0.008870     0  1904
+[wall   42.883] button_event_task           100    716       897       58  0.008970     0  876
+[wall   42.883] light_control_task          200    123     26390     1357  0.131950     0  1848
+[wall   42.883] display_alert_task          500     45     42899    40092  0.085798     0  1820
+[wall   42.939] break_timer_task           1000     25      1185      166  0.001185     0  1912
+[wall   42.939] desk_communication_task    1000      6      5684     5005  0.005684     0  5892
+[wall   42.939] Total U (WCET-based) = 24.2457%   RMS bound n=6: 73.48%
+[wall   42.939] heap free=216124  min_free=207552  TIME_SCALE=120
+[wall   44.641] [Desk C: away_timeout resets user settings, dimming, return] Scenario completed successfully
+[wall   45.464] VCD file written to: out/desk_c/logic_analyzer.vcd
