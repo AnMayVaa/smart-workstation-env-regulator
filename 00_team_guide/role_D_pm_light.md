@@ -141,7 +141,7 @@
 | Universal access | บท 2 หน้า 42–44 |
 | ทำไม GPIO ต้องมีวงจรขับ | บท 13 หน้า 34–35 |
 | PWM และคาบสำหรับ LED | บท 13 หน้า 91–95 |
-| Functional vs nonfunctional features (ใช้เทียบแนวคิด) | บท 10 หน้า 38 และ 45 |
+| Functional vs nonfunctional features (ใช้เทียบแนวคิด) | บท 10 หน้า 39 และ 45 |
 | Cloud vs edge (ใช้กับหัวข้อ 9) | บท 24 |
 | IoT security/privacy (ใช้กับหัวข้อ 9) | บท 26 หน้า 21–26 |
 
