@@ -2,30 +2,35 @@
 
 | รายการ | ค่า |
 |---|---|
-| เวอร์ชัน | v1.2 |
-| วันที่ | 2026-10-14 |
+| เวอร์ชัน | v1.4 |
+| วันที่ | 2026-10-15 |
 | เจ้าของ | B |
 
 ## ปัญหาและการตัดสินใจ
 
 | # | ปัญหา/ข้อจำกัด | ผลกระทบ | วิธีรับมือปัจจุบัน | งานติดตาม |
 |---:|---|---|---|---|
-| 1 | A1 v1.0 ยืนยันว่า C ส่ง `air_status` ผ่าน A แต่ไม่ส่ง `alert_request` ข้าม Wi-Fi | logic ร่างเดิมของ B รับ alert จาก C ผิดทิศทาง | B อ่าน `co2_level`, `temp_flag`, `sensor_ok` แล้วสร้าง/clear alert `SRC_AIR` ภายในโหนด | ทดสอบ TC-B-07/08 ร่วมกับ A หลังรวมโค้ด |
-| 2 | A1 v1.0 ให้ B เป็นเจ้าของ `user_lux_target`/`late_mode` และ reset ตาม FR-11 | ต้องมี UI ที่ไม่ชนกับปุ่ม alert | ใช้เมนูตามบริบทบน OLED; alert มีสิทธิ์เหนือเมนู; ใช้ปุ่มเดียว GPIO 27 และเก็บ GPIO 33 เป็นขาสำรอง | D ตรวจการอ่านค่าแบบ read-only ใน integration test |
-| 3 | A-T/C-T/D-T ส่งฉบับจริงแล้ว แต่ WCET ยังเป็นค่าประมาณ | feasibility ดีขึ้นแต่ยังไม่ใช่ผลวัดจากระบบ | B3 ใช้ period/deadline/WCET ตามไฟล์เจ้าของและคำนวณใหม่ | A วัด WCET ใน A4 อย่างน้อย 100 รอบแล้วแทนค่าประมาณ |
-| 4 | Wokwi ไม่มี LD2410 | พิสูจน์ความแม่นยำของ presence sensor ไม่ได้ | ใช้ PIR ทดสอบ FSM และ fault injection เท่านั้น | ทดสอบกับ LD2410 จริงหรือ HIL simulator ในงานต่อยอด |
+| 1 | A1 v1.0 ยืนยันว่า C ส่ง `air_status` ผ่าน A แต่ไม่ส่ง `alert_request` ข้าม Wi-Fi | logic ร่างเดิมของ B รับ alert จาก C ผิดทิศทาง | B อ่าน `co2_level`, `temp_flag`, `sensor_ok` แล้วสร้าง/clear alert `SRC_AIR` ภายในโหนด; A5 S1/S1b/S3 ผ่าน | รันต่อเนื่อง 10 นาทีเพื่อยืนยันการ clear/reconnect ซ้ำ |
+| 2 | A1 v1.0 ให้ B เป็นเจ้าของ `user_lux_target`/`late_mode` และ reset ตาม FR-11 | ต้องมี UI ที่ไม่ชนกับปุ่ม alert | ใช้เมนูตามบริบทบน OLED; A5 D4 ยืนยัน 800 lux/late ON และ reset เป็น 500/false หลัง away | ไม่มีงานค้างฝั่ง B |
+| 3 | WCET ขั้นออกแบบเป็นค่าประมาณ | อาจประเมิน blocking และ utilization ต่ำกว่าจริง | B3 เพิ่มผล A5 รอบ 22.8 นาทีแยก core: งานควบคุมโต๊ะ core 1 = 28.98%, communication core 0 = 0.52%, `late=0` | วัดบน ESP32 จริงก่อนสรุป WCET ขั้นสุดท้าย |
+| 4 | Wokwi ไม่มี LD2410 | พิสูจน์ความแม่นยำของ presence sensor ไม่ได้ | ใช้ slide switch ที่ GPIO 13 ทดสอบ FSM และ fault injection เท่านั้น | ทดสอบกับ LD2410 จริงหรือ HIL simulator ในงานต่อยอด |
 | 5 | กระแสรวมของ OLED module และ buzzer ไม่ได้ระบุครบใน datasheet ระดับระบบ | การคำนวณแหล่งจ่ายอาจคลาดเคลื่อน | กันงบ 30 mA และ 5 mA แยกเป็นค่าประมาณ | A วัดกระแสจริงและใส่ margin ใน A2/A4 |
 | 6 | mmWave อาจตรวจคนด้านหลังผนังบางหรือคนที่เดินผ่าน | เกิด false occupied และไม่ปิดไฟ | ปรับ gate/sensitivity ให้ครอบคลุมเฉพาะเก้าอี้และใช้ stable time 1 s | ทดสอบตำแหน่งติดตั้งหลายแบบ; บันทึก false positive/negative |
-| 7 | OLED และ BH1750 ใช้ I²C ร่วมกัน | เกิด race หรือ priority inversion ได้ | ใช้ `i2c_lock`, timeout 50 ms และปล่อยหลัง transaction | A ตรวจ critical-section time และ error counter |
+| 7 | OLED และ BH1750 ใช้ I²C ร่วมกัน | เกิด race หรือ priority inversion ได้ | ใช้ `i2c_lock`, timeout 50 ms; A5 รอบยาววัด display 53.110 ms และ light 31.797 ms โดยไม่พลาด deadline | ยืนยันซ้ำบนบอร์ดจริง |
 | 8 | ค่าตั้ง 500 ms, 1 s, 30 ms และ 1.5 s เป็น design parameters | อาจไม่เหมาะกับผู้ใช้หรือ hardware จริง | ระบุแหล่งว่าเป็นค่าตั้งเพื่อทดสอบ ไม่อ้างเป็นงานวิจัย | ปรับจาก fault-injection และ usability test พร้อมขึ้นเวอร์ชัน |
-| 9 | แผนทดสอบใน branch C ใช้รหัส TC-B-01 ถึง TC-B-04 คนละความหมายกับไฟล์ของ B | รวมแผนแล้วอาจอ้างผลทดสอบผิดกรณี | ถือ `06_testing/B-TC_testcases.md` เป็น source of truth ของ TC-B-01 ถึง TC-B-08 | C เปลี่ยน reference ก่อนรวม master test plan |
+| 9 | **ปิดแล้ว:** แผนทดสอบรวมเคยใช้รหัส TC-B ไม่ตรงกับไฟล์ B | รวมแผนแล้วอาจอ้างผลผิดกรณี | ตาราง 7.1 ในเล่ม pre-final ใช้ความหมาย TC-B-01 ถึง TC-B-08 ตรงกับ B-TC แล้ว | ตรวจ mapping ของตารางผล 7.3 แยกในข้อ 13 |
 | 10 | **ปิดแล้ว:** ชื่อ alert อากาศและ ownership เคยไม่ตรงกันระหว่างเอกสาร | B อาจสร้างหรือ clear alert ผิดชนิด | ยึด A1 v1.0 เพียงชุดเดียว: `ALERT_CO2_HIGH`, `ALERT_TEMP`, `ALERT_SENSOR_FAULT` จาก `SRC_AIR`; B แปลงจาก `air_status` และไม่มี alert ข้าม Wi-Fi | ไม่มีงานค้างฝั่ง B |
 | 11 | `08_code/SIMULATION_GUIDE.md` เรียกกรณีเตือน 20 นาทีว่า TC-B-02 แต่ไฟล์ B กำหนดเป็น TC-B-01 | หลักฐาน Wokwi อาจติดรหัสผิด | B-TC เป็น source of truth และเพิ่มกติกา `TIME_SCALE` ให้ตรง simulation guide | A แก้ชื่อเป็น TC-B-01 ก่อนรวมหลักฐาน A5 |
-| 12 | C-T v1 ยังเขียนว่า `Task_Control_Fan` สร้าง `alert_request` ซึ่งขัดกับ A1 v1.0 | implementation ฝั่ง C อาจส่งข้อมูลซ้ำหรือผิด ownership | B3 ใช้เวลา/task จาก C-T แต่ยึด data flow จาก A1 v1.0 ซึ่งมีลำดับสูงกว่า | C ตัดการส่ง alert ข้าม Wi-Fi และคงเพียง field ใน `air_status` |
+| 12 | **ปิดแล้ว:** C-T เคยเขียนว่า `Task_Control_Fan` สร้าง `alert_request` | implementation ฝั่ง C อาจส่งข้อมูลซ้ำหรือผิด ownership | C-T ล่าสุดระบุว่าอัปเดตเฉพาะ field ใน `air_status` และไม่มี `alert_request` ข้าม Wi-Fi | ไม่มีงานค้าง |
+| 13 | **ปิดแล้ว:** ตารางผล 7.3 เคยจับ TC-B-01/02 ไม่ตรงกับ test plan | รหัสผลทดสอบอาจอ้างผิดกรณี | เล่มล่าสุดแยก TC-B-01 = EYE 20 นาที และ TC-B-02 = STAND 30 นาทีแล้ว | รักษา mapping เดียวกับ B-TC เมื่อเพิ่มผลใหม่ |
+| 14 | หลัง LD2410 ฟื้นจาก fault ระบบเริ่ม session ใหม่ | เวลานั่งก่อน fault ไม่ถูกนำมาต่อ | ยืนยันให้คงพฤติกรรมนี้ เพราะช่วง fault ทำให้เวลานั่งไม่น่าเชื่อถือและ B2 ระบุไว้แล้ว | เพิ่มคำอธิบายในผล/ข้อจำกัด ไม่ต้องแก้โค้ด |
+| 15 | **ปิดแล้ว:** A5 แนะนำเพิ่ม stack ของ `button_event_task` เป็น 3,072 B | stack margin รอบสั้นเคยเหลือ 876 B | โค้ดกำหนด 3,072 B และรอบ 22.8 นาทีเหลืออย่างน้อย 2,196 B | วัดซ้ำบน ESP32 จริง |
+| 17 | นโยบาย alert ที่ไม่ใช่การพักไม่ได้ระบุใน B2 เดิม | alert เต็มจอตลอดอาจบังเวลานั่ง | ยืนยัน implementation: เตือนอากาศ ลิงก์ และเซนเซอร์แสงเต็มจอ 10 s แล้วเป็นแถบล่าง; presence/fault priority 2 คงเต็มจอ | ทดสอบ usability บน OLED จริง |
+| 16 | **ปิดแล้ว:** A5/เล่มเดิมบวก utilization ข้าม core แล้วเทียบ RMS bound ชุดเดียว | การสรุป schedulability ไม่ตรงกับการ pin task จริง | B3 และเล่มล่าสุดแยก core 1 control 28.98% ออกจาก core 0 communication 0.52% แล้ว | คำนวณใหม่เมื่อ task set หรือ core affinity เปลี่ยน |
 
 ## ข้อจำกัดของแบบจำลองเวลา
 
-การทดสอบ utilization ใน B3 ใช้ periodic/sporadic task และ estimated WCET โดยถือว่า network wait ไม่ busy-wait ผล 5.40% สำหรับโหนดโต๊ะและ 0.42% สำหรับโหนดห้องจึงเป็น feasibility estimate ไม่ใช่หลักฐานรับรองเวลาแบบฮาร์ดเรียลไทม์ งานห้องบางงานมี deadline สั้นกว่า period จึงตรวจ workload 21 ms เทียบ deadline ต่ำสุด 500 ms เพิ่มด้วย เมื่อมีโค้ดจริงต้องวัด execution time, queue latency, I²C blocking และ stack high-water mark ภายใต้กรณี alert กับ Wi-Fi เกิดพร้อมกัน
+ขั้นออกแบบใช้ estimated WCET ได้ 3.90% สำหรับงานควบคุมโต๊ะ core 1 และ 1.50% สำหรับ application task core 0 ส่วน A5 รอบ 22.8 นาทีวัดได้ 28.98% บน core 1 และ 0.52% ของ communication บน core 0 โดยไม่พบ deadline miss ผลรวมเชิงรายงานคือ 29.50% แต่ไม่ใช้เทียบ RMS bound ข้าม core โหนดห้องใช้กรณีแย่สุดที่วัดได้ 4.36% บน core 1 และ 0.16% บน core 0 ผลนี้ยังไม่ใช่ WCET ของฮาร์ดแวร์จริงและไม่รวมทุก system task จึงต้องวัดบน ESP32 จริงก่อนสรุป
 
 ## แหล่งอ้างอิงแบบ IEEE
 
@@ -55,5 +60,7 @@
 ## สิ่งที่ต้องตรวจซ้ำก่อนรวมเล่ม
 
 - [ ] D ตรวจเลขหน้าแหล่งอ้างอิง [1] และ [6] และปีของ EN 12464-1 ตามหมายเหตุใน overview
-- [ ] A วัด WCET/กระแสจริง, C แก้ data flow ใน C-T และ C sync รหัส test ของ B
+- [x] D แก้ mapping ผล TC-B-01/02 และการคิด utilization แยก core ในเล่มแล้ว
+- [x] A รัน Wokwi 22.8 นาทีและ `TIME_SCALE=1` ครบ 20 นาทีจริงแล้ว
+- [ ] A วัดกระแส/เวลาและ stack high-water mark เมื่อใช้ฮาร์ดแวร์จริง
 - [ ] D รวมหมายเลขอ้างอิงกับ bibliography กลางโดยไม่ให้เลขซ้ำ
