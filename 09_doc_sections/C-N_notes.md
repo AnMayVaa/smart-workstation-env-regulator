@@ -44,6 +44,8 @@
 - **[C-Ref-1]** *Ventilation for Acceptable Indoor Air Quality*, ANSI/ASHRAE Standard 62.1-2022, American Society of Heating, Refrigerating and Air-Conditioning Engineers, Atlanta, GA, USA, 2022.
 
 ### 3.2 เอกสารข้อมูลจำเพาะของอุปกรณ์ (Hardware Datasheets)
-- **[C-DS-1]** Sensirion AG, *SCD4x – Breaking the Size Barrier in CO2 Sensing (SCD40/SCD41 Datasheet)*, Version 1.4, May 2023. [Online]. Available: https://sensirion.com/media/documents/48C4B7FB/64C134E7/Sensirion_SCD4x_Datasheet.pdf
-- **[C-DS-2]** Infineon Technologies / International Rectifier, *IRLZ44NPbF HEXFET Power MOSFET Logic-Level Gate Drive Datasheet*, Oct. 2012. [Online]. Available: https://www.infineon.com/dgdl/irlz44npbf.pdf
-- **[C-DS-3]** Vishay General Semiconductor, *1N4001 through 1N4007 General Purpose Plastic Rectifier Datasheet*, Rev. 1.8, Feb. 2018.
+- **[C-DS-1]** Sensirion AG, *SCD4x – Breaking the Size Barrier in CO2 Sensing (SCD40/SCD41 Datasheet)*, Version 1.7, Apr. 2025. (ตรงกับไฟล์ `Sensirion_SCD41_Datasheet.pdf` ใน `03_hardware/datasheets/`)
+- **[C-DS-2]** Alpha & Omega Semiconductor, *AO3400A 30V N-Channel MOSFET Datasheet*, Rev. 5.0, Dec. 2020. (ตรงกับไฟล์ `AO3400A_datasheet.pdf` ใน `03_hardware/datasheets/`)
+- **[C-DS-3]** Vishay General Semiconductor, *1N4001 through 1N4007 General Purpose Plastic Rectifier Datasheet*, Rev. 1.8, Feb. 2018. (ตรงกับไฟล์ `1N4007_Datasheet.pdf` ใน `03_hardware/datasheets/`)
+- **[C-DS-4]** Infineon Technologies / International Rectifier, *IRLZ44NPbF HEXFET Power MOSFET Logic-Level Gate Drive Datasheet*, Oct. 2012. (สำหรับอ้างอิงเปรียบเทียบใน `03_hardware/datasheets/IRLZ44N_datasheet.pdf`)
+- **[C-DS-5]** Hanwei Electronics Co., Ltd., *MQ-135 Semiconductor Sensor for Air Quality Datasheet*, 2015. (สำหรับอ้างอิงเปรียบเทียบคุณลักษณะเซนเซอร์เคมี)
