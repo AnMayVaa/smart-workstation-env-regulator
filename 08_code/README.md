@@ -45,7 +45,18 @@
 3. ดับเบิลคลิก `08_code/open_wokwi.bat` → เปิด VS Code 2 หน้าต่าง (โหนดห้อง + โหนดโต๊ะ) · ถ้าต้องการโต๊ะตัวที่ 2 ให้รัน `open_wokwi.bat 2`
 4. ในแต่ละหน้าต่างกด **F1 → Wokwi: Start Simulator** · Serial Monitor อยู่แท็บ Terminal พิมพ์คำสั่งได้เลย
 
-แต่ละโฟลเดอร์มี `wokwi.toml` + `diagram.json` + โปรแกรมที่คอมไพล์แล้วใน `build/` (ESP32 Arduino core 3.0.7) ถ้าแก้โค้ดต้องคอมไพล์ใหม่ (`arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir build .`) · `build/` ไม่ถูก commit (อยู่ใน `.gitignore`)
+แต่ละโฟลเดอร์มี `wokwi.toml` + `diagram.json` และ `wokwi.toml` ชี้ไปที่โปรแกรมที่คอมไพล์แล้วใน `build/` (ESP32 Arduino core 3.0.7) · `build/` ไม่ถูก commit (อยู่ใน `.gitignore`) ต้องคอมไพล์เองครั้งแรกและทุกครั้งที่แก้โค้ด
+arduino-cli ต้องการให้ชื่อโฟลเดอร์ตรงกับไฟล์ `.ino` จึงคัดลอกไปไว้ในโฟลเดอร์ชื่อ `sketch` ก่อน (ตัวอย่างโหนดโต๊ะ ใน PowerShell)
+
+```powershell
+cd 08_code\desk_node
+Remove-Item -Recurse -Force $env:TEMP\sketch -ErrorAction SilentlyContinue
+New-Item -ItemType Directory $env:TEMP\sketch | Out-Null
+Copy-Item *.ino, *.cpp, *.h $env:TEMP\sketch
+arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir build $env:TEMP\sketch
+```
+
+ไม่มี arduino-cli ให้ใช้วิธีที่ 2 (เว็บคอมไพล์ให้เอง)
 
 ### วิธีที่ 2: เว็บ wokwi.com (คัดลอกทีละไฟล์)
 
@@ -56,6 +67,11 @@
 4. ปุ่ม **▾ ข้างแท็บไฟล์ → New file** สร้างไฟล์ที่เหลือ **ชื่อตรงตัว** แล้ววางเนื้อหา (`.h` และ `.cpp` ทุกไฟล์ + `libraries.txt`)
 5. กด ▶ ครั้งแรกจะดาวน์โหลดไลบรารีจาก `libraries.txt` เอง
 6. **Save** แล้วตั้งชื่อ `swer-desk-node` / `swer-room-node` และตั้งเป็น public เพื่อใส่ลิงก์ในเล่มหัวข้อ 10
+
+โปรเจคที่ตั้งเป็น public แล้ว (โค้ดเดียวกับโฟลเดอร์นี้):
+
+- โหนดห้อง: https://wokwi.com/projects/477874423842942977
+- โหนดโต๊ะ: https://wokwi.com/projects/477874597473570817
 
 > รัน 2 โหนดพร้อมกัน: เปิด **2 หน้าต่างเบราว์เซอร์วางข้างกัน** (ไม่ใช่ 2 แท็บ) เบราว์เซอร์ลดความเร็วแท็บที่ซ่อนอยู่
 > ทั้ง 2 โหนดต้องใช้ `TOPIC_PREFIX` เดียวกันใน `config.h` (ตอนนี้ `swer-7k3q/r1/`)

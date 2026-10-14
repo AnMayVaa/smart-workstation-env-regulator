@@ -59,4 +59,5 @@
 ## 5. ลิงก์โค้ด
 
 - Repository: https://github.com/AnMayVaa/smart-workstation-env-regulator
+- Wokwi (public): โหนดห้อง https://wokwi.com/projects/477874423842942977 · โหนดโต๊ะ https://wokwi.com/projects/477874597473570817
 - โค้ด A4: `08_code/desk_node`, `08_code/room_node` · ทดสอบอัตโนมัติ: `08_code/ci/` · ผล A5: `06_testing/A5_results.md`
