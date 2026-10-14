@@ -1,0 +1,24 @@
+digraph room {
+  graph [rankdir=LR, fontname="Helvetica", fontsize=20, label="Room node: wiring (A2 v1.0)", labelloc=t, nodesep=0.35, ranksep=0.9, bgcolor="white", pad=0.3];
+  node  [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=12, fillcolor="#f2f2f2", color="#555555"];
+  edge  [fontname="Helvetica", fontsize=10, color="#444444"];
+  ADP [label="Adapter\n12 V 1.5 A", fillcolor="#ffe0b2"];
+  FUSE [label="Polyfuse 1.1 A\n+ 470 uF", fillcolor="#ffe0b2"];
+  BUCK [label="LM2596-5.0\n12 V -> 5 V", fillcolor="#ffe0b2"];
+  ESP [label="ESP32-DevKitC V4\n(ESP32-WROOM-32E)\nAMS1117 -> 3.3 V on board", fillcolor="#bbdefb", fontsize=13];
+  SCD [label="Sensirion SCD41\nCO2 / T / RH, I2C 0x62\n[Wokwi: pot -> GPIO35\n+ DHT22 -> GPIO4]", fillcolor="#e1bee7"];
+  Q [label="AO3400A\nRg 100R, Rpd 10k", fillcolor="#e1bee7"];
+  FAN [label="Exhaust fan DC 12 V\n250 mA (400 mA start)\n[Wokwi: blue LED]", fillcolor="#e1bee7"];
+  D [label="Flyback diode\n1N4007 across fan", fillcolor="#e1bee7"];
+  RGB [label="RGB status LED\ncommon cathode\n3 x 220R", fillcolor="#e1bee7"];
+  ADP -> FUSE [label="12 V"];
+  FUSE -> BUCK [label="12 V"];
+  FUSE -> FAN [label="+12 V"];
+  BUCK -> ESP [label="5 V pin"];
+  ESP -> SCD [label="3.3 V, SDA 21 / SCL 22", dir=both];
+  ESP -> Q [label="GPIO25 PWM 50 Hz"];
+  Q -> FAN [label="Drain -> fan (-)"];
+  D -> FAN [label="cathode to +12 V", style=dashed];
+  ESP -> RGB [label="R GPIO18 / G GPIO19 / B GPIO23"];
+  GND [label="Common GND\n(adapter, buck, ESP32, MOSFET source)", shape=note, fillcolor="#eeeeee"];
+}

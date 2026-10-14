@@ -1,0 +1,32 @@
+digraph desk {
+  graph [rankdir=LR, fontname="Helvetica", fontsize=20, label="Desk node: wiring (A2 v1.0)", labelloc=t, nodesep=0.35, ranksep=0.9, bgcolor="white", pad=0.3];
+  node  [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=12, fillcolor="#f2f2f2", color="#555555"];
+  edge  [fontname="Helvetica", fontsize=10, color="#444444"];
+  ADP [label="Adapter\n12 V 2 A", fillcolor="#ffe0b2"];
+  FUSE [label="Polyfuse 2.5 A\n+ 470 uF", fillcolor="#ffe0b2"];
+  BUCK [label="LM2596-5.0\n12 V -> 5 V", fillcolor="#ffe0b2"];
+  ESP [label="ESP32-DevKitC V4\n(ESP32-WROOM-32E)\nAMS1117 -> 3.3 V on board", fillcolor="#bbdefb", fontsize=13];
+  LD [label="HLK-LD2410\nmmWave presence\n[Wokwi: PIR]", fillcolor="#c8e6c9"];
+  OLED [label="OLED SSD1306\nI2C 0x3C", fillcolor="#c8e6c9"];
+  BH [label="BH1750 (GY-302)\nI2C 0x23\n[Wokwi: photoresistor -> GPIO34]", fillcolor="#fff9c4"];
+  BZ [label="Buzzer PS1240\n+ R 1k", fillcolor="#c8e6c9"];
+  BTN [label="Button B3F\nactive-low, 10k pull-up\n(+ spare on GPIO33)", fillcolor="#c8e6c9"];
+  Q1 [label="AO3400A #1\nRg 100R, Rpd 10k", fillcolor="#fff9c4"];
+  Q2 [label="AO3400A #2\nRg 100R, Rpd 10k", fillcolor="#fff9c4"];
+  LED [label="CCT LED strip 12 V\n(+12V common, CW-, WW-)", fillcolor="#fff9c4"];
+  ADP -> FUSE [label="12 V"];
+  FUSE -> BUCK [label="12 V"];
+  FUSE -> LED [label="+12 V"];
+  BUCK -> ESP [label="5 V pin"];
+  BUCK -> LD [label="5 V (>200 mA)"];
+  LD -> ESP [label="TX -> GPIO16 (U2RX)\nRX <- GPIO17 (U2TX)\nOUT -> GPIO13"];
+  ESP -> OLED [label="SDA 21 / SCL 22", dir=both];
+  ESP -> BH [label="SDA 21 / SCL 22", dir=both];
+  ESP -> BZ [label="GPIO26 PWM 4 kHz"];
+  BTN -> ESP [label="GPIO27 (IRQ)"];
+  ESP -> Q1 [label="GPIO18 PWM 5 kHz (CW)"];
+  ESP -> Q2 [label="GPIO19 PWM 5 kHz (WW)"];
+  Q1 -> LED [label="Drain -> CW-"];
+  Q2 -> LED [label="Drain -> WW-"];
+  GND [label="Common GND\n(adapter, buck, ESP32, MOSFET source)", shape=note, fillcolor="#eeeeee"];
+}
