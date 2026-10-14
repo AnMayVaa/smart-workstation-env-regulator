@@ -2,9 +2,10 @@
 
 | รายการ | ค่า |
 |---|---|
-| เวอร์ชัน | v1.1 |
+| เวอร์ชัน | v1.2 |
 | วันที่ | 2026-10-14 |
 | แก้ไขใน v1.1 | ติ๊กรับรองว่าตรงกับ A1 v1.0 (Issue #7) |
+| แก้ไขใน v1.2 | อ้างอิง [5] เลขรายงาน LBNL-60946 และ [6] เติมเลขหน้า 429–434 |
 | เจ้าของ | D |
 | ส่งให้ | ทุกคน (A เช็คกับตารางข้อมูลกลาง A1) |
 | สถานะ | ✅ ใช้งานได้ (A ตรวจเทียบ A1 v1.0 แล้ว) |
@@ -144,9 +145,9 @@
 
 [4] A. U. Viola, L. M. James, L. J. Schlangen, and D. J. Dijk, "Blue-enriched white light in the workplace improves self-reported alertness, performance and sleep quality," Scand. J. Work Environ. Health, vol. 34, no. 4, pp. 297–306, 2008, doi: 10.5271/sjweh.1268.
 
-[5] O. Seppänen, W. J. Fisk, and Q. H. Lei, "Effect of temperature on task performance in office environment," Lawrence Berkeley National Laboratory, Rep. LBNL-60952, Jul. 2006.
+[5] O. Seppänen, W. J. Fisk, and Q. H. Lei, "Effect of temperature on task performance in office environment," Lawrence Berkeley National Laboratory, Rep. LBNL-60946, Jul. 2006.
 
-[6] A. A. Abusharha and E. I. Pearce, "The effect of low humidity on the human tear film," Cornea, vol. 32, no. 4, 2013, doi: 10.1097/ICO.0b013e31826671ab.
+[6] A. A. Abusharha and E. I. Pearce, "The effect of low humidity on the human tear film," Cornea, vol. 32, no. 4, pp. 429–434, 2013, doi: 10.1097/ICO.0b013e31826671ab.
 
 [7] C. Talens-Estarelles et al., "The effects of breaks on digital eye strain, dry eye and binocular vision: Testing the 20-20-20 rule," Cont. Lens Anterior Eye, 2022, Art. no. 101744, doi: 10.1016/j.clae.2022.101744.
 
@@ -163,7 +164,7 @@
 [13] Sensirion, "SCD4x: Breaking the size barrier in CO2 sensing," datasheet.
 
 > [1]–[8] เลขเดียวกับข้อ 14 ของ overview (แก้รายละเอียดแล้ว), [9]–[13] เพิ่มใหม่ เลขอาจเปลี่ยนตอนรวมเล่ม D5
-> [6] ยังไม่มีเลขหน้า ต้องเช็คที่ https://pubmed.ncbi.nlm.nih.gov/23023409/
+> แก้ใน v1.2: [5] เลขรายงานที่ถูกคือ LBNL-60946 (ตรวจจาก OSTI) และเติมเลขหน้า [6] pp. 429–434
 
 ---
 

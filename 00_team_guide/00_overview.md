@@ -305,8 +305,8 @@ Embedded_Project/
 [2] U. Satish et al., "Is CO2 an indoor pollutant? Direct effects of low-to-moderate CO2 concentrations on human decision-making performance," *Environ. Health Perspect.*, vol. 120, no. 12, pp. 1671–1677, 2012, doi: 10.1289/ehp.1104789.
 [3] *Light and lighting – Lighting of work places – Part 1: Indoor work places*, EN 12464-1:2021.
 [4] A. U. Viola, L. M. James, L. J. Schlangen, and D. J. Dijk, "Blue-enriched white light in the workplace improves self-reported alertness, performance and sleep quality," *Scand. J. Work Environ. Health*, vol. 34, no. 4, pp. 297–306, 2008, doi: 10.5271/sjweh.1268.
-[5] O. Seppänen, W. J. Fisk, and Q. H. Lei, "Effect of temperature on task performance in office environment," Lawrence Berkeley National Laboratory, Rep. LBNL-60952, Jul. 2006.
-[6] A. A. Abusharha and E. I. Pearce, "The effect of low humidity on the human tear film," *Cornea*, vol. 32, no. 4, 2013, doi: 10.1097/ICO.0b013e31826671ab.
+[5] O. Seppänen, W. J. Fisk, and Q. H. Lei, "Effect of temperature on task performance in office environment," Lawrence Berkeley National Laboratory, Rep. LBNL-60946, Jul. 2006.
+[6] A. A. Abusharha and E. I. Pearce, "The effect of low humidity on the human tear film," *Cornea*, vol. 32, no. 4, pp. 429–434, 2013, doi: 10.1097/ICO.0b013e31826671ab.
 [7] C. Talens-Estarelles et al., "The effects of breaks on digital eye strain, dry eye and binocular vision: Testing the 20-20-20 rule," *Cont. Lens Anterior Eye*, 2022, Art. no. 101744, doi: 10.1016/j.clae.2022.101744.
 [8] P. Wennberg et al., "Acute effects of breaking up prolonged sitting on fatigue and cognition: A pilot study," *BMJ Open*, vol. 6, no. 2, Art. no. e009630, 2016.
 
@@ -317,4 +317,4 @@ Embedded_Project/
 [13] Sensirion, "SCD4x: Breaking the size barrier in CO2 sensing," datasheet.
 
 รายการเต็มและเลขล่าสุดอยู่ใน `01_requirements/D1_requirements.md` ข้อ 7 · เลขทั้งเล่มจะจัดใหม่ตอนรวมเล่ม
-ต้องตรวจซ้ำก่อนส่งจริง: เลขหน้าของ [6]
+ตรวจเลขรายงาน [5] และเลขหน้า [6] แล้ว (2026-10-14)
