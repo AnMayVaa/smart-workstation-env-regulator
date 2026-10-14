@@ -2,8 +2,8 @@
 
 | รายการ | ค่า |
 |---|---|
-| เวอร์ชัน | v1.2 |
-| วันที่ | 2026-10-14 |
+| เวอร์ชัน | v1.4 |
+| วันที่ | 2026-10-15 |
 | เจ้าของ | B |
 | รูปแบบ | Timed FSM ร่วมกับ alert queue และ display manager |
 
@@ -37,6 +37,7 @@
 | `EYE_ALERT`/`STAND_ALERT` | `WORKING` | กดสั้น | รับทราบและหยุดเสียง แต่ไม่รีเซ็ตเวลานั่ง เพราะยังไม่ได้พักจริง |
 | `EYE_ALERT`/`STAND_ALERT` | `WORKING` | กดยาวอย่างน้อย 1.5 s และ `snooze_count < 2` | เพิ่ม `snooze_count`, เก็บชนิด alert ไว้ใน `snoozed_alert`, ตั้ง `snooze_due` อีก 5 min, หยุดเสียง และแสดงเวลาเตือนใหม่ |
 | `EYE_ALERT`/`STAND_ALERT` | สถานะเดิม | กดยาวเมื่อ `snooze_count == 2` | ไม่เลื่อนและไม่ clear alert; OLED แสดงว่าเลื่อนได้สูงสุด 2 ครั้ง ผู้ใช้ยังรับทราบด้วยกดสั้นหรือพักจริงได้ |
+| `WORKING` | `WORKING` | มี `ALERT_STAND_BREAK` ที่ snooze รออยู่และถึงกำหนด eye alert | เลื่อน `next_eye_due` ไปรอบถัดไปโดยไม่ล้าง snooze; stand alert ครอบ eye alert จนกว่าจะเตือนซ้ำ |
 | `WORKING`/alert | `AWAY_PENDING` | ไม่พบคนต่อเนื่อง 1 s | ตั้ง `occupied=false`, จำ `sit_elapsed`, เริ่ม `away_elapsed`; clear alert ของ B บนจอแต่เก็บ due time |
 | `AWAY_PENDING` | `WORKING` | พบคนก่อนครบ 3 min | ตั้ง `occupied=true`, `away_timeout=false`, ทำ session เดิมต่อโดยไม่นับช่วงที่ลุกออกไป |
 | `AWAY_PENDING` | `UNOCCUPIED` | ไม่พบคนครบ 3 min | ถือว่าพักสำเร็จตามช่วงลุกเดิน 3 นาที [B2-2], รีเซ็ต session และ due time; ถ้าเวลาว่างรวมถึง 5 min ให้ตั้ง `away_timeout=true` |
@@ -46,6 +47,8 @@
 - ภาพพร้อมใช้: `07_visuals/B2_fsm_presence_v1.png`
 - ภาพเวกเตอร์: `07_visuals/B2_fsm_presence_v1.svg`
 - ต้นฉบับแก้ไขใน diagrams.net: `07_visuals/B2_fsm_presence_v1.drawio`
+
+ในการจำลอง `read_latest_ld2410_frame_without_blocking()` ถูกแทนด้วยการอ่าน slide switch ที่ GPIO 13 เพื่อคงสถานะมีคนได้นาน ส่วนฮาร์ดแวร์จริงยังอ่าน frame จาก LD2410 ทาง UART2 ตามเดิม
 
 ## 4. Pseudocode
 
@@ -120,6 +123,8 @@ break_timer_task every 1000 ms:
                 occupied = false
                 state = AWAY_PENDING
             else if snooze_pending and now >= snooze_due:
+                if snoozed_alert == ALERT_STAND_BREAK and now >= next_eye_due:
+                    next_eye_due += EYE_INTERVAL
                 enqueue snoozed_alert with its original priority
                 snooze_pending = false
                 state = alert_state_for(snoozed_alert)
@@ -127,7 +132,13 @@ break_timer_task every 1000 ms:
                 reset_snooze_control()
                 enqueue ALERT_STAND_BREAK with priority 1
                 next_stand_due += STAND_INTERVAL
+                if now >= next_eye_due:
+                    next_eye_due += EYE_INTERVAL
                 state = STAND_ALERT
+            else if now >= next_eye_due and snooze_pending
+                    and snoozed_alert == ALERT_STAND_BREAK:
+                next_eye_due += EYE_INTERVAL
+                // pending STAND remains intact and covers this EYE due time
             else if now >= next_eye_due:
                 reset_snooze_control()
                 enqueue ALERT_EYE_BREAK with priority 1
@@ -185,7 +196,16 @@ set_away_timeout_true_once():
         publish user_lux_target and late_mode only if each value changed
 
 button_event_task every 100 ms and on queued edge:
-    classify a debounced edge as short_press or long_press
+    when any CHANGE edge arrives from ISR:
+        mark a debounce burst pending
+        restart a 30 ms quiet window for every following edge
+    after the line has stayed quiet for 30 ms:
+        read the settled GPIO level; do not trust the level sampled by ISR
+        if settled level changes to pressed:
+            remember the first edge time as press_start
+        else if settled level changes to released:
+            duration = first release-burst edge time - press_start
+            emit one short_press or long_press only when duration >= 30 ms
 
     if a presence alert is active and a press event exists:
         short press acknowledges the alert
@@ -236,7 +256,10 @@ display_alert_task every 500 ms or when alert queue wakes it:
              air.co2_level and air.fan_pct
 
     if active alert exists:
-        render alert message
+        render `SENSOR ERR` for sensor faults so the title fits 128 px
+        keep presence alerts and every priority 2 alert full-screen until cleared
+        keep other alerts full-screen for 10 s, then show a one-line banner
+        on the status page so sit time remains visible
         priority 0: screen only
         priority 1: one short beep when alert becomes active
         priority 2: repeat short beeps with gaps, never block the task
