@@ -32,8 +32,9 @@
 
 | ID | TC | ทดสอบ | ผลที่ได้ | ผล |
 |---|---|---|---|---|
-| D1 | TC-B-01 | `presence on` | `UNOCCUPIED -> WORKING` หลัง 1.1 s (stable 1 s), ไฟ fade-in 2 s ที่ 5 kHz (VCD) | ผ่าน |
-| D2 | TC-B-02 | นั่งต่อเนื่อง | EYE ที่ 20 นาทีระบบ, STAND ที่ 30 นาที, beep 150 ms 4.00 kHz (VCD) | ผ่าน |
+| D1 | — (FR-01, เงื่อนไขก่อน TC-B-01) | `presence on` | `UNOCCUPIED -> WORKING` หลัง 1.1 s (stable 1 s), ไฟ fade-in 2 s ที่ 5 kHz (VCD) | ผ่าน |
+| D2a | TC-B-01 | นั่งต่อเนื่องจนครบ 20 นาที | `desk_a`: EYE หลังเริ่มนั่ง 10.5 s × 120 ≈ 21 นาทีระบบ (ตรวจทุก 1 s = 2 นาทีระบบ) · ยืนยันเวลาจริงใน M3 (ข้อ 7): 20 นาที 0.2 วินาที · beep 150 ms 4.00 kHz (VCD) | ผ่าน |
+| D2b | TC-B-02 | นั่งครบ 30 นาที / ลุกเกิน 3 นาทีแล้วกลับ | `desk_a`: STAND ที่ ≈ 31 นาทีระบบ · `desk_c/serial.log`: `WORKING -> AWAY_PENDING` `[ 18.923]` → `AWAY_PENDING -> UNOCCUPIED` `[ 21.023]` (2.1 s × 120 ≈ 4 นาที ≥ 3 นาที) แล้ว `status` แสดง `sit=0min` (เริ่มนับใหม่) · วิดีโอ S5 ช่วงท้ายมีลำดับเดียวกัน | ผ่าน |
 | D3 | TC-B-04 | กดค้าง 3 ครั้งตอน STAND | snooze 1/2 → กลับมา 5 นาที → 2/2 → กลับมา → ครั้งที่ 3 จอขึ้น `max 2 snoozes` (ภาพ `evidence/2026-10-14_wokwi_ci/desk_a/12_snooze_rejected_max2.png`) | ผ่าน |
 | D4 | TC-B-05, 06 | เมนู 500→800 lux, late ON แล้วลุกไป | log `user_lux_target=800 late_mode=1` · หลัง away 5 นาที → `lux_target=500 late=0` (FR-11) | ผ่าน |
 | D5 | TC-D-01 | LDR 50 / 800 / 200 lux | 50 lux → `lux_now=476` (เป้า 500 ± 25) B=71 % · 800 lux → B ลดลงหา 0 · 200 lux → 475 | ผ่าน |
