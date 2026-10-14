@@ -4,3 +4,4 @@
 *.png binary
 *.jpg binary
 *.drawio text
+*.bat text eol=crlf
