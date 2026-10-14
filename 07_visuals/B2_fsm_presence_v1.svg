@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#dc2626"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title { font:700 30px 'Noto Sans Thai','Tahoma',sans-serif; fill:#0f172a; }
+      .section { font:700 19px 'Noto Sans Thai','Tahoma',sans-serif; fill:#475569; letter-spacing:.5px; }
+      .state { fill:#eff6ff; stroke:#2563eb; stroke-width:3; }
+      .alert { fill:#fff7ed; stroke:#ea580c; stroke-width:3; }
+      .away { fill:#f5f3ff; stroke:#7c3aed; stroke-width:3; }
+      .fault { fill:#fef2f2; stroke:#dc2626; stroke-width:3; }
+      .stateName { font:700 22px 'Noto Sans Thai','Tahoma',sans-serif; fill:#0f172a; }
+      .stateDesc { font:17px 'Noto Sans Thai','Tahoma',sans-serif; fill:#475569; }
+      .edge { fill:none; stroke:#334155; stroke-width:2.5; marker-end:url(#arrow); }
+      .faultEdge { fill:none; stroke:#dc2626; stroke-width:2.5; stroke-dasharray:9 7; marker-end:url(#arrowRed); }
+      .condition { font:16px 'Noto Sans Thai','Tahoma',sans-serif; fill:#0f172a; paint-order:stroke; stroke:#fff; stroke-width:6px; stroke-linejoin:round; }
+      .small { font:15px 'Noto Sans Thai','Tahoma',sans-serif; fill:#475569; }
+      .noteTitle { font:700 17px 'Noto Sans Thai','Tahoma',sans-serif; fill:#0f172a; }
+      .note { font:16px 'Noto Sans Thai','Tahoma',sans-serif; fill:#334155; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#ffffff"/>
+  <text x="800" y="48" text-anchor="middle" class="title">Timed FSM: การตรวจคนและการเตือนพัก (B2)</text>
+
+  <rect x="55" y="78" width="1490" height="365" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="82" y="112" class="section">เส้นทางการทำงานปกติ</text>
+
+  <circle cx="105" cy="245" r="13" fill="#0f172a"/>
+  <path d="M118 245 L180 245" class="edge"/>
+
+  <rect x="180" y="185" width="260" height="120" rx="18" class="state" filter="url(#shadow)"/>
+  <text x="310" y="231" text-anchor="middle" class="stateName">UNOCCUPIED</text>
+  <text x="310" y="264" text-anchor="middle" class="stateDesc">ยังไม่มี session การนั่ง</text>
+
+  <rect x="555" y="185" width="260" height="120" rx="18" class="state" filter="url(#shadow)"/>
+  <text x="685" y="231" text-anchor="middle" class="stateName">WORKING</text>
+  <text x="685" y="264" text-anchor="middle" class="stateDesc">นับเวลานั่งต่อเนื่อง</text>
+
+  <rect x="930" y="115" width="260" height="120" rx="18" class="alert" filter="url(#shadow)"/>
+  <text x="1060" y="161" text-anchor="middle" class="stateName">EYE_ALERT</text>
+  <text x="1060" y="194" text-anchor="middle" class="stateDesc">เตือนพักสายตาเมื่อครบ 20 นาที</text>
+
+  <rect x="930" y="285" width="260" height="120" rx="18" class="alert" filter="url(#shadow)"/>
+  <text x="1060" y="331" text-anchor="middle" class="stateName">STAND_ALERT</text>
+  <text x="1060" y="364" text-anchor="middle" class="stateDesc">เตือนลุกเมื่อครบ 30 นาที</text>
+
+  <path d="M440 245 L555 245" class="edge"/>
+  <text x="497" y="226" text-anchor="middle" class="condition">พบคนคงที่ 1 s</text>
+
+  <path d="M815 220 C855 200 885 175 930 175" class="edge"/>
+  <text x="866" y="168" text-anchor="middle" class="condition">ครบ 20 min</text>
+
+  <path d="M815 270 C855 290 885 345 930 345" class="edge"/>
+  <text x="867" y="321" text-anchor="middle" class="condition">ครบ 30 min</text>
+
+  <path d="M930 205 C885 235 860 245 815 245" class="edge"/>
+  <text x="868" y="229" text-anchor="middle" class="condition">รับทราบ / snooze</text>
+
+  <path d="M930 375 C850 415 785 385 775 305" class="edge"/>
+  <text x="830" y="393" text-anchor="middle" class="condition">รับทราบ / snooze</text>
+
+  <path d="M1060 235 L1060 285" class="edge"/>
+  <text x="1076" y="265" class="condition">ถึง 30 min</text>
+
+  <rect x="55" y="468" width="930" height="245" rx="18" fill="#faf5ff" stroke="#ddd6fe" stroke-width="2"/>
+  <text x="82" y="503" class="section">เส้นทางเมื่อลุกออกจากโต๊ะ</text>
+
+  <rect x="390" y="535" width="300" height="125" rx="18" class="away" filter="url(#shadow)"/>
+  <text x="540" y="582" text-anchor="middle" class="stateName">AWAY_PENDING</text>
+  <text x="540" y="615" text-anchor="middle" class="stateDesc">ยังไม่ครบเวลาที่ถือว่าพักจริง</text>
+
+  <path d="M650 305 C650 410 600 470 570 535" class="edge"/>
+  <text x="662" y="438" class="condition">ไม่พบคนคงที่ 1 s</text>
+
+  <path d="M510 535 C470 450 500 350 585 305" class="edge"/>
+  <text x="386" y="421" class="condition">กลับมาก่อน 3 min</text>
+  <text x="386" y="444" class="small">ทำ session เดิมต่อ</text>
+
+  <path d="M390 598 C320 598 295 510 295 305" class="edge"/>
+  <text x="205" y="530" class="condition">ไม่พบคนครบ 3 min</text>
+  <text x="205" y="553" class="small">พักสำเร็จและรีเซ็ต session</text>
+
+  <rect x="725" y="530" width="220" height="135" rx="14" fill="#ffffff" stroke="#c4b5fd" stroke-width="2"/>
+  <text x="745" y="563" class="noteTitle">Output ระหว่างไม่มีคน</text>
+  <text x="745" y="596" class="note">• ครบ 3 min: รีเซ็ต session</text>
+  <text x="745" y="626" class="note">• ครบ 5 min: away_timeout=true</text>
+  <text x="745" y="650" class="small">พบคนเมื่อใด → away_timeout=false</text>
+
+  <rect x="1010" y="468" width="535" height="245" rx="18" fill="#fff7f7" stroke="#fecaca" stroke-width="2"/>
+  <text x="1037" y="503" class="section">เส้นทางเมื่อเซนเซอร์ผิดปกติ</text>
+
+  <rect x="1060" y="515" width="460" height="42" rx="21" fill="#ffffff" stroke="#fca5a5" stroke-width="2"/>
+  <text x="1290" y="542" text-anchor="middle" class="condition">ทุกสถานะ: ไม่มี valid frame &gt; 500 ms</text>
+  <path d="M1290 557 C1290 570 1355 570 1355 580" class="faultEdge"/>
+
+  <rect x="1210" y="580" width="290" height="105" rx="18" class="fault" filter="url(#shadow)"/>
+  <text x="1355" y="622" text-anchor="middle" class="stateName">SENSOR_FAULT</text>
+  <text x="1355" y="653" text-anchor="middle" class="stateDesc">fail-safe: occupied=true</text>
+
+  <text x="1038" y="598" class="noteTitle">เมื่อข้อมูลกลับมาปกติ</text>
+  <text x="1038" y="628" class="note">พบคน → WORKING</text>
+  <text x="1038" y="657" class="note">ไม่พบคน → UNOCCUPIED</text>
+
+  <rect x="55" y="742" width="1490" height="205" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="82" y="780" class="section">กติกาประกอบที่ใช้ร่วมกับ FSM</text>
+
+  <rect x="90" y="810" width="430" height="100" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="112" y="842" class="noteTitle">ปุ่มกด</text>
+  <text x="112" y="872" class="note">กดสั้น: รับทราบ โดยไม่รีเซ็ตเวลานั่ง</text>
+  <text x="112" y="897" class="note">กดยาว ≥ 1.5 s: เลื่อน 5 min สูงสุด 2 ครั้ง/alert</text>
+
+  <rect x="585" y="810" width="430" height="100" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="607" y="842" class="noteTitle">Alert manager</text>
+  <text x="607" y="872" class="note">priority 2 &gt; 1 &gt; 0; เท่ากันใช้รายการเก่าก่อน</text>
+  <text x="607" y="897" class="note">STAND_ALERT แทน EYE_ALERT ใน session เดียวกัน</text>
+
+  <rect x="1080" y="810" width="430" height="100" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="1102" y="842" class="noteTitle">Fail-safe</text>
+  <text x="1102" y="872" class="note">sensor fault → away_timeout=false</text>
+  <text x="1102" y="897" class="note">แจ้ง ALERT_SENSOR_FAULT priority 2</text>
+</svg>
