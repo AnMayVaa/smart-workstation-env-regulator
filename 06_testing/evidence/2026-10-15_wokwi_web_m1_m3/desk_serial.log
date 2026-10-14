@@ -1,0 +1,72 @@
+=== SWER desk node 1  (SIMULATION=1, TIME_SCALE=1) ===
+[    2.076] tasks started; type 'help' for test commands
+[    4.291] A: Wi-Fi up 10.10.0.2, SNTP started
+[    5.259] A: MQTT connected as swer-desk1-324d
+[    6.077] A: room/online=0
+[    6.373] B: display alert ROOM TEMP prio 1
+[   20.093] A: link_ok=0
+[   22.274] B: display alert LINK LOST prio 0
+[  128.807] TEST: presence forced ON
+[  129.875] B: UNOCCUPIED -> WORKING
+[  129.875] D: OFF -> REGULATING (B=0.0%)
+[  129.879] A: desk_report occ=1 (immediate)
+[  168.518] A: room/online=1
+[  184.949] A: link_ok=1
+[  195.460] A: link_ok=0
+[  195.461] B: display alert LINK LOST prio 0
+[  268.138] A: room/online=0
+[  334.160] TEST: BH1750 read error
+[  334.676] D: REGULATING -> SENSOR_FAULT (B=50.6%)
+[  334.677] B: display alert SENSOR FAULT prio 1
+[  348.856] TEST: BH1750 restored
+[  349.076] D: SENSOR_FAULT -> REGULATING (B=60.0%)
+[  349.077] B: display alert LINK LOST prio 0
+[  451.254] A: Wi-Fi OFF (test)
+[  490.139] TEST: Wi-Fi allowed
+[  493.797] A: MQTT connected as swer-desk1-324d
+[  494.716] A: room/online=0
+[  566.809] TEST: clock set to 16:55 (advances x1)
+[  759.772] A: room/online=1
+B: state=WORKING occupied=1 sit=10min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=524 B=54.1% r=0.445
+A: time_valid=1 16:58 link_ok=0 air: co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=0s
+A: wifi=1 mqtt=1 room_online=1 link_ok=0 reports=145 air_rx=4 air_lost=1 bad=0 rssi=-62
+[  763.198] A: link_ok=1
+[  763.543] A: link_ok=0
+[  763.543] B: display alert CO2 HIGH prio 1
+[  765.719] A: MQTT connected as swer-desk1-324d
+[  765.723] A: link_ok=1
+[  766.540] A: room/online=1
+[  781.354] A: link_ok=0
+[  781.355] B: display alert LINK LOST prio 0
+[  845.317] A: room/online=0
+B: state=WORKING occupied=1 sit=18min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=524 B=54.1% r=0.519
+A: time_valid=1 17:05 link_ok=0 air: co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=446s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=236 air_rx=8 air_lost=121 bad=0 rssi=-89
+---- task statistics (measured) ----
+task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+presence_task               100  12154       948       37  0.009480     0  1820
+button_event_task           100  12153        68       22  0.000680     0  2196
+light_control_task          200   6077     31797     1132  0.158985     0  1768
+display_alert_task          500   2245     53110    42811  0.106220     0  1752
+break_timer_task           1000   1216       867       57  0.000867     0  3456
+desk_communication_task    1000    237      5207     4119  0.005207     0  5644
+Total U (WCET-based) = 28.1439%   RMS bound n=6: 73.48%
+heap free=188512  min_free=174376  TIME_SCALE=1
+[ 1330.076] B: WORKING -> EYE_ALERT
+[ 1330.077] B: display alert EYE BREAK prio 1
+B: state=EYE_ALERT occupied=1 sit=20min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=524 B=54.1% r=0.544
+A: time_valid=1 17:08 link_ok=0 air: co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=592s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=265 air_rx=8 air_lost=121 bad=0 rssi=-93
+---- task statistics (measured) ----
+task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+presence_task               100  13595       948       37  0.009480     0  1820
+button_event_task           100  13594        68       22  0.000680     0  2196
+light_control_task          200   6798     31797     1138  0.158985     0  1768
+display_alert_task          500   2511     53110    42821  0.106220     0  1752
+break_timer_task           1000   1360     14394       68  0.014394     0  1792
+desk_communication_task    1000    266      5207     4111  0.005207     0  5644
+Total U (WCET-based) = 29.4966%   RMS bound n=6: 73.48%
+heap free=188236  min_free=174376  TIME_SCALE=1
