@@ -1,0 +1,5 @@
+# Wokwi library manager
+PubSubClient
+ArduinoJson
+DHT sensor library
+Adafruit Unified Sensor

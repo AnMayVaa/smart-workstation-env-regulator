@@ -1,0 +1,40 @@
+name: 'INT room: occupancy from desk, CO2 high, sensor fault, desk link loss'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- wait-serial: MQTT connected
+- wait-serial: desk 1 occupied=1
+- wait-serial: room_desks_online=1 room_occupied_count=1
+- write-serial: 'status
+
+    '
+- write-serial: 'co2 1200
+
+    '
+- wait-serial: -> S3_AIR_POOR
+- delay: 8s
+- write-serial: 'fault scd41
+
+    '
+- wait-serial: -> S4_SENSOR_FAULT
+- delay: 6s
+- write-serial: 'ok scd41
+
+    '
+- write-serial: 'co2 700
+
+    '
+- wait-serial: S4_SENSOR_FAULT ->
+- wait-serial: room_desks_online=0 room_occupied_count=0
+- write-serial: 'status
+
+    '
+- wait-serial: room_desks_online=1 room_occupied_count=1
+- write-serial: 'status
+
+    '
+- write-serial: 'stats
+
+    '
+- delay: 1500ms

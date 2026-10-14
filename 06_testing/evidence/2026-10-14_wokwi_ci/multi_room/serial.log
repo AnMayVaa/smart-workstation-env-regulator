@@ -1,0 +1,33 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+
+=== SWER room node  (SIMULATION=1) ===
+[    1.917] tasks started; type 'help' for test commands
+[    2.176] C: S0_ROOM_EMPTY -> S1_AIR_GOOD co2=0 fan=0% desks online=0 occupied=0
+[    2.560] A: MQTT connected as swer-room-ffba
+[    2.969] A: new desk 1
+[    2.969] A: desk 1 online=1[    3.074] A: new desk 2
+[    3.074] A: desk 2 online=1[    6.923] A: room_desks_online=2 room_occupied_count=0
+[   11.923] C: S1_AIR_GOOD -> S0_ROOM_EMPTY co2=400 fan=0% desks online=2 occupied=0
+[   11.932] A: desk 1 occupied=1[   11.933] A: room_desks_online=2 room_occupied_count=1
+[   16.923] C: S0_ROOM_EMPTY -> S1_AIR_GOOD co2=400 fan=0% desks online=2 occupied=1
+C: state=S1_AIR_GOOD co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0%
+A: room_desks_online=2 room_occupied_count=1
+A: wifi=1 mqtt=1 published=3 bad=0
+   desk 1 online=1 occ=1 iv=5s last=6s ago lost=0
+   desk 2 online=1 occ=0 iv=5s last=1s ago lost=0
+---- task statistics (measured) ----
+task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+air_sensor_task            5000      4    259895    70405  0.051979     0  1884
+room_communication_task    5000      4      6082     4417  0.001216     0  5684
+Total U (WCET-based) = 5.3195%
+heap free=240472  min_free=232848

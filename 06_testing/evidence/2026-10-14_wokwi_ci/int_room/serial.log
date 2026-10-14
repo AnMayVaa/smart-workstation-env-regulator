@@ -1,0 +1,62 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+
+=== SWER room node  (SIMULATION=1) ===
+[    1.915] tasks started; type 'help' for test commands
+ets Jul 29 2019 12:21:46
+
+rst:0x8 (TG1WDT_SYS_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+
+=== SWER room node  (SIMULATION=1) ===
+E (2982) phy_init: load_cal_data_from_nvs_handle: calibration data MAC check failed: expected 00:00:00:00:00:00, found 24:0a:c4:00:01:10
+[    4.812] tasks started; type 'help' for test commands
+[    4.903] C: S0_ROOM_EMPTY -> S1_AIR_GOOD co2=0 fan=0% desks online=0 occupied=0
+[    5.248] A: MQTT connected as swer-room-066d
+[    5.657] A: new desk 1
+[    5.658] A: desk 1 online=1
+[    9.817] A: room_desks_online=1 room_occupied_count=0
+[    9.818] C: S1_AIR_GOOD -> S0_ROOM_EMPTY co2=400 fan=0% desks online=1 occupied=0
+[   10.733] A: desk 1 occupied=1[   14.817] A: room_desks_online=1 room_occupied_count=1[   14.818] C: S0_ROOM_EMPTY -> S1_AIR_GOOD co2=400 fan=0% desks online=1 occupied=1
+C: state=S1_AIR_GOOD co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0%
+A: room_desks_online=1 room_occupied_count=1
+A: wifi=1 mqtt=1 published=2 bad=0
+   desk 1 online=1 occ=1 iv=5s last=4s ago lost=0
+[   14.867] TEST: CO2 fixed at 1200 ppm (next reading)
+[   19.817] C: S1_AIR_GOOD -> S3_AIR_POOR co2=1200 fan=100% desks online=1 occupied=1
+[   27.869] TEST: SCD41 read error
+[   39.811] C: S3_AIR_POOR -> S4_SENSOR_FAULT co2=1200 fan=80% desks online=1 occupied=1
+[   45.820] TEST: SCD41 restored
+[   45.821] TEST: CO2 fixed at 700 ppm (next reading)
+[   54.818] C: S4_SENSOR_FAULT -> S1_AIR_GOOD co2=700 fan=0% desks online=1 occupied=1
+[   69.817] A: room_desks_online=0 room_occupied_count=0C: state=S1_AIR_GOOD co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0%
+A: room_desks_online=0 room_occupied_count=0
+A: wifi=1 mqtt=1 published=13 bad=0
+   desk 1 online=1 occ=1 iv=5s last=16s ago lost=0
+[   79.028] A: desk 1 online=1
+[   79.817] A: room_desks_online=1 room_occupied_count=1C: state=S1_AIR_GOOD co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0%
+A: room_desks_online=1 room_occupied_count=1
+A: wifi=1 mqtt=1 published=15 bad=0
+   desk 1 online=1 occ=1 iv=5s last=0s ago lost=0
+---- task statistics (measured) ----
+task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+air_sensor_task            5000     16     91770    10757  0.018354     0  1808
+room_communication_task    5000     16      5684     5179  0.001137     0  5704
+Total U (WCET-based) = 1.9491%
+heap free=242716  min_free=232736

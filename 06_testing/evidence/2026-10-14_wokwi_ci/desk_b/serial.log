@@ -1,0 +1,86 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+
+=== SWER desk node 1  (SIMULATION=1, TIME_SCALE=120) ===
+[    2.025] tasks started; type 'help' for test commands
+[    2.076] TEST: presence forced ON
+[    2.138] A: Wi-Fi up 10.13.37.2, SNTP started
+[    2.406] A: MQTT connected as swer-desk1-c381
+[    3.124] B: UNOCCUPIED -> WORKING[    3.130] A: desk_report occ=1 (immediate)
+[    3.139] TEST: BH1750 read error
+[    3.225] D: OFF -> REGULATING (B=0.0%)
+[    3.625] D: REGULATING -> SENSOR_FAULT (B=10.0%)
+[    3.652] B: display alert SENSOR FAULT prio 1
+B: state=WORKING occupied=1 sit=1min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=SENSOR_FAULT lux_now=200 B=20.0% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-70
+[    4.067] TEST: BH1750 restored
+[    4.425] D: SENSOR_FAULT -> REGULATING (B=30.0%)
+B: state=WORKING occupied=1 sit=1min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=380 B=35.0% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-95
+[    4.793] TEST: LD2410 frames stopped
+[    5.324] B: WORKING -> SENSOR_FAULT[    5.325] B: display alert SENSOR FAULT prio 2
+B: state=SENSOR_FAULT occupied=1 sit=3min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=530 B=59.4% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-97
+[    5.770] TEST: LD2410 frames restored
+[    5.824] B: SENSOR_FAULT -> WORKING
+B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=549 B=57.3% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-75
+B: state=WORKING occupied=1 sit=12min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=476 B=71.1% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=3 air_rx=0 air_lost=0 bad=0 rssi=-78
+[   16.025] B: WORKING -> EYE_ALERT
+[   16.026] B: display alert EYE BREAK prio 1
+B: state=EYE_ALERT occupied=1 sit=24min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=878 B=11.1% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=5 air_rx=0 air_lost=0 bad=0 rssi=-93
+[   20.047] A: link_ok=0
+[   21.025] B: EYE_ALERT -> STAND_ALERT
+[   21.026] B: display alert LINK LOST prio 0
+[   21.065] B: display alert STAND UP prio 1
+B: state=STAND_ALERT occupied=1 sit=32min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=463 B=44.7% r=0.500
+A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=5 air_rx=0 air_lost=0 bad=0 rssi=-89
+[   22.193] TEST: clock set to 16:58 (advances x120)
+B: state=STAND_ALERT occupied=1 sit=34min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=475 B=45.9% r=0.500
+A: time_valid=1 16:59 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=6 air_rx=0 air_lost=0 bad=0 rssi=-90
+B: state=STAND_ALERT occupied=1 sit=54min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=475 B=45.9% r=0.680
+A: time_valid=1 17:19 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=8 air_rx=0 air_lost=0 bad=0 rssi=-76
+B: state=STAND_ALERT occupied=1 sit=74min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=475 B=45.9% r=0.547
+A: time_valid=1 17:39 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=10 air_rx=0 air_lost=0 bad=0 rssi=-78
+[   43.187] TEST: clock from NTP
+---- task statistics (measured) ----
+task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+presence_task               100    412       699       42  0.006990     0  1904
+button_event_task           100    411        24       23  0.000240     0  2188
+light_control_task          200    206     25351      965  0.126755     0  1848
+display_alert_task          500     79     43408    41808  0.086816     0  1820
+break_timer_task           1000     42     14500      663  0.014500     0  1880
+desk_communication_task    1000     10      5351     4813  0.005351     0  5892
+Total U (WCET-based) = 24.0652%   RMS bound n=6: 73.48%
+heap free=216212  min_free=207552  TIME_SCALE=120

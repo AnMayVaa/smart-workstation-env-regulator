@@ -1,0 +1,56 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1156
+load:0x40078000,len:11456
+ho 0 tail 12 room 4
+load:0x40080400,len:2972
+entry 0x400805dc
+
+=== SWER desk node 1  (SIMULATION=1, TIME_SCALE=1) ===
+[    2.023] tasks started; type 'help' for test commands
+[    2.137] A: Wi-Fi up 10.13.37.2, SNTP started
+[    2.406] A: MQTT connected as swer-desk1-ae16
+[    4.518] A: room/online=1[    8.551] TEST: presence forced ON
+[    9.622] B: UNOCCUPIED -> WORKING
+[    9.623] D: OFF -> REGULATING (B=0.0%)
+[    9.628] A: desk_report occ=1 (immediate)[   19.373] B: display alert CO2 HIGH prio 1
+B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=503 B=50.6% r=0.500
+A: time_valid=0 00:00 link_ok=1 air: co2=1200 lvl=2 t=24.0 rh=55 tf=0 ok=1 fan=100 age=1s
+A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=5 air_rx=3 air_lost=0 bad=0 rssi=-97
+[   37.766] B: display alert SENSOR FAULT prio 2
+B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=503 B=50.6% r=0.500
+A: time_valid=1 22:57 link_ok=1 air: co2=1200 lvl=2 t=24.0 rh=55 tf=0 ok=0 fan=80 age=0s
+A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=8 air_rx=7 air_lost=0 bad=0 rssi=-83
+B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=503 B=50.6% r=0.497
+A: time_valid=1 22:57 link_ok=1 air: co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=2s
+A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=11 air_rx=10 air_lost=0 bad=0 rssi=-80
+[   54.504] A: Wi-Fi OFF (test)
+[   54.504] A: link_ok=0[   54.517] B: display alert LINK LOST prio 0
+B: state=WORKING occupied=1 sit=0min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=503 B=50.6% r=0.497
+A: time_valid=1 22:57 link_ok=0 air: co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=3s
+A: wifi=0 mqtt=0 room_online=1 link_ok=0 reports=11 air_rx=10 air_lost=0 bad=0 rssi=0
+[   73.032] TEST: Wi-Fi allowed
+[   73.457] A: MQTT connected as swer-desk1-ae16
+[   74.078] A: room/online=1
+[   78.298] A: link_ok=1B: state=WORKING occupied=1 sit=1min away_timeout=0 lux_target=500 late=0 snooze=0
+D: state=REGULATING lux_now=503 B=50.6% r=0.493
+A: time_valid=1 22:57 link_ok=1 air: co2=700 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=5s
+A: wifi=1 mqtt=1 room_online=1 link_ok=1 reports=13 air_rx=12 air_lost=3 bad=0 rssi=-83
+---- task statistics (measured) ----
+task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+presence_task               100    779       809       38  0.008090     0  1888
+button_event_task           100    778       194       24  0.001940     0  2188
+light_control_task          200    390     29335     1093  0.146675     0  1848
+display_alert_task          500    144     47327    41551  0.094654     0  2060
+break_timer_task           1000     78      1246       78  0.001246     0  3480
+desk_communication_task    1000     13      5186     4925  0.005186     0  5848
+Total U (WCET-based) = 25.7791%   RMS bound n=6: 73.48%
+heap free=216076  min_free=205228  TIME_SCALE=1

@@ -1,0 +1,93 @@
+name: 'Desk B: BH1750 + LD2410 faults, lux regulation, colour schedule'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- write-serial: 'presence on
+
+    '
+- wait-serial: UNOCCUPIED -> WORKING
+- write-serial: 'fault bh1750
+
+    '
+- wait-serial: REGULATING -> SENSOR_FAULT
+- delay: 400ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_b/01_light_sensor_fault.png
+- write-serial: 'status
+
+    '
+- write-serial: 'ok bh1750
+
+    '
+- wait-serial: SENSOR_FAULT -> REGULATING
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- write-serial: 'fault ld2410
+
+    '
+- wait-serial: -> SENSOR_FAULT
+- delay: 400ms
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_b/02_presence_sensor_fault.png
+- write-serial: 'status
+
+    '
+- write-serial: 'ok ld2410
+
+    '
+- wait-serial: SENSOR_FAULT ->
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- set-control:
+    part-id: ldr
+    control: lux
+    value: 50
+- delay: 6s
+- write-serial: 'status
+
+    '
+- set-control:
+    part-id: ldr
+    control: lux
+    value: 800
+- delay: 6s
+- write-serial: 'status
+
+    '
+- set-control:
+    part-id: ldr
+    control: lux
+    value: 200
+- delay: 4s
+- write-serial: 'status
+
+    '
+- write-serial: 'time 16:58
+
+    '
+- delay: 1s
+- write-serial: 'status
+
+    '
+- delay: 10s
+- write-serial: 'status
+
+    '
+- delay: 10s
+- write-serial: 'status
+
+    '
+- write-serial: 'time auto
+
+    '
+- write-serial: 'stats
+
+    '
+- delay: 1500ms

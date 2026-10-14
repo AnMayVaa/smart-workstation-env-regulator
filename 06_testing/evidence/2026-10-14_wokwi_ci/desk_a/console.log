@@ -1,0 +1,128 @@
+[wall    4.168] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall    4.505] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall    5.479] Starting simulation...
+[wall    6.106] ets Jul 29 2019 12:21:46
+[wall    6.106] 
+[wall    6.106] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall    6.106] configsip: 0, SPIWP:0xee
+[wall    6.106] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall    6.106] mode:DIO, clock div:2
+[wall    6.106] load:0x3fff0030,len:1156
+[wall    6.106] load:0x40078000,len:11456
+[wall    6.106] ho 0 tail 12 room 4
+[wall    6.106] load:0x40080400,len:2972
+[wall    6.106] entry 0x400805dc
+[wall    7.948] 
+[wall    7.994] === SWER desk node 1  (SIMULATION=1, TIME_SCALE=120) ===
+[wall    8.796] [    2.024] tasks started
+[wall    8.796] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "tasks started"
+[wall    9.000] ; type 'help' for test commands
+[wall    9.100] [    2.136] A: Wi-Fi up 10.13.37.2, SNTP started
+[wall    9.629] [    2.428] A: MQTT connected as swer-desk1-c296
+[wall   12.327] [    5.024] B: away_timeout=1
+[wall   12.327] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "away_timeout=1"
+[wall   12.327] [Desk A: settings menu, break alerts, ack, snooze limit] delay 500ms
+[wall   12.402]  (reset user_lux_target=500, late_mode=0)
+[wall   13.011] [Desk A: settings menu, break alerts, ack, snooze limit] delay 1700ms
+[wall   14.931] [Desk A: settings menu, break alerts, ack, snooze limit] delay 450ms
+[wall   15.431] [Desk A: settings menu, break alerts, ack, snooze limit] delay 200ms
+[wall   15.782] [Desk A: settings menu, break alerts, ack, snooze limit] delay 150ms
+[wall   16.024] [Desk A: settings menu, break alerts, ack, snooze limit] delay 450ms
+[wall   16.131] [    8.060] B: user_lux_target=600 late_mode=0
+[wall   16.592] [Desk A: settings menu, break alerts, ack, snooze limit] delay 150ms
+[wall   16.877] [Desk A: settings menu, break alerts, ack, snooze limit] delay 450ms
+[wall   16.985] [    8.660] B: user_lux_target=700 late_mode=0
+[wall   17.464] [Desk A: settings menu, break alerts, ack, snooze limit] delay 150ms
+[wall   17.703] [Desk A: settings menu, break alerts, ack, snooze limit] delay 450ms
+[wall   17.797] [    9.260] B: user_lux_target=800 late_mode=0
+[wall   18.200] [Desk A: settings menu, break alerts, ack, snooze limit] delay 200ms
+[wall   18.556] [Desk A: settings menu, break alerts, ack, snooze limit] delay 1700ms
+[wall   20.490] [Desk A: settings menu, break alerts, ack, snooze limit] delay 450ms
+[wall   21.032] [Desk A: settings menu, break alerts, ack, snooze limit] delay 200ms
+[wall   21.381] [Desk A: settings menu, break alerts, ack, snooze limit] delay 150ms
+[wall   21.636] [Desk A: settings menu, break alerts, ack, snooze limit] delay 450ms
+[wall   21.723] [   12.413] B: user_lux_target=800 late_mode=1
+[wall   22.176] [Desk A: settings menu, break alerts, ack, snooze limit] delay 200ms
+[wall   22.525] [Desk A: settings menu, break alerts, ack, snooze limit] delay 1700ms
+[wall   24.424] [Desk A: settings menu, break alerts, ack, snooze limit] delay 450ms
+[wall   24.926] [Desk A: settings menu, break alerts, ack, snooze limit] delay 200ms
+[wall   25.388] B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=800 late=1 snooze=0
+[wall   25.388] D: state=OFF lux_now=200 B=0.0% r=0.740
+[wall   25.405] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   25.405] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=2 air_rx=0 air_lost=0 bad=0 rssi=-70
+[wall   25.415] [   15.425] TEST: presence forced ON
+[wall   26.577] [   16.522] B: UNOCCUPIED -> WORKING
+[wall   26.577] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "UNOCCUPIED -> WORKING"
+[wall   26.577] [Desk A: settings menu, break alerts, ack, snooze limit] delay 2s
+[wall   26.661] [   16.529] A: desk_report occ=1 (immediate)
+[wall   26.747] [   16.624] D: OFF -> REGULATING (B=0.0%)
+[wall   31.118] [   20.030] A: link_ok=0
+[wall   31.118] [   20.030] B: display alert LINK LOST prio 0
+[wall   41.121] [   27.035] B: WORKING -> EYE_ALERT
+[wall   41.175] [   27.063] B: display alert EYE BREAK
+[wall   41.175] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "display alert EYE BREAK"
+[wall   41.176] [Desk A: settings menu, break alerts, ack, snooze limit] delay 300ms
+[wall   41.303]  prio 1
+[wall   41.772] [Desk A: settings menu, break alerts, ack, snooze limit] delay 150ms
+[wall   42.137] [   27.549] B: EYE_ALERT -> WORKING
+[wall   42.137] [   27.550] B: short press -> ack
+[wall   42.137] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "short press -> ack"
+[wall   42.292]  (snooze 0/2)
+[wall   42.292] [   27.551] B: display alert LINK LOST prio 0
+[wall   47.699] [   32.024] B: WORKING -> STAND_ALERT
+[wall   47.701] [   32.025] B: display alert STAND UP
+[wall   47.701] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "display alert STAND UP"
+[wall   47.701] [Desk A: settings menu, break alerts, ack, snooze limit] delay 300ms
+[wall   47.832]  prio 1
+[wall   48.455] [Desk A: settings menu, break alerts, ack, snooze limit] delay 1700ms
+[wall   50.741] [   34.063] B: STAND_ALERT -> WORKING
+[wall   50.741] [   34.064] B: long press -> snooze (snooze 1/2)
+[wall   50.741] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "long press -> snooze (snooze 1/2)"
+[wall   50.741] [Desk A: settings menu, break alerts, ack, snooze limit] delay 200ms
+[wall   50.868] [   34.065] B: display alert LINK LOST prio 0
+[wall   54.599] [   37.024] B: WORKING -> STAND_ALERT
+[wall   54.634] [   37.025] B: display alert STAND UP prio 1
+[wall   54.634] [   37.039] B: snoozed STAND re-raised
+[wall   54.634] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "snoozed STAND re-raised"
+[wall   54.634] [Desk A: settings menu, break alerts, ack, snooze limit] delay 200ms
+[wall   55.283] [Desk A: settings menu, break alerts, ack, snooze limit] delay 1700ms
+[wall   57.570] [   38.975] B: STAND_ALERT -> WORKING
+[wall   57.570] [   38.976] B: long press -> snooze (snooze 2/2)
+[wall   57.570] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "long press -> snooze (snooze 2/2)"
+[wall   57.682] [   38.977] B: display alert LINK LOST prio 0
+[wall   61.604] [   42.024] B: WORKING -> STAND_ALERT
+[wall   61.604] [   42.025] B: display alert STAND UP prio 1
+[wall   61.676] [   42.038] B: snoozed STAND re-raised
+[wall   61.676] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "snoozed STAND re-raised"
+[wall   61.676] [Desk A: settings menu, break alerts, ack, snooze limit] delay 200ms
+[wall   62.125] [Desk A: settings menu, break alerts, ack, snooze limit] delay 1700ms
+[wall   64.316] [Desk A: settings menu, break alerts, ack, snooze limit] delay 450ms
+[wall   64.898] [Desk A: settings menu, break alerts, ack, snooze limit] delay 100ms
+[wall   65.214] [Desk A: settings menu, break alerts, ack, snooze limit] delay 150ms
+[wall   65.312] B: state=STAND_ALERT occupied=1 sit=55min away_timeout=0 lux_target=800 late=1 snooze=2
+[wall   65.312] D: state=REGULATING lux_now=776 B=96.1% r=0.800
+[wall   65.312] A: time_valid=1 22:37 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   65.328] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=8 air_rx=0 air_lost=0 bad=0 rssi=-92
+[wall   65.539] [   44.677] B: STAND_ALERT -> WORKING
+[wall   65.539] [   44.678] B: short press -> ack
+[wall   65.539] [Desk A: settings menu, break alerts, ack, snooze limit] Expected text matched: "short press -> ack"
+[wall   65.540] [Desk A: settings menu, break alerts, ack, snooze limit] delay 300ms
+[wall   65.706]  (snooze 0/2)
+[wall   65.706] [   44.679] B: display alert LINK LOST prio 0
+[wall   66.119] [Desk A: settings menu, break alerts, ack, snooze limit] delay 1500ms
+[wall   66.220] B: state=WORKING occupied=1 sit=57min away_timeout=0 lux_target=800 late=1 snooze=0
+[wall   66.220] D: state=REGULATING lux_now=776 B=96.1% r=0.800
+[wall   66.233] A: time_valid=1 22:37 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   66.233] A: wifi=1 mqtt=1 room_online=0 link_ok=0 reports=8 air_rx=0 air_lost=0 bad=0 rssi=-85
+[wall   66.233] ---- task statistics (measured) ----
+[wall   66.246] task                     T(ms)   runs   WCET(us)  avg(us)  U=C/T     late  stack_free(B)
+[wall   66.246] presence_task               100    431       889       41  0.008890     0  1904
+[wall   66.276] button_event_task           100   1244      1447       58  0.014470     0  876
+[wall   66.300] light_control_task          200    216     28534     1209  0.142670     0  1848
+[wall   66.300] display_alert_task          500     83     43186    40494  0.086372     0  1820
+[wall   66.300] break_timer_task           1000     44     16394     1187  0.016394     0  1912
+[wall   66.300] desk_communication_task    1000      8      5605     5000  0.005605     0  5892
+[wall   66.300] Total U (WCET-based) = 27.4401%   RMS bound n=6: 73.48%
+[wall   66.313] heap free=215924  min_free=207552  TIME_SCALE=120
+[wall   68.118] [Desk A: settings menu, break alerts, ack, snooze limit] Scenario completed successfully
+[wall   69.773] VCD file written to: out/room_a/logic_analyzer.vcd

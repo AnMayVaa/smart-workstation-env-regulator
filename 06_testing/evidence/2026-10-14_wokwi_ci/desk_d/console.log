@@ -1,0 +1,59 @@
+[wall    0.146] Wokwi CLI v0.28.1 (7cf4ffaebfd8)
+[wall    0.948] Connected to Wokwi Simulation API 1.0.0-20261009-g59cd2aaf
+[wall    1.919] Starting simulation...
+[wall    2.683] ets Jul 29 2019 12:21:46
+[wall    2.683] 
+[wall    2.683] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[wall    2.683] configsip: 0, SPIWP:0xee
+[wall    2.683] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[wall    2.683] mode:DIO, clock div:2
+[wall    2.683] load:0x3fff0030,len:1156
+[wall    2.683] load:0x40078000,len:11456
+[wall    2.683] ho 0 tail 12 room 4
+[wall    2.683] load:0x40080400,len:2972
+[wall    2.683] entry 0x400805dc
+[wall    4.991] 
+[wall    5.128] === SWER desk node 1  (SIMULATION=1, TIME_SCALE=120) ===
+[wall    6.007] [    2.024] tasks started
+[wall    6.007] [Desk D: 60 s dim hold then fade to OFF] Expected text matched: "tasks started"
+[wall    6.334] ; type 'help' for test commands
+[wall    6.386] [    2.076] TEST: presence forced ON
+[wall    6.462] [    2.145] A: Wi-Fi OFF (test)
+[wall    7.510] [    3.123] B: UNOCCUPIED -> WORKING
+[wall    7.510] [Desk D: 60 s dim hold then fade to OFF] Expected text matched: "UNOCCUPIED -> WORKING"
+[wall    7.510] [Desk D: 60 s dim hold then fade to OFF] delay 3s
+[wall    7.652] [    3.224] D: OFF -> REGULATING (B=0.0%)
+[wall   11.991] B: state=WORKING occupied=1 sit=5min away_timeout=0 lux_target=500 late=0 snooze=0
+[wall   12.043] D: state=REGULATING lux_now=503 B=50.6% r=0.500
+[wall   12.043] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   12.043] A: wifi=0 mqtt=0 room_online=0 link_ok=0 reports=0 air_rx=0 air_lost=0 bad=0 rssi=0
+[wall   12.043] [    6.176] TEST: presence forced OFF
+[wall   13.522] [    7.223] B: WORKING -> AWAY_PENDING
+[wall   16.012] [    9.024] B: AWAY_PENDING -> UNOCCUPIED
+[wall   17.247] [   10.024] B: away_timeout=1 (reset user_lux_target=500, late_mode=0)
+[wall   17.506] [   10.224] D: REGULATING -> DIMMING
+[wall   17.506] [Desk D: 60 s dim hold then fade to OFF] Expected text matched: "REGULATING -> DIMMING"
+[wall   17.507] [Desk D: 60 s dim hold then fade to OFF] delay 2500ms
+[wall   17.610]  (B=50.6%)
+[wall   21.232] [Desk D: 60 s dim hold then fade to OFF] delay 30s
+[wall   21.391] B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=500 late=0 snooze=0
+[wall   21.391] D: state=DIMMING lux_now=351 B=25.3% r=0.500
+[wall   21.391] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   21.391] A: wifi=0 mqtt=0 room_online=0 link_ok=0 reports=0 air_rx=0 air_lost=0 bad=0 rssi=0
+[wall   31.208] [   20.024] A: link_ok=0
+[wall   31.208] [   20.025] B: display alert LINK LOST prio 0
+[wall   59.869] B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=500 late=0 snooze=0
+[wall   59.904] D: state=DIMMING lux_now=351 B=25.3% r=0.500
+[wall   59.904] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall   59.904] A: wifi=0 mqtt=0 room_online=0 link_ok=0 reports=0 air_rx=0 air_lost=0 bad=0 rssi=0
+[wall   95.928] [   70.224] D: DIMMING -> OFF
+[wall   95.928] [Desk D: 60 s dim hold then fade to OFF] Expected text matched: "DIMMING -> OFF"
+[wall   95.929] [Desk D: 60 s dim hold then fade to OFF] delay 5500ms
+[wall   96.011]  (B=25.3%)
+[wall  103.149] [Desk D: 60 s dim hold then fade to OFF] delay 1500ms
+[wall  103.257] B: state=UNOCCUPIED occupied=0 sit=0min away_timeout=1 lux_target=500 late=0 snooze=0
+[wall  103.257] D: state=OFF lux_now=200 B=0.0% r=0.500
+[wall  103.285] A: time_valid=0 00:00 link_ok=0 air: co2=0 lvl=0 t=0.0 rh=0 tf=0 ok=0 fan=0 age=65535s
+[wall  103.285] A: wifi=0 mqtt=0 room_online=0 link_ok=0 reports=0 air_rx=0 air_lost=0 bad=0 rssi=0
+[wall  104.803] [Desk D: 60 s dim hold then fade to OFF] Scenario completed successfully
+[wall  108.027] VCD file written to: out/desk_d/logic_analyzer.vcd
