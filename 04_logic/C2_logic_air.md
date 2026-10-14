@@ -121,6 +121,7 @@ typedef enum {
 air_status_t     air_status;
 room_fsm_state_t current_state = STATE_ROOM_EMPTY;
 uint8_t          sensor_fault_count = 0;
+uint8_t          sensor_ok_count = 0;        // นับรอบอ่านสำเร็จเพื่อฟื้นคืนสถานะ (RECOVER_READS = 2)
 bool             fan_was_ventilating = false;
 
 void Task_AirQuality(void *pvParameters) {
@@ -141,20 +142,23 @@ void Task_AirQuality(void *pvParameters) {
             read_success = false; // รอล็อกเกิน 50 ms ถือเป็นความผิดพลาด
         }
 
-        // 2. ตรวจสอบความถูกต้องของข้อมูล (Sanity Check & Fault Detection)
+        // 2. ตรวจสอบความถูกต้องของข้อมูล (Sanity Check & Fault Detection - NFR-07)
         if (!read_success || raw_co2 < 300 || raw_co2 > 5000) {
-            if (sensor_fault_count < MAX_SENSOR_FAULTS) {
-                sensor_fault_count++;
-            }
+            sensor_fault_count++;
+            sensor_ok_count = 0;
         } else {
-            sensor_fault_count = 0; // รีเซ็ตตัวนับเมื่ออ่านสำเร็จ
+            sensor_fault_count = 0;
+            sensor_ok_count++;
             air_status.co2_ppm = raw_co2;
             air_status.temp_c_x10 = raw_temp_x10;
             air_status.rh_pct = raw_rh;
         }
 
-        // 3. ประมวลผลและเปลี่ยนสถานะ FSM
-        if (sensor_fault_count >= MAX_SENSOR_FAULTS) {
+        // 3. อัปเดตข้อมูลสถานะโต๊ะทำงานแบบ Real-time ก่อนประเมิน FSM [A3, A5 Bug #8]
+        comm_update_counts();
+
+        // 4. ประมวลผลและเปลี่ยนสถานะ FSM (C2 FSM Logic)
+        if (sensor_fault_count >= MAX_SENSOR_FAULTS || (current_state == STATE_SENSOR_FAULT && sensor_ok_count < 2)) {
             current_state = STATE_SENSOR_FAULT;
         } else if (room_desks_online > 0 && room_occupied_count == 0) {
             // ห้องว่างเฉพาะเมื่อมีการต่อโต๊ะอยู่และทุกโต๊ะไม่มีคน [FR-15, A1 ข้อ 4]
