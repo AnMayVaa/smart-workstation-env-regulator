@@ -2,8 +2,8 @@
 
 | รายการ | ค่า |
 |---|---|
-| เวอร์ชัน | v1.2 |
-| วันที่ | 2026-10-14 |
+| เวอร์ชัน | v1.3 |
+| วันที่ | 2026-10-15 |
 | เจ้าของ | B |
 | รูปแบบ | Timed FSM ร่วมกับ alert queue และ display manager |
 
@@ -46,6 +46,8 @@
 - ภาพพร้อมใช้: `07_visuals/B2_fsm_presence_v1.png`
 - ภาพเวกเตอร์: `07_visuals/B2_fsm_presence_v1.svg`
 - ต้นฉบับแก้ไขใน diagrams.net: `07_visuals/B2_fsm_presence_v1.drawio`
+
+ในการจำลอง `read_latest_ld2410_frame_without_blocking()` ถูกแทนด้วยการอ่าน slide switch ที่ GPIO 13 เพื่อคงสถานะมีคนได้นาน ส่วนฮาร์ดแวร์จริงยังอ่าน frame จาก LD2410 ทาง UART2 ตามเดิม
 
 ## 4. Pseudocode
 
