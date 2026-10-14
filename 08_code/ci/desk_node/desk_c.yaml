@@ -1,0 +1,112 @@
+name: 'Desk C: away_timeout resets user settings, dimming, return'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- wait-serial: away_timeout=1
+- delay: 500ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 1700ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 1700ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 150ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 1
+- delay: 1700ms
+- set-control:
+    part-id: btn
+    control: pressed
+    value: 0
+- delay: 450ms
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- write-serial: 'presence on
+
+    '
+- wait-serial: UNOCCUPIED -> WORKING
+- delay: 2s
+- write-serial: 'presence off
+
+    '
+- wait-serial: WORKING -> AWAY_PENDING
+- wait-serial: AWAY_PENDING -> UNOCCUPIED
+- wait-serial: away_timeout=1
+- wait-serial: REGULATING -> DIMMING
+- delay: 500ms
+- write-serial: 'status
+
+    '
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_c/01_away_dimming.png
+- write-serial: 'presence on
+
+    '
+- wait-serial: DIMMING -> REGULATING
+- delay: 2500ms
+- write-serial: 'status
+
+    '
+- write-serial: 'stats
+
+    '
+- delay: 1500ms

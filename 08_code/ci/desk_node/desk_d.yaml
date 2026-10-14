@@ -1,0 +1,37 @@
+name: 'Desk D: 60 s dim hold then fade to OFF'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- write-serial: 'wifi off
+
+    '
+- write-serial: 'presence on
+
+    '
+- wait-serial: UNOCCUPIED -> WORKING
+- delay: 3s
+- write-serial: 'status
+
+    '
+- write-serial: 'presence off
+
+    '
+- wait-serial: REGULATING -> DIMMING
+- delay: 2500ms
+- write-serial: 'status
+
+    '
+- delay: 30s
+- write-serial: 'status
+
+    '
+- wait-serial: DIMMING -> OFF
+- delay: 5500ms
+- write-serial: 'status
+
+    '
+- take-screenshot:
+    part-id: oled
+    save-to: out/desk_d/01_light_off.png
+- delay: 1500ms

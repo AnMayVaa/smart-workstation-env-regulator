@@ -1,0 +1,72 @@
+name: 'Room A: C2 FSM, 950 ppm hysteresis, empty vs unknown'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- wait-serial: MQTT connected
+- write-serial: 'desks 1 1
+
+    '
+- write-serial: 'co2 1050
+
+    '
+- wait-serial: -> S3_AIR_POOR
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- write-serial: 'co2 970
+
+    '
+- delay: 5500ms
+- write-serial: 'status
+
+    '
+- write-serial: 'co2 920
+
+    '
+- wait-serial: -> S2_AIR_MODERATE
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- write-serial: 'co2 750
+
+    '
+- wait-serial: -> S1_AIR_GOOD
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- write-serial: 'co2 900
+
+    '
+- wait-serial: -> S2_AIR_MODERATE
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- write-serial: 'co2 1200
+
+    '
+- wait-serial: -> S3_AIR_POOR
+- write-serial: 'desks 1 0
+
+    '
+- wait-serial: -> S0_ROOM_EMPTY
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- write-serial: 'desks 0 0
+
+    '
+- wait-serial: -> S3_AIR_POOR
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- write-serial: 'stats
+
+    '
+- delay: 1500ms

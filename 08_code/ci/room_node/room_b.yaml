@@ -1,0 +1,60 @@
+name: 'Room B: SCD41 fault + 2-read recovery, temperature flags'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- write-serial: 'desks 1 1
+
+    '
+- write-serial: 'co2 700
+
+    '
+- wait-serial: -> S1_AIR_GOOD
+- write-serial: 'fault scd41
+
+    '
+- wait-serial: -> S4_SENSOR_FAULT
+- delay: 1200ms
+- write-serial: 'status
+
+    '
+- delay: 3s
+- write-serial: 'ok scd41
+
+    '
+- wait-serial: S4_SENSOR_FAULT ->
+- delay: 300ms
+- write-serial: 'status
+
+    '
+- write-serial: 'temp 27
+
+    '
+- delay: 5500ms
+- write-serial: 'status
+
+    '
+- write-serial: 'temp 18
+
+    '
+- delay: 5500ms
+- write-serial: 'status
+
+    '
+- write-serial: 'temp auto
+
+    '
+- write-serial: 'co2 5200
+
+    '
+- delay: 16s
+- write-serial: 'status
+
+    '
+- write-serial: 'co2 pot
+
+    '
+- write-serial: 'stats
+
+    '
+- delay: 1500ms

@@ -1,0 +1,15 @@
+name: 'MULTI desk 2: free'
+version: 1
+author: A
+steps:
+- wait-serial: tasks started
+- wait-serial: MQTT connected
+- wait-serial: room/online=1
+- delay: 20s
+- write-serial: 'status
+
+    '
+- take-screenshot:
+    part-id: oled
+    save-to: out/multi/01_desk2_status.png
+- delay: 1500ms
