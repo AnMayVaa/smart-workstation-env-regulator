@@ -1,0 +1,11 @@
+=== TC-A-08: room node status while desk 1 is unoccupied (away_timeout=1) ===
+[    7.076] B: away_timeout=1 (reset user_lux_target=500, late_mode=0)        <- desk
+A: room_desks_online=1 room_occupied_count=0                                  <- room
+   desk 1 online=1 occ=0 iv=15s last=10s ago lost=6                           <- room
+
+=== TC-A-05: desk clock with Wi-Fi off (desk node, TIME_SCALE 60, clock from NTP) ===
+A: time_valid=1 01:10 link_ok=0 air: co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=2s
+[  147.629] A: Wi-Fi OFF (test)
+A: time_valid=1 01:21 link_ok=0 air: co2=400 lvl=0 t=24.0 rh=55 tf=0 ok=1 fan=0 age=672s
+[  818.882] TEST: Wi-Fi allowed
+[  822.441] A: MQTT connected as swer-desk1-578f
